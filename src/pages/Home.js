@@ -5,6 +5,7 @@ import { AppContext } from '../context/AppContext.js';
 import { ProductCard } from '../components/ProductCard.js';
 import { WhatsAppIcon } from '../components/WhatsAppIcon.js';
 import { WHATSAPP_DISPLAY, getSupportWhatsAppUrl } from '../utils/whatsapp.js';
+import { db } from '../services/db.js';
 
 const html = htm.bind(h);
 
@@ -18,16 +19,30 @@ export const Home = () => {
         }
     }, [products]);
 
-    // Grouping Products from the 205 dataset
-    const trendingProducts = products.filter(p => p.featured).slice(0, 8);
-    const ringsDrop = products.filter(p => p.category === "rings").slice(0, 4);
-    const chainsDrop = products.filter(p => p.category === "chains").slice(0, 4);
-    const braceletsDrop = products.filter(p => p.category === "bracelets").slice(0, 4);
+    // Categories with dynamic image thumbnails from actual products
+    const categoriesList = db.getCategories();
+    const categoryBubbles = categoriesList.map(cat => {
+        const matchingProd = products.find(p => (p.category || "").toLowerCase() === cat.toLowerCase() && p.images && p.images[0]);
+        const img = matchingProd ? matchingProd.images[0] : "https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp";
+        const count = products.filter(p => (p.category || "").toLowerCase() === cat.toLowerCase()).length;
+        return {
+            name: cat,
+            label: cat.replace(/-/g, " ").toUpperCase(),
+            image: img,
+            count
+        };
+    });
+
+    // Grouping Products from the dataset
+    const trendingProducts = products.filter(p => p.featured || p.newArrival).slice(0, 8);
+    const ringsDrop = products.filter(p => (p.category || "").toLowerCase() === "rings").slice(0, 4);
+    const chainsDrop = products.filter(p => (p.category || "").toLowerCase() === "chains").slice(0, 4);
+    const braceletsDrop = products.filter(p => (p.category || "").toLowerCase() === "bracelets").slice(0, 4);
 
     return html`
         <div class="home-page anim-fade-in">
             <!-- Cinematic Hero Banner matching blyo.in / Accessify -->
-            <section class="hero" style="position: relative; min-height: 85vh; display: flex; align-items: center;">
+            <section class="hero" style="position: relative; min-height: 75vh; display: flex; align-items: center;">
                 <div class="hero-background">
                     <img 
                         src="https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp" 
@@ -35,33 +50,33 @@ export const Home = () => {
                         style="filter: brightness(0.4) contrast(1.1); object-fit: cover;"
                     />
                 </div>
-                <div class="hero-overlay" style="background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.5) 60%, rgba(10,10,10,0.85) 100%);"></div>
+                <div class="hero-overlay" style="background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 50%, rgba(10,10,10,0.85) 100%);"></div>
                 <div class="container" style="position: relative; z-index: 2;">
                     <div class="hero-content" style="max-width: 680px;">
-                        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px;">
                             <span class="whatsapp-badge">
                                 <${WhatsAppIcon} size=${14} color="#25D366" />
-                                <span>WhatsApp Direct Orders: ${WHATSAPP_DISPLAY}</span>
+                                <span>WhatsApp Orders: ${WHATSAPP_DISPLAY}</span>
                             </span>
                         </div>
-                        <h1 class="hero-title" style="font-size: clamp(2.5rem, 6vw, 4.2rem); line-height: 1.05; letter-spacing: -0.03em;">
+                        <h1 class="hero-title" style="font-size: clamp(2.2rem, 5.5vw, 4rem); line-height: 1.05; letter-spacing: -0.03em;">
                             GET <br /> <span class="chrome-text">ACCESSIFIED</span>
                         </h1>
-                        <p class="hero-description" style="font-size: 1.05rem; line-height: 1.7; color: var(--text-secondary); margin-top: 18px; margin-bottom: 32px;">
-                            Explore 205 Gothic and Y2K streetwear accessories: 316L stainless steel rings, heavyweight cross chains, link bracelets, belts, wallets, and lifestyle fragrances.
+                        <p class="hero-description" style="font-size: 1rem; line-height: 1.6; color: var(--text-secondary); margin-top: 14px; margin-bottom: 28px;">
+                            ${products.length}+ Streetwear & Gothic Y2K accessories: stainless steel rings, heavyweight cross chains, link bracelets, belts, wallets, and combos.
                         </p>
-                        <div class="hero-actions" style="display: flex; gap: 14px; flex-wrap: wrap;">
-                            <a href="#/shop" class="btn btn-primary" style="padding: 14px 32px;">
-                                EXPLORE 205 PRODUCTS
+                        <div class="hero-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <a href="#/shop" class="btn btn-primary" style="padding: 13px 28px;">
+                                EXPLORE SHOP
                             </a>
                             <a 
                                 href=${getSupportWhatsAppUrl()} 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
                                 class="btn-whatsapp" 
-                                style="padding: 14px 24px;"
+                                style="padding: 13px 22px;"
                             >
-                                <${WhatsAppIcon} size=${20} color="#ffffff" />
+                                <${WhatsAppIcon} size=${18} color="#ffffff" />
                                 <span>Order on WhatsApp</span>
                             </a>
                         </div>
@@ -69,151 +84,142 @@ export const Home = () => {
                 </div>
             </section>
 
-            <!-- Quick Category Pill Selector -->
-            <section style="background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); padding: 24px 0;">
+            <!-- Cosmora-Style Visual Circular Category Story Bubbles -->
+            <section class="category-stories-section">
                 <div class="container">
-                    <div style="display: flex; gap: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; justify-content: flex-start;">
-                        <a href="#/shop" class="btn btn-secondary" style="padding: 8px 18px; font-size: 0.8rem; border-radius: 20px; white-space: nowrap;">
-                            🔥 All Products (205)
+                    <div class="category-stories-wrapper">
+                        <!-- All Products Bubble -->
+                        <a href="#/shop" class="category-story-item">
+                            <div class="category-story-circle all-circle">
+                                <i data-lucide="sparkles" style="width: 24px; height: 24px; color: var(--color-whatsapp);"></i>
+                            </div>
+                            <span class="category-story-label">ALL (${products.length})</span>
                         </a>
-                        <a href="#/shop?category=rings" class="btn btn-secondary" style="padding: 8px 18px; font-size: 0.8rem; border-radius: 20px; white-space: nowrap;">
-                            💍 Rings (88)
-                        </a>
-                        <a href="#/shop?category=chains" class="btn btn-secondary" style="padding: 8px 18px; font-size: 0.8rem; border-radius: 20px; white-space: nowrap;">
-                            ⛓️ Chains & Necklaces (50)
-                        </a>
-                        <a href="#/shop?category=bracelets" class="btn btn-secondary" style="padding: 8px 18px; font-size: 0.8rem; border-radius: 20px; white-space: nowrap;">
-                            📿 Bracelets (21)
-                        </a>
-                        <a href="#/shop?category=combos" class="btn btn-secondary" style="padding: 8px 18px; font-size: 0.8rem; border-radius: 20px; white-space: nowrap;">
-                            ⚡ Combos & Sets (16)
-                        </a>
-                        <a href="#/shop?category=fragrances" class="btn btn-secondary" style="padding: 8px 18px; font-size: 0.8rem; border-radius: 20px; white-space: nowrap;">
-                            💨 Fragrances (13)
-                        </a>
+
+                        ${categoryBubbles.map(bubble => html`
+                            <a href=${`#/shop?category=${bubble.name}`} class="category-story-item">
+                                <div class="category-story-circle">
+                                    <img src=${bubble.image} alt=${bubble.label} loading="lazy" />
+                                </div>
+                                <span class="category-story-label">${bubble.label}</span>
+                            </a>
+                        `)}
                     </div>
                 </div>
             </section>
 
-            <!-- Featured Collections Cards -->
-            <section class="section">
+            <!-- Trending / Best Sellers Grid -->
+            <section class="section" style="padding-top: 40px;">
                 <div class="container">
-                    <div class="section-header">
-                        <span class="section-subtitle">GOTHIC & Y2K SELECTION</span>
-                        <h2 class="section-title">TOP CATEGORIES</h2>
-                    </div>
-
-                    <div class="collections-grid">
-                        <div class="collection-card">
-                            <img src="https://cdn.zepio.io/blyo/product/ebbe65b3-b81a-448b-a644-09c752b39a3b.webp" alt="Belts & Wallets" />
-                            <div class="collection-content">
-                                <h3 class="collection-title">Belts & Wallets</h3>
-                                <a href="#/shop?category=belts" class="collection-link">DISCOVER DROP</a>
-                            </div>
+                    <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                        <div>
+                            <span style="font-size: 0.75rem; color: var(--color-whatsapp); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">TRENDING DROPS</span>
+                            <h2 style="font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2rem); margin-top: 4px;">HOTTEST PICKS</h2>
                         </div>
-
-                        <div class="collection-card">
-                            <img src="https://cdn.zepio.io/blyo/product/6e22f085-79e1-455b-866a-b2866657c919.webp" alt="Chains Collection" />
-                            <div class="collection-content">
-                                <h3 class="collection-title">Cross & Curb Chains</h3>
-                                <a href="#/shop?category=chains" class="collection-link">DISCOVER DROP</a>
-                            </div>
-                        </div>
-
-                        <div class="collection-card">
-                            <img src="https://cdn.zepio.io/blyo/product/2065ba5c-c2b5-48fa-bb64-c5a4dbb8a07c.webp" alt="Gothic Rings Collection" />
-                            <div class="collection-content">
-                                <h3 class="collection-title">Stainless Rings</h3>
-                                <a href="#/shop?category=rings" class="collection-link">DISCOVER DROP</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Trending 205 Drops -->
-            <section class="section" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
-                <div class="container">
-                    <div class="section-header">
-                        <span class="section-subtitle">Most Wanted</span>
-                        <h2 class="section-title">HOTTEST DROPS</h2>
+                        <a href="#/shop" class="btn btn-secondary" style="font-size: 0.8rem; padding: 7px 16px;">View All (${products.length}) →</a>
                     </div>
 
                     <div class="products-grid">
-                        ${trendingProducts.map(p => html`
-                            <${ProductCard} key=${p.id} product=${p} />
+                        ${trendingProducts.map(product => html`
+                            <${ProductCard} key=${product.id} product=${product} />
                         `)}
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 50px;">
-                        <a href="#/shop" class="btn btn-secondary" style="padding: 14px 36px;">
-                            VIEW ALL 205 ACCESSORIES
-                        </a>
                     </div>
                 </div>
             </section>
 
-            <!-- Rings Showcase -->
-            <section class="section">
+            <!-- Rings Section -->
+            ${ringsDrop.length > 0 && html`
+                <section class="section" style="background: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+                    <div class="container">
+                        <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">316L STAINLESS STEEL</span>
+                                <h2 style="font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2rem); margin-top: 4px;">GOTHIC & Y2K RINGS</h2>
+                            </div>
+                            <a href="#/shop?category=rings" class="btn btn-secondary" style="font-size: 0.8rem; padding: 7px 16px;">View All Rings →</a>
+                        </div>
+
+                        <div class="products-grid">
+                            ${ringsDrop.map(product => html`
+                                <${ProductCard} key=${product.id} product=${product} />
+                            `)}
+                        </div>
+                    </div>
+                </section>
+            `}
+
+            <!-- Chains Section -->
+            ${chainsDrop.length > 0 && html`
+                <section class="section">
+                    <div class="container">
+                        <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">HEAVYWEIGHT INDUSTRIAL</span>
+                                <h2 style="font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2rem); margin-top: 4px;">CHAINS & NECKLACES</h2>
+                            </div>
+                            <a href="#/shop?category=chains" class="btn btn-secondary" style="font-size: 0.8rem; padding: 7px 16px;">View All Chains →</a>
+                        </div>
+
+                        <div class="products-grid">
+                            ${chainsDrop.map(product => html`
+                                <${ProductCard} key=${product.id} product=${product} />
+                            `)}
+                        </div>
+                    </div>
+                </section>
+            `}
+
+            <!-- Bracelets Section -->
+            ${braceletsDrop.length > 0 && html`
+                <section class="section" style="background: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+                    <div class="container">
+                        <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px;">
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">ARM HARDWARE</span>
+                                <h2 style="font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2rem); margin-top: 4px;">BRACELETS & CUFFS</h2>
+                            </div>
+                            <a href="#/shop?category=bracelets" class="btn btn-secondary" style="font-size: 0.8rem; padding: 7px 16px;">View All Bracelets →</a>
+                        </div>
+
+                        <div class="products-grid">
+                            ${braceletsDrop.map(product => html`
+                                <${ProductCard} key=${product.id} product=${product} />
+                            `)}
+                        </div>
+                    </div>
+                </section>
+            `}
+
+            <!-- Features Trust Badges -->
+            <section class="section" style="padding: 50px 0;">
                 <div class="container">
-                    <div class="section-header">
-                        <span class="section-subtitle">Stainless Steel Collection</span>
-                        <h2 class="section-title">SIGNATURE RINGS</h2>
-                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                        <div class="card" style="padding: 24px 16px;">
+                            <div style="color: var(--color-whatsapp); margin-bottom: 12px;">
+                                <${WhatsAppIcon} size=${28} color="#25D366" />
+                            </div>
+                            <h3 style="font-size: 0.95rem; text-transform: uppercase;">Direct WhatsApp Orders</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 6px;">Order in 1 click with pre-filled product details to +91 7012400815.</p>
+                        </div>
 
-                    <div class="products-grid">
-                        ${ringsDrop.map(p => html`
-                            <${ProductCard} key=${p.id} product=${p} />
-                        `)}
-                    </div>
+                        <div class="card" style="padding: 24px 16px;">
+                            <i data-lucide="shield-check" style="width: 28px; height: 28px; color: var(--text-primary); margin-bottom: 12px;"></i>
+                            <h3 style="font-size: 0.95rem; text-transform: uppercase;">316L Stainless Steel</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 6px;">Waterproof, rust-resistant, hypoallergenic chrome jewelry.</p>
+                        </div>
 
-                    <div style="text-align: center; margin-top: 40px;">
-                        <a href="#/shop?category=rings" class="btn btn-secondary">VIEW ALL 88 RINGS</a>
-                    </div>
-                </div>
-            </section>
+                        <div class="card" style="padding: 24px 16px;">
+                            <i data-lucide="truck" style="width: 28px; height: 28px; color: var(--text-primary); margin-bottom: 12px;"></i>
+                            <h3 style="font-size: 0.95rem; text-transform: uppercase;">Free Express Shipping</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 6px;">Free delivery across India on all orders over ₹1,000.</p>
+                        </div>
 
-            <!-- Chains Showcase -->
-            <section class="section" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
-                <div class="container">
-                    <div class="section-header">
-                        <span class="section-subtitle">Heavyweight Metal</span>
-                        <h2 class="section-title">CHAINS & NECKLACES</h2>
+                        <div class="card" style="padding: 24px 16px;">
+                            <i data-lucide="package" style="width: 28px; height: 28px; color: var(--text-primary); margin-bottom: 12px;"></i>
+                            <h3 style="font-size: 0.95rem; text-transform: uppercase;">Tactical Packaging</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 6px;">Signature matte black protective unboxing experience.</p>
+                        </div>
                     </div>
-
-                    <div class="products-grid">
-                        ${chainsDrop.map(p => html`
-                            <${ProductCard} key=${p.id} product=${p} />
-                        `)}
-                    </div>
-
-                    <div style="text-align: center; margin-top: 40px;">
-                        <a href="#/shop?category=chains" class="btn btn-secondary">VIEW ALL 50 CHAINS</a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- WhatsApp Direct Order Banner -->
-            <section class="section" style="padding: 100px 0; background: linear-gradient(135deg, rgba(37,211,102,0.15) 0%, rgba(10,10,10,0.95) 100%); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
-                <div class="container" style="text-align: center; max-width: 720px;">
-                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: #25D366; margin-bottom: 20px;">
-                        <${WhatsAppIcon} size=${36} color="#ffffff" />
-                    </div>
-                    <span class="section-subtitle" style="color: #25D366;">EASY & INSTANT SHOPPING</span>
-                    <h2 class="section-title" style="margin-bottom: 16px;">ORDER DIRECTLY THROUGH WHATSAPP</h2>
-                    <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.8; margin-bottom: 30px;">
-                        Found something you like? Click "Order through WhatsApp" on any product or order your full cart at once. We verify availability, confirm delivery, and dispatch your package immediately!
-                    </p>
-                    <a 
-                        href=${getSupportWhatsAppUrl()} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        class="btn-whatsapp btn-whatsapp-lg" 
-                        style="max-width: 320px; margin: 0 auto; display: inline-flex;"
-                    >
-                        <${WhatsAppIcon} size=${22} color="#ffffff" />
-                        <span>Chat on WhatsApp: ${WHATSAPP_DISPLAY}</span>
-                    </a>
                 </div>
             </section>
         </div>

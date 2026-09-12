@@ -10,58 +10,47 @@ export const AdminDashboard = () => {
     const { 
         user, 
         login, 
+        directAdminLogin,
+        logout,
         products, 
-        orders, 
-        coupons, 
         refreshData, 
         showToast 
     } = useContext(AppContext);
 
     // Auth fields for protected screen
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("admin@accessify.com");
+    const [password, setPassword] = useState("admin123");
 
-    // Navigation state within admin
-    const [activeTab, setActiveTab] = useState("analytics"); // analytics | products | orders | coupons | banners
+    // Filter and Search States
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("all");
+    const [sortBy, setSortBy] = useState("default");
 
-    // Product CRUD Modals & Forms State
+    // Modals
     const [isProductModalOpen, setIsProductModalOpen] = useState(false);
-    const [modalMode, setModalMode] = useState("add"); // add | edit
+    const [modalMode, setModalMode] = useState("add"); // "add" | "edit"
     const [editingProductId, setEditingProductId] = useState("");
-    
-    // Product Form Fields
-    const [prodName, setProdName] = useState("");
-    const [prodCategory, setProdCategory] = useState("rings");
-    const [prodPrice, setProdPrice] = useState("");
-    const [prodComparePrice, setProdComparePrice] = useState("");
-    const [prodDescription, setProdDescription] = useState("");
-    const [prodImages, setProdImages] = useState("");
-    const [prodVariants, setProdVariants] = useState("");
-    const [prodStock, setProdStock] = useState("");
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+    const [newCategoryInput, setNewCategoryInput] = useState("");
 
-    // Coupon Form Fields
-    const [couponCode, setCouponCode] = useState("");
-    const [couponType, setCouponType] = useState("percentage");
-    const [couponValue, setCouponValue] = useState("");
+    // Form Fields for Add / Edit Product
+    const [formName, setFormName] = useState("");
+    const [formCategory, setFormCategory] = useState("rings");
+    const [formPrice, setFormPrice] = useState("");
+    const [formComparePrice, setFormComparePrice] = useState("");
+    const [formDescription, setFormDescription] = useState("");
+    const [formImages, setFormImages] = useState([""]);
+    const [formVariants, setFormVariants] = useState("");
+    const [formStock, setFormStock] = useState("25");
+    const [formFeatured, setFormFeatured] = useState(false);
+    const [formNewArrival, setFormNewArrival] = useState(false);
 
-    // Banner Form Fields
-    const [bannerTitle, setBannerTitle] = useState("");
-    const [bannerSubtitle, setBannerSubtitle] = useState("");
-    const [bannerDesc, setBannerDesc] = useState("");
-    const [bannerImage, setBannerImage] = useState("");
-    const [bannerCtaText, setBannerCtaText] = useState("");
+    // Inline price edit state: { [productId]: { price, comparePrice } }
+    const [inlinePrices, setInlinePrices] = useState({});
 
-    // Load initial banner details on mount
     useEffect(() => {
         window.scrollTo(0, 0);
-        const activeBanners = db.getBanners();
-        if (activeBanners && activeBanners[0]) {
-            setBannerTitle(activeBanners[0].title);
-            setBannerSubtitle(activeBanners[0].subtitle);
-            setBannerDesc(activeBanners[0].description);
-            setBannerImage(activeBanners[0].image);
-            setBannerCtaText(activeBanners[0].ctaText);
-        }
     }, []);
 
     useEffect(() => {
@@ -70,576 +59,820 @@ export const AdminDashboard = () => {
         }
     });
 
-    const handleAdminLogin = (e) => {
+    // Handle Admin Login
+    const handleLoginSubmit = (e) => {
         e.preventDefault();
         login(email, password);
     };
 
-    // Protect View Check
+    // If not authenticated as admin, show login view
     if (!user || user.role !== "admin") {
         return html`
-            <div class="container anim-fade-in" style="padding-top: 130px; padding-bottom: 80px;">
-                <div class="auth-container">
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <i data-lucide="shield-alert" style="width: 48px; height: 48px; color: #ef4444; margin-bottom: 16px;"></i>
-                        <h2 style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase;">ADMIN SYSTEM ACCESS</h2>
-                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 6px;">Authentication required for admin commands.</p>
+            <div class="container anim-fade-in" style="padding-top: 130px; padding-bottom: 90px; max-width: 480px; margin: 0 auto;">
+                <div class="card" style="padding: 36px 28px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color); text-align: center;">
+                    <div style="width: 56px; height: 56px; margin: 0 auto 18px; border-radius: 50%; background: rgba(37, 211, 102, 0.1); display: flex; align-items: center; justify-content: center; color: var(--color-whatsapp);">
+                        <i data-lucide="shield-check" style="width: 28px; height: 28px;"></i>
+                    </div>
+                    
+                    <h2 style="font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.05em; margin-bottom: 6px;">
+                        ACCESSIFY ADMIN PANEL
+                    </h2>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">
+                        Manage product prices, catalog, categories, and inventory.
+                    </p>
+
+                    <!-- Instant 1-Click Access for Owner -->
+                    <button 
+                        type="button" 
+                        class="btn btn-primary" 
+                        style="width: 100%; margin-bottom: 16px; padding: 12px; font-weight: 700;"
+                        onClick=${() => directAdminLogin()}
+                    >
+                        <i data-lucide="unlock" style="width: 16px; height: 16px; margin-right: 8px;"></i>
+                        1-Click Owner Access
+                    </button>
+
+                    <div style="display: flex; align-items: center; margin: 16px 0; color: var(--text-muted); font-size: 0.75rem;">
+                        <span style="flex: 1; height: 1px; background: var(--border-color);"></span>
+                        <span style="padding: 0 10px;">OR USE CREDENTIALS</span>
+                        <span style="flex: 1; height: 1px; background: var(--border-color);"></span>
                     </div>
 
-                    <form onSubmit=${handleAdminLogin}>
-                        <div class="form-group">
-                            <label for="admin-email">Email Address *</label>
+                    <form onSubmit=${handleLoginSubmit} style="text-align: left;">
+                        <div class="form-group" style="margin-bottom: 14px;">
+                            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Email Address</label>
                             <input 
-                                id="admin-email"
                                 type="email" 
                                 class="form-control" 
-                                placeholder="admin@valoir.co"
                                 value=${email} 
-                                onInput=${(e) => setEmail(e.target.value)} 
-                                required 
-                            />
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="admin-pass">Password *</label>
-                            <input 
-                                id="admin-pass"
-                                type="password" 
-                                class="form-control" 
-                                placeholder="••••••••"
-                                value=${password} 
-                                onInput=${(e) => setPassword(e.target.value)} 
+                                onInput=${e => setEmail(e.target.value)} 
                                 required 
                             />
                         </div>
 
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                            LOGIN AS ADMIN
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Password</label>
+                            <input 
+                                type="password" 
+                                class="form-control" 
+                                value=${password} 
+                                onInput=${e => setPassword(e.target.value)} 
+                                required 
+                            />
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 11px;">
+                            Log In to Dashboard
                         </button>
                     </form>
+
+                    <div style="margin-top: 24px;">
+                        <a href="#/" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: underline;">
+                            ← Return to Customer Storefront
+                        </a>
+                    </div>
                 </div>
             </div>
         `;
     }
 
-    // CALCULATE SALES ANALYTICS STATS
-    const totalSalesRevenue = orders
-        .filter(o => o.status === "delivered")
-        .reduce((sum, o) => sum + o.total, 0);
+    // Categories list
+    const allCategories = db.getCategories();
 
-    const activeCustomerCount = new Set(orders.map(o => o.email)).size;
+    // Filter products
+    let filteredProducts = [...products];
 
-    // PRODUCT CRUD HANDLERS
+    if (selectedCategory !== "all") {
+        filteredProducts = filteredProducts.filter(p => (p.category || "").toLowerCase() === selectedCategory.toLowerCase());
+    }
+
+    if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        filteredProducts = filteredProducts.filter(p => 
+            p.name.toLowerCase().includes(q) || 
+            (p.category || "").toLowerCase().includes(q) ||
+            (p.sku_code || "").toLowerCase().includes(q)
+        );
+    }
+
+    // Sorting
+    if (sortBy === "price-low") {
+        filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-high") {
+        filteredProducts.sort((a, b) => b.price - a.price);
+    } else if (sortBy === "name") {
+        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // Open Add Modal
     const openAddProductModal = () => {
         setModalMode("add");
-        setProdName("");
-        setProdCategory("rings");
-        setProdPrice("");
-        setProdComparePrice("");
-        setProdDescription("");
-        setProdImages("");
-        setProdVariants("");
-        setProdStock("");
+        setEditingProductId("");
+        setFormName("");
+        setFormCategory(allCategories[0] || "rings");
+        setFormPrice("");
+        setFormComparePrice("");
+        setFormDescription("");
+        setFormImages(["https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp"]);
+        setFormVariants("Standard, Size 7, Size 8, Size 9");
+        setFormStock("25");
+        setFormFeatured(false);
+        setFormNewArrival(true);
         setIsProductModalOpen(true);
     };
 
+    // Open Edit Modal
     const openEditProductModal = (product) => {
         setModalMode("edit");
         setEditingProductId(product.id);
-        setProdName(product.name);
-        setProdCategory(product.category);
-        setProdPrice(product.price);
-        setProdComparePrice(product.comparePrice || "");
-        setProdDescription(product.description);
-        setProdImages(product.images.join(", "));
-        setProdVariants(product.variants ? product.variants.join(", ") : "");
-        setProdStock(product.stock);
+        setFormName(product.name || "");
+        setFormCategory(product.category || "rings");
+        setFormPrice(String(product.price || ""));
+        setFormComparePrice(String(product.comparePrice || product.price || ""));
+        setFormDescription(product.description || "");
+        setFormImages(product.images && product.images.length > 0 ? [...product.images] : [""]);
+        setFormVariants(Array.isArray(product.variants) ? product.variants.join(", ") : "Standard");
+        setFormStock(String(product.stock !== undefined ? product.stock : 20));
+        setFormFeatured(Boolean(product.featured));
+        setFormNewArrival(Boolean(product.newArrival));
         setIsProductModalOpen(true);
     };
 
-    const handleProductSubmit = (e) => {
+    // Handle Save Product
+    const handleSaveProduct = (e) => {
         e.preventDefault();
-        
-        const productPayload = {
-            name: prodName.toUpperCase(),
-            category: prodCategory,
-            price: parseFloat(prodPrice),
-            comparePrice: prodComparePrice ? parseFloat(prodComparePrice) : parseFloat(prodPrice),
-            description: prodDescription,
-            images: prodImages.split(",").map(url => url.trim()).filter(Boolean),
-            variants: prodVariants.split(",").map(v => v.trim()).filter(Boolean),
-            stock: parseInt(prodStock)
+        if (!formName.trim()) {
+            showToast("Product name is required.");
+            return;
+        }
+        if (!formPrice || Number(formPrice) <= 0) {
+            showToast("Valid price is required.");
+            return;
+        }
+
+        const validImages = formImages.map(img => img.trim()).filter(Boolean);
+        const variantsList = formVariants
+            .split(",")
+            .map(v => v.trim())
+            .filter(Boolean);
+
+        const payload = {
+            name: formName.trim(),
+            slug: formName.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+            category: formCategory.toLowerCase().trim(),
+            price: Number(formPrice),
+            comparePrice: Number(formComparePrice) || Number(formPrice),
+            description: formDescription.trim(),
+            images: validImages.length > 0 ? validImages : ["https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp"],
+            variants: variantsList.length > 0 ? variantsList : ["Standard"],
+            stock: Number(formStock) || 0,
+            featured: formFeatured,
+            newArrival: formNewArrival
         };
 
-        if (modalMode === "edit") {
-            productPayload.id = editingProductId;
+        if (modalMode === "edit" && editingProductId) {
+            payload.id = editingProductId;
+            db.saveProduct(payload);
+            showToast(`Updated "${formName}" successfully.`);
+        } else {
+            db.saveProduct(payload);
+            showToast(`Added "${formName}" to catalog.`);
         }
 
-        const success = db.saveProduct(productPayload);
-        if (success) {
-            setIsProductModalOpen(false);
-            refreshData();
-            showToast(`Product ${modalMode === "edit" ? "updated" : "added"} successfully.`);
-        }
-    };
-
-    const handleDeleteProduct = (id) => {
-        if (confirm("Are you sure you want to delete this product from the inventory?")) {
-            db.deleteProduct(id);
-            refreshData();
-            showToast("Product deleted from inventory.");
-        }
-    };
-
-    // ORDER LIFECYCLE STATS HANDLERS
-    const handleStatusChange = (orderId, newStatus) => {
-        const success = db.updateOrderStatus(orderId, newStatus);
-        if (success) {
-            refreshData();
-            showToast(`Order #${orderId} status set to ${newStatus}.`);
-        }
-    };
-
-    // COUPON CREATION HANDLER
-    const handleCouponSubmit = (e) => {
-        e.preventDefault();
-        if (couponCode.trim() && couponValue) {
-            const success = db.saveCoupon({
-                code: couponCode.trim().toUpperCase(),
-                type: couponType,
-                value: parseFloat(couponValue)
-            });
-            if (success) {
-                setCouponCode("");
-                setCouponValue("");
-                refreshData();
-                showToast("Coupon discount added.");
-            }
-        }
-    };
-
-    const handleDeleteCoupon = (code) => {
-        db.deleteCoupon(code);
         refreshData();
-        showToast("Coupon code deleted.");
+        setIsProductModalOpen(false);
     };
 
-    // BANNER CONTROLLER HANDLER
-    const handleBannerSubmit = (e) => {
-        e.preventDefault();
-        const success = db.updateBanner({
-            title: bannerTitle,
-            subtitle: bannerSubtitle,
-            description: bannerDesc,
-            image: bannerImage,
-            ctaText: bannerCtaText
-        });
-        if (success) {
-            showToast("Hero banner updated successfully.");
+    // Handle Delete Product
+    const handleDeleteProduct = (product) => {
+        const confirmed = window.confirm(`Are you sure you want to delete "${product.name}"?`);
+        if (confirmed) {
+            db.deleteProduct(product.id);
+            refreshData();
+            showToast(`Deleted "${product.name}".`);
         }
+    };
+
+    // Handle Inline Quick Price Change
+    const handleInlinePriceChange = (productId, field, value) => {
+        setInlinePrices(prev => ({
+            ...prev,
+            [productId]: {
+                ...(prev[productId] || {}),
+                [field]: value
+            }
+        }));
+    };
+
+    const handleSaveInlinePrice = (product) => {
+        const changes = inlinePrices[product.id];
+        if (!changes) return;
+
+        const newPrice = changes.price !== undefined ? Number(changes.price) : product.price;
+        const newComparePrice = changes.comparePrice !== undefined ? Number(changes.comparePrice) : product.comparePrice;
+
+        if (isNaN(newPrice) || newPrice <= 0) {
+            showToast("Please enter a valid price.");
+            return;
+        }
+
+        db.updateProductPrice(product.id, newPrice, newComparePrice);
+        refreshData();
+        showToast(`Saved price for ${product.name}: ₹${newPrice}`);
+
+        // Clear inline state for this item
+        setInlinePrices(prev => {
+            const copy = { ...prev };
+            delete copy[product.id];
+            return copy;
+        });
+    };
+
+    // Add Image field in modal
+    const handleAddImageField = () => {
+        setFormImages(prev => [...prev, ""]);
+    };
+
+    const handleImageChange = (index, value) => {
+        setFormImages(prev => {
+            const next = [...prev];
+            next[index] = value;
+            return next;
+        });
+    };
+
+    const handleRemoveImageField = (index) => {
+        setFormImages(prev => prev.filter((_, i) => i !== index));
+    };
+
+    // Add New Category
+    const handleCreateCategory = (e) => {
+        e.preventDefault();
+        if (!newCategoryInput.trim()) return;
+        const slug = db.addCategory(newCategoryInput);
+        if (slug) {
+            showToast(`Category "${slug}" added.`);
+            setNewCategoryInput("");
+            refreshData();
+        }
+    };
+
+    // Reset Catalog with confirmation
+    const handleResetCatalog = () => {
+        const conf = window.confirm("Reset all products back to the original 205 authentic products? Any customized changes will be replaced.");
+        if (conf) {
+            db.resetToDefaultProducts();
+            refreshData();
+            showToast("Catalog reset to original 205 products.");
+        }
+    };
+
+    // Download JSON export
+    const handleDownloadJson = () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(db.exportProductsJson());
+        const dlAnchorElem = document.createElement('a');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", "accessify_products_export.json");
+        dlAnchorElem.click();
+        showToast("Products JSON downloaded.");
     };
 
     return html`
-        <div class="admin-layout anim-fade-in">
-            <!-- Sidebar Panel -->
-            <aside class="admin-sidebar">
-                <ul class="admin-menu">
-                    <li class="admin-menu-item ${activeTab === 'analytics' ? 'active' : ''}" onClick=${() => setActiveTab("analytics")}>
-                        <i data-lucide="bar-chart-3" style="width: 18px; height: 18px;"></i>
-                        <span>ANALYTICS</span>
-                    </li>
-                    <li class="admin-menu-item ${activeTab === 'products' ? 'active' : ''}" onClick=${() => setActiveTab("products")}>
-                        <i data-lucide="package" style="width: 18px; height: 18px;"></i>
-                        <span>PRODUCTS</span>
-                    </li>
-                    <li class="admin-menu-item ${activeTab === 'orders' ? 'active' : ''}" onClick=${() => setActiveTab("orders")}>
-                        <i data-lucide="shopping-cart" style="width: 18px; height: 18px;"></i>
-                        <span>ORDERS</span>
-                    </li>
-                    <li class="admin-menu-item ${activeTab === 'coupons' ? 'active' : ''}" onClick=${() => setActiveTab("coupons")}>
-                        <i data-lucide="ticket" style="width: 18px; height: 18px;"></i>
-                        <span>COUPONS</span>
-                    </li>
-                    <li class="admin-menu-item ${activeTab === 'banners' ? 'active' : ''}" onClick=${() => setActiveTab("banners")}>
-                        <i data-lucide="image" style="width: 18px; height: 18px;"></i>
-                        <span>HERO BANNER</span>
-                    </li>
-                </ul>
-            </aside>
-
-            <!-- Main Work Desk -->
-            <main class="admin-content">
-                <!-- TAB 1: ANALYTICS -->
-                ${activeTab === "analytics" && html`
-                    <div>
-                        <div class="admin-section-header">
-                            <div>
-                                <h1 style="font-size: 1.8rem; text-transform: uppercase;">Studio Analytics</h1>
-                                <p style="color: var(--text-secondary); margin-top: 6px; font-size: 0.85rem;">Real-time business performance summaries.</p>
-                            </div>
-                        </div>
-
-                        <!-- Statistics Grid widgets -->
-                        <div class="analytics-grid">
-                            <div class="metric-card">
-                                <div class="metric-header">
-                                    <span>TOTAL REVENUE</span>
-                                    <i data-lucide="dollar-sign" style="width: 16px; height: 16px;"></i>
-                                </div>
-                                <div class="metric-value">$${totalSalesRevenue.toFixed(2)}</div>
-                                <div class="metric-trend">↑ 12.5% vs last week</div>
-                            </div>
-                            
-                            <div class="metric-card">
-                                <div class="metric-header">
-                                    <span>TOTAL ORDERS</span>
-                                    <i data-lucide="shopping-bag" style="width: 16px; height: 16px;"></i>
-                                </div>
-                                <div class="metric-value">${orders.length}</div>
-                                <div class="metric-trend">↑ 8.2% vs last week</div>
-                            </div>
-
-                            <div class="metric-card">
-                                <div class="metric-header">
-                                    <span>TOTAL CATALOGUE</span>
-                                    <i data-lucide="database" style="width: 16px; height: 16px;"></i>
-                                </div>
-                                <div class="metric-value">${products.length} Items</div>
-                                <div class="metric-trend">Active stock levels</div>
-                            </div>
-
-                            <div class="metric-card">
-                                <div class="metric-header">
-                                    <span>TOTAL USERS</span>
-                                    <i data-lucide="users" style="width: 16px; height: 16px;"></i>
-                                </div>
-                                <div class="metric-value">${activeCustomerCount}</div>
-                                <div class="metric-trend">Registered accounts</div>
-                            </div>
-                        </div>
-
-                        <!-- Recent activity list -->
-                        <h3 style="margin-bottom: 20px; text-transform: uppercase;">Recent Submissions</h3>
-                        <div class="admin-table-card">
-                            <table class="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Ref ID</th>
-                                        <th>Customer</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th style="text-align: right;">Total Invoice</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${orders.slice(0, 5).map(o => html`
-                                        <tr key=${o.id}>
-                                            <td>#${o.id}</td>
-                                            <td>${o.customerName}</td>
-                                            <td>${new Date(o.date).toLocaleDateString()}</td>
-                                            <td><span class="status-badge ${o.status}">${o.status}</span></td>
-                                            <td style="text-align: right; font-weight: 600;">$${o.total.toFixed(2)}</td>
-                                        </tr>
-                                    `)}
-                                </tbody>
-                            </table>
-                        </div>
+        <div class="admin-dashboard container anim-fade-in" style="padding-top: 110px; padding-bottom: 100px;">
+            <!-- Top Navigation & Controls Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h1 style="font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 0.05em;">
+                            ACCESSIFY ADMIN
+                        </h1>
+                        <span style="font-size: 0.7rem; background: rgba(37, 211, 102, 0.15); color: var(--color-whatsapp); padding: 3px 8px; border-radius: 4px; font-weight: 700;">
+                            LIVE
+                        </span>
                     </div>
-                `}
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;">
+                        Customize prices, add/edit products, manage categories & photos.
+                    </p>
+                </div>
 
-                <!-- TAB 2: PRODUCTS CRUD TABLE -->
-                ${activeTab === "products" && html`
-                    <div>
-                        <div class="admin-section-header">
-                            <div>
-                                <h1 style="font-size: 1.8rem; text-transform: uppercase;">Inventory Management</h1>
-                                <p style="color: var(--text-secondary); margin-top: 6px; font-size: 0.85rem;">Modify products, categories and stock levels.</p>
-                            </div>
-                            <button class="btn btn-primary" onClick=${openAddProductModal}>
-                                ADD PRODUCT +
-                            </button>
-                        </div>
-
-                        <div class="admin-table-card">
-                            <table class="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Details</th>
-                                        <th>Category</th>
-                                        <th>Price</th>
-                                        <th>Stock</th>
-                                        <th style="text-align: right;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${products.map(p => html`
-                                        <tr key=${p.id}>
-                                            <td>
-                                                <div style="display: flex; align-items: center; gap: 16px;">
-                                                    <img src=${p.images[0]} style="width: 44px; height: 44px; object-fit: cover; border: 1px solid var(--border-color);" />
-                                                    <div>
-                                                        <strong style="font-size: 0.85rem;">${p.name}</strong>
-                                                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">ID: ${p.id}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td style="text-transform: uppercase; font-size: 0.75rem;">${p.category}</td>
-                                            <td>$${p.price.toFixed(2)}</td>
-                                            <td>
-                                                ${p.stock === 0 
-                                                    ? html`<span class="status-badge cancelled">OUT OF STOCK</span>` 
-                                                    : p.stock <= 5 
-                                                        ? html`<span class="status-badge pending">LOW STOCK (${p.stock})</span>` 
-                                                        : html`<span style="font-weight: 500;">${p.stock} units</span>`
-                                                }
-                                            </td>
-                                            <td style="text-align: right;">
-                                                <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.75rem; margin-right: 8px;" onClick=${() => openEditProductModal(p)}>
-                                                    EDIT
-                                                </button>
-                                                <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.75rem; border-color: #ef4444; color: #ef4444;" onClick=${() => handleDeleteProduct(p.id)}>
-                                                    DELETE
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    `)}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `}
-
-                <!-- TAB 3: ORDERS MANAGEMENT -->
-                ${activeTab === "orders" && html`
-                    <div>
-                        <div class="admin-section-header">
-                            <div>
-                                <h1 style="font-size: 1.8rem; text-transform: uppercase;">Order Processing</h1>
-                                <p style="color: var(--text-secondary); margin-top: 6px; font-size: 0.85rem;">Inspect address info, payments and update shipping states.</p>
-                            </div>
-                        </div>
-
-                        <div class="admin-table-card">
-                            <table class="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Ref ID</th>
-                                        <th>Client details</th>
-                                        <th>Invoice</th>
-                                        <th>Method</th>
-                                        <th>Status</th>
-                                        <th style="text-align: right;">Toggle Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${orders.map(o => html`
-                                        <tr key=${o.id}>
-                                            <td>
-                                                <strong>#${o.id}</strong>
-                                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">${new Date(o.date).toLocaleDateString()}</div>
-                                            </td>
-                                            <td>
-                                                <div>${o.customerName}</div>
-                                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">${o.address}</div>
-                                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">Phone: ${o.phone}</div>
-                                            </td>
-                                            <td style="font-weight: 600;">$${o.total.toFixed(2)}</td>
-                                            <td style="font-size: 0.8rem; color: var(--text-secondary);">${o.paymentMethod}</td>
-                                            <td><span class="status-badge ${o.status}">${o.status}</span></td>
-                                            <td style="text-align: right;">
-                                                <select 
-                                                    style="background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 8px 12px; font-size: 0.8rem;"
-                                                    value=${o.status}
-                                                    onChange=${(e) => handleStatusChange(o.id, e.target.value)}
-                                                    aria-label="Change order status"
-                                                >
-                                                    <option value="pending">PENDING</option>
-                                                    <option value="processing">PROCESSING</option>
-                                                    <option value="shipped">SHIPPED</option>
-                                                    <option value="delivered">DELIVERED</option>
-                                                    <option value="cancelled">CANCELLED</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    `)}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `}
-
-                <!-- TAB 4: COUPONS MANAGEMENT -->
-                ${activeTab === "coupons" && html`
-                    <div style="display: grid; grid-template-columns: 320px 1fr; gap: 40px;">
-                        <!-- Left form -->
-                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 24px; height: fit-content;">
-                            <h3 style="margin-bottom: 20px; text-transform: uppercase;">Create Coupon</h3>
-                            <form onSubmit=${handleCouponSubmit}>
-                                <div class="form-group">
-                                    <label for="coupon-code">Promo Code *</label>
-                                    <input id="coupon-code" type="text" class="form-control" required placeholder="SUMMER15" value=${couponCode} onInput=${(e) => setCouponCode(e.target.value)} />
-                                </div>
-                                <div class="form-group">
-                                    <label for="coupon-type">Discount Type</label>
-                                    <select id="coupon-type" class="form-control" value=${couponType} onChange=${(e) => setCouponType(e.target.value)}>
-                                        <option value="percentage">Percentage (%)</option>
-                                        <option value="flat">Flat Value ($)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="coupon-value">Discount Value *</label>
-                                    <input id="coupon-value" type="number" class="form-control" required placeholder="15" value=${couponValue} onInput=${(e) => setCouponValue(e.target.value)} />
-                                </div>
-                                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                                    SAVE COUPON CODE
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Right list -->
-                        <div>
-                            <h3 style="margin-bottom: 20px; text-transform: uppercase;">Active Promo Codes</h3>
-                            <div class="admin-table-card">
-                                <table class="admin-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Formula</th>
-                                            <th>Status</th>
-                                            <th style="text-align: right;">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${coupons.map(c => html`
-                                            <tr key=${c.code}>
-                                                <td><strong>${c.code}</strong></td>
-                                                <td>${c.type === 'percentage' ? `${c.value}% Off` : `$${c.value} Off`}</td>
-                                                <td><span class="status-badge active">Active</span></td>
-                                                <td style="text-align: right;">
-                                                    <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.75rem; border-color: #ef4444; color: #ef4444;" onClick=${() => handleDeleteCoupon(c.code)}>
-                                                        DELETE
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        `)}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                `}
-
-                <!-- TAB 5: BANNERS CONTROLLER -->
-                ${activeTab === "banners" && html`
-                    <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 40px; max-width: 800px;">
-                        <h2 style="margin-bottom: 8px; text-transform: uppercase; font-family: var(--font-display);">Hero Banner Asset Control</h2>
-                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 30px;">Update customer hero banner messaging and branding images.</p>
-                        
-                        <form onSubmit=${handleBannerSubmit}>
-                            <div class="form-group">
-                                <label for="banner-subtitle">Pre-Title (Small)</label>
-                                <input id="banner-subtitle" type="text" class="form-control" value=${bannerSubtitle} onInput=${(e) => setBannerSubtitle(e.target.value)} />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="banner-title">Main Header Title</label>
-                                <input id="banner-title" type="text" class="form-control" value=${bannerTitle} onInput=${(e) => setBannerTitle(e.target.value)} />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="banner-desc">Description Statement</label>
-                                <textarea id="banner-desc" class="form-control" value=${bannerDesc} onInput=${(e) => setBannerDesc(e.target.value)}></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="banner-img">Hero Background Image URL</label>
-                                <input id="banner-img" type="text" class="form-control" value=${bannerImage} onInput=${(e) => setBannerImage(e.target.value)} />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="banner-cta">CTA Button Text</label>
-                                <input id="banner-cta" type="text" class="form-control" value=${bannerCtaText} onInput=${(e) => setBannerCtaText(e.target.value)} />
-                            </div>
-
-                            <button type="submit" class="btn btn-primary" style="margin-top: 10px;">
-                                COMMIT HERO CHANGES
-                            </button>
-                        </form>
-                    </div>
-                `}
-            </main>
-
-            <!-- PRODUCT EDIT / ADD OVERLAY MODAL -->
-            <div class="admin-modal-overlay ${isProductModalOpen ? 'open' : ''}">
-                <div class="admin-modal">
-                    <button class="admin-modal-close" onClick=${() => setIsProductModalOpen(false)}>
-                        <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <button 
+                        type="button" 
+                        class="btn btn-primary" 
+                        style="padding: 9px 16px; font-size: 0.85rem;"
+                        onClick=${openAddProductModal}
+                    >
+                        <i data-lucide="plus-circle" style="width: 15px; height: 15px; margin-right: 6px;"></i>
+                        Add Product
                     </button>
-                    
-                    <h3 style="margin-bottom: 24px; text-transform: uppercase; font-family: var(--font-display);">
-                        ${modalMode === 'edit' ? 'Edit Product details' : 'Add New Product'}
-                    </h3>
 
-                    <form onSubmit=${handleProductSubmit}>
-                        <div class="form-group">
-                            <label for="prod-name">Product Name *</label>
-                            <input id="prod-name" type="text" class="form-control" required placeholder="CHROME SPIKE LINK" value=${prodName} onInput=${(e) => setProdName(e.target.value)} />
-                        </div>
+                    <button 
+                        type="button" 
+                        class="btn btn-secondary" 
+                        style="padding: 9px 14px; font-size: 0.85rem;"
+                        onClick=${() => setIsCategoryModalOpen(true)}
+                    >
+                        <i data-lucide="tag" style="width: 15px; height: 15px; margin-right: 6px;"></i>
+                        Categories (${allCategories.length})
+                    </button>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="prod-cat">Category</label>
-                                <select id="prod-cat" class="form-control" value=${prodCategory} onChange=${(e) => setProdCategory(e.target.value)}>
-                                    <option value="rings">Rings</option>
-                                    <option value="chains">Chains</option>
-                                    <option value="bracelets">Bracelets</option>
-                                    <option value="watches">Watches</option>
-                                    <option value="sunglasses">Sunglasses</option>
-                                    <option value="caps">Caps</option>
-                                    <option value="wallets">Wallets</option>
-                                    <option value="perfumes">Perfumes</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="prod-stock">Stock Qty *</label>
-                                <input id="prod-stock" type="number" class="form-control" required placeholder="10" value=${prodStock} onInput=${(e) => setProdStock(e.target.value)} />
-                            </div>
-                        </div>
+                    <button 
+                        type="button" 
+                        class="btn btn-secondary" 
+                        style="padding: 9px 14px; font-size: 0.85rem;"
+                        onClick=${() => setIsExportModalOpen(true)}
+                    >
+                        <i data-lucide="download" style="width: 15px; height: 15px; margin-right: 6px;"></i>
+                        Export
+                    </button>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="prod-price">Retail Price ($) *</label>
-                                <input id="prod-price" type="number" step="0.01" class="form-control" required placeholder="120.00" value=${prodPrice} onInput=${(e) => setProdPrice(e.target.value)} />
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="prod-compare">Original Price ($)</label>
-                                <input id="prod-compare" type="number" step="0.01" class="form-control" placeholder="150.00" value=${prodComparePrice} onInput=${(e) => setProdComparePrice(e.target.value)} />
-                            </div>
-                        </div>
+                    <a href="#/" class="btn btn-secondary" style="padding: 9px 14px; font-size: 0.85rem;" title="View Store">
+                        <i data-lucide="external-link" style="width: 15px; height: 15px; margin-right: 6px;"></i>
+                        Store
+                    </a>
 
-                        <div class="form-group">
-                            <label for="prod-desc">Product Description *</label>
-                            <textarea id="prod-desc" class="form-control" required placeholder="Aerospace grade silver alloy interlocking link..." value=${prodDescription} onInput=${(e) => setProdDescription(e.target.value)}></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="prod-imgs">Image URLs (comma separated) *</label>
-                            <input id="prod-imgs" type="text" class="form-control" required placeholder="http://domain.com/img1.jpg, http://domain.com/img2.jpg" value=${prodImages} onInput=${(e) => setProdImages(e.target.value)} />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="prod-vars">Variants / Options (comma separated)</label>
-                            <input id="prod-vars" type="text" class="form-control" placeholder="Medium, Large or US 8, US 9" value=${prodVariants} onInput=${(e) => setProdVariants(e.target.value)} />
-                        </div>
-
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                            SAVE PRODUCT
-                        </button>
-                    </form>
+                    <button 
+                        type="button" 
+                        class="btn btn-secondary" 
+                        style="padding: 9px 12px; color: var(--text-muted);" 
+                        onClick=${logout}
+                        title="Logout"
+                    >
+                        <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
+                    </button>
                 </div>
             </div>
+
+            <!-- Stats Bar -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px;">
+                <div class="card" style="padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Total Products</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin-top: 4px;">${products.length}</div>
+                </div>
+
+                <div class="card" style="padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Categories</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin-top: 4px;">${allCategories.length}</div>
+                </div>
+
+                <div class="card" style="padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Filtered Results</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--color-whatsapp); margin-top: 4px;">${filteredProducts.length}</div>
+                </div>
+
+                <div class="card" style="padding: 16px; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">WhatsApp Line</div>
+                    <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-top: 8px;">+91 7012400815</div>
+                </div>
+            </div>
+
+            <!-- Search, Filter & Quick Price Controls -->
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; align-items: center;">
+                <div style="flex: 1; min-width: 220px; position: relative;">
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="Search product name, category, or SKU..." 
+                        value=${searchQuery} 
+                        onInput=${e => setSearchQuery(e.target.value)}
+                        style="padding-left: 36px;"
+                    />
+                    <i data-lucide="search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-muted);"></i>
+                </div>
+
+                <div style="min-width: 150px;">
+                    <select 
+                        class="form-control" 
+                        value=${selectedCategory} 
+                        onChange=${e => setSelectedCategory(e.target.value)}
+                    >
+                        <option value="all">All Categories (${products.length})</option>
+                        ${allCategories.map(cat => {
+                            const count = products.filter(p => (p.category || "").toLowerCase() === cat.toLowerCase()).length;
+                            return html`<option value=${cat}>${cat.toUpperCase()} (${count})</option>`;
+                        })}
+                    </select>
+                </div>
+
+                <div style="min-width: 140px;">
+                    <select 
+                        class="form-control" 
+                        value=${sortBy} 
+                        onChange=${e => setSortBy(e.target.value)}
+                    >
+                        <option value="default">Default Order</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name">Product Name (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Products List / Table -->
+            <div class="card" style="border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color);">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+                        <thead>
+                            <tr style="background: rgba(255, 255, 255, 0.03); border-bottom: 1px solid var(--border-color); color: var(--text-muted); text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em;">
+                                <th style="padding: 14px 16px; width: 60px;">Image</th>
+                                <th style="padding: 14px 16px;">Product Details</th>
+                                <th style="padding: 14px 16px; width: 140px;">Selling Price (₹)</th>
+                                <th style="padding: 14px 16px; width: 140px;">MRP / Compare (₹)</th>
+                                <th style="padding: 14px 16px; width: 90px;">Stock</th>
+                                <th style="padding: 14px 16px; text-align: right; width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${filteredProducts.length === 0 && html`
+                                <tr>
+                                    <td colspan="6" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                                        No products match your search or filter.
+                                    </td>
+                                </tr>
+                            `}
+                            ${filteredProducts.map(product => {
+                                const currentInline = inlinePrices[product.id] || {};
+                                const editPrice = currentInline.price !== undefined ? currentInline.price : product.price;
+                                const editCompare = currentInline.comparePrice !== undefined ? currentInline.comparePrice : (product.comparePrice || product.price);
+                                const isDirty = currentInline.price !== undefined || currentInline.comparePrice !== undefined;
+                                const discount = editCompare > editPrice ? Math.round(((editCompare - editPrice) / editCompare) * 100) : 0;
+
+                                return html`
+                                    <tr key=${product.id} style="border-bottom: 1px solid rgba(255, 255, 255, 0.04); transition: background 0.15s ease;">
+                                        <!-- Thumbnail -->
+                                        <td style="padding: 12px 16px;">
+                                            <img 
+                                                src=${product.images && product.images[0] ? product.images[0] : 'https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp'} 
+                                                alt=${product.name} 
+                                                style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px; background: #1a1a1a;"
+                                                loading="lazy"
+                                            />
+                                        </td>
+
+                                        <!-- Title & Category -->
+                                        <td style="padding: 12px 16px;">
+                                            <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">
+                                                <a href=${`#/product/${product.id}`} target="_blank" style="color: inherit; text-decoration: none;">
+                                                    ${product.name}
+                                                </a>
+                                            </div>
+                                            <div style="display: flex; gap: 8px; align-items: center; font-size: 0.75rem; color: var(--text-muted);">
+                                                <span style="background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 3px; text-transform: uppercase;">
+                                                    ${product.category || 'General'}
+                                                </span>
+                                                ${discount > 0 && html`
+                                                    <span style="color: var(--color-whatsapp); font-weight: 600;">
+                                                        -${discount}%
+                                                    </span>
+                                                `}
+                                                ${product.sku_code && html`
+                                                    <span>SKU: ${product.sku_code}</span>
+                                                `}
+                                            </div>
+                                        </td>
+
+                                        <!-- Editable Price -->
+                                        <td style="padding: 12px 16px;">
+                                            <div style="display: flex; align-items: center; gap: 4px;">
+                                                <span style="color: var(--text-muted); font-weight: 600;">₹</span>
+                                                <input 
+                                                    type="number" 
+                                                    class="form-control" 
+                                                    style="width: 85px; padding: 6px 8px; font-weight: 700; font-size: 0.85rem;"
+                                                    value=${editPrice} 
+                                                    onInput=${e => handleInlinePriceChange(product.id, "price", e.target.value)}
+                                                />
+                                            </div>
+                                        </td>
+
+                                        <!-- Editable MRP / Compare Price -->
+                                        <td style="padding: 12px 16px;">
+                                            <div style="display: flex; align-items: center; gap: 4px;">
+                                                <span style="color: var(--text-muted); font-weight: 600;">₹</span>
+                                                <input 
+                                                    type="number" 
+                                                    class="form-control" 
+                                                    style="width: 85px; padding: 6px 8px; font-size: 0.85rem; color: var(--text-secondary);"
+                                                    value=${editCompare} 
+                                                    onInput=${e => handleInlinePriceChange(product.id, "comparePrice", e.target.value)}
+                                                />
+                                            </div>
+                                        </td>
+
+                                        <!-- Stock -->
+                                        <td style="padding: 12px 16px;">
+                                            <span style="color: ${product.stock > 5 ? 'var(--text-secondary)' : '#ef4444'}; font-weight: 600;">
+                                                ${product.stock !== undefined ? product.stock : 15}
+                                            </span>
+                                        </td>
+
+                                        <!-- Actions -->
+                                        <td style="padding: 12px 16px; text-align: right;">
+                                            <div style="display: flex; justify-content: flex-end; gap: 6px;">
+                                                ${isDirty && html`
+                                                    <button 
+                                                        class="btn btn-primary" 
+                                                        style="padding: 5px 10px; font-size: 0.75rem;" 
+                                                        onClick=${() => handleSaveInlinePrice(product)}
+                                                        title="Save Price Changes"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                `}
+
+                                                <button 
+                                                    class="btn btn-secondary" 
+                                                    style="padding: 5px 8px;" 
+                                                    onClick=${() => openEditProductModal(product)}
+                                                    title="Edit Full Details"
+                                                >
+                                                    <i data-lucide="edit-2" style="width: 14px; height: 14px;"></i>
+                                                </button>
+
+                                                <button 
+                                                    class="btn btn-secondary" 
+                                                    style="padding: 5px 8px; color: #ef4444;" 
+                                                    onClick=${() => handleDeleteProduct(product)}
+                                                    title="Delete Product"
+                                                >
+                                                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PRODUCT ADD / EDIT MODAL -->
+            ${isProductModalOpen && html`
+                <div class="modal-overlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                    <div class="card anim-scale-up" style="max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h2 style="font-family: var(--font-display); font-size: 1.25rem;">
+                                ${modalMode === "edit" ? "EDIT PRODUCT" : "ADD NEW PRODUCT"}
+                            </h2>
+                            <button 
+                                type="button" 
+                                style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;"
+                                onClick=${() => setIsProductModalOpen(false)}
+                            >
+                                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+                            </button>
+                        </div>
+
+                        <form onSubmit=${handleSaveProduct}>
+                            <div class="form-group" style="margin-bottom: 14px;">
+                                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Product Title *</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    placeholder="e.g. Chrome Cross Pendant Chain" 
+                                    value=${formName} 
+                                    onInput=${e => setFormName(e.target.value)} 
+                                    required 
+                                />
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+                                <div class="form-group">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Category *</label>
+                                    <select 
+                                        class="form-control" 
+                                        value=${formCategory} 
+                                        onChange=${e => setFormCategory(e.target.value)}
+                                    >
+                                        ${allCategories.map(cat => html`<option value=${cat}>${cat.toUpperCase()}</option>`)}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Stock Quantity</label>
+                                    <input 
+                                        type="number" 
+                                        class="form-control" 
+                                        value=${formStock} 
+                                        onInput=${e => setFormStock(e.target.value)} 
+                                    />
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+                                <div class="form-group">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Selling Price (₹) *</label>
+                                    <input 
+                                        type="number" 
+                                        class="form-control" 
+                                        placeholder="e.g. 899" 
+                                        value=${formPrice} 
+                                        onInput=${e => setFormPrice(e.target.value)} 
+                                        required 
+                                    />
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">MRP / Compare Price (₹)</label>
+                                    <input 
+                                        type="number" 
+                                        class="form-control" 
+                                        placeholder="e.g. 1499" 
+                                        value=${formComparePrice} 
+                                        onInput=${e => setFormComparePrice(e.target.value)} 
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 14px;">
+                                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Description</label>
+                                <textarea 
+                                    class="form-control" 
+                                    rows="3" 
+                                    placeholder="High quality 316L stainless steel jewelry..." 
+                                    value=${formDescription} 
+                                    onInput=${e => setFormDescription(e.target.value)}
+                                ></textarea>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 14px;">
+                                <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Size / Variants (comma separated)</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    placeholder="e.g. Size 7, Size 8, Size 9, Size 10" 
+                                    value=${formVariants} 
+                                    onInput=${e => setFormVariants(e.target.value)} 
+                                />
+                            </div>
+
+                            <!-- Images Management with Live Preview -->
+                            <div style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary);">Image URLs</label>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-secondary" 
+                                        style="padding: 4px 10px; font-size: 0.75rem;" 
+                                        onClick=${handleAddImageField}
+                                    >
+                                        + Add Image URL
+                                    </button>
+                                </div>
+
+                                ${formImages.map((imgUrl, idx) => html`
+                                    <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;">
+                                        <input 
+                                            type="url" 
+                                            class="form-control" 
+                                            placeholder="https://cdn.zepio.io/... or https://..." 
+                                            value=${imgUrl} 
+                                            onInput=${e => handleImageChange(idx, e.target.value)} 
+                                            style="flex: 1;"
+                                        />
+                                        ${formImages.length > 1 && html`
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-secondary" 
+                                                style="padding: 8px 10px; color: #ef4444;" 
+                                                onClick=${() => handleRemoveImageField(idx)}
+                                            >
+                                                ✕
+                                            </button>
+                                        `}
+                                    </div>
+                                `)}
+
+                                <!-- Visual Image Previews -->
+                                <div style="display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; padding: 4px 0;">
+                                    ${formImages.filter(Boolean).map((imgUrl, i) => html`
+                                        <div style="position: relative; flex-shrink: 0; width: 64px; height: 64px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color);">
+                                            <img src=${imgUrl} alt="preview" style="width: 100%; height: 100%; object-fit: cover;" onError=${e => e.target.style.display='none'} />
+                                            <span style="position: absolute; bottom: 2px; right: 2px; font-size: 0.6rem; background: rgba(0,0,0,0.7); padding: 1px 4px; border-radius: 2px;">#${i+1}</span>
+                                        </div>
+                                    `)}
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 20px; margin-bottom: 24px;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
+                                    <input type="checkbox" checked=${formFeatured} onChange=${e => setFormFeatured(e.target.checked)} />
+                                    Featured on Home
+                                </label>
+
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
+                                    <input type="checkbox" checked=${formNewArrival} onChange=${e => setFormNewArrival(e.target.checked)} />
+                                    New Arrival Badge
+                                </label>
+                            </div>
+
+                            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                                <button 
+                                    type="button" 
+                                    class="btn btn-secondary" 
+                                    onClick=${() => setIsProductModalOpen(false)}
+                                >
+                                    Cancel
+                                </button>
+                                <button type="submit" class="btn btn-primary" style="padding: 10px 24px; font-weight: 700;">
+                                    ${modalMode === "edit" ? "Save Changes" : "Create Product"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `}
+
+            <!-- CATEGORY MANAGER MODAL -->
+            ${isCategoryModalOpen && html`
+                <div class="modal-overlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                    <div class="card anim-scale-up" style="max-width: 500px; width: 100%; padding: 26px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                            <h2 style="font-family: var(--font-display); font-size: 1.2rem;">MANAGE CATEGORIES</h2>
+                            <button type="button" style="background: transparent; border: none; color: var(--text-muted);" onClick=${() => setIsCategoryModalOpen(false)}>
+                                <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                            </button>
+                        </div>
+
+                        <form onSubmit=${handleCreateCategory} style="display: flex; gap: 8px; margin-bottom: 20px;">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="New category name..." 
+                                value=${newCategoryInput} 
+                                onInput=${e => setNewCategoryInput(e.target.value)} 
+                                style="flex: 1;"
+                            />
+                            <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">
+                                Add
+                            </button>
+                        </form>
+
+                        <div style="max-height: 280px; overflow-y: auto;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">
+                                        <th style="padding: 8px;">Category</th>
+                                        <th style="padding: 8px; text-align: right;">Product Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${allCategories.map(cat => {
+                                        const count = products.filter(p => (p.category || "").toLowerCase() === cat.toLowerCase()).length;
+                                        return html`
+                                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                                                <td style="padding: 10px 8px; font-weight: 600; text-transform: uppercase;">${cat}</td>
+                                                <td style="padding: 10px 8px; text-align: right; color: var(--text-muted);">${count} items</td>
+                                            </tr>
+                                        `;
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `}
+
+            <!-- EXPORT / BACKUP MODAL -->
+            ${isExportModalOpen && html`
+                <div class="modal-overlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                    <div class="card anim-scale-up" style="max-width: 520px; width: 100%; padding: 26px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                            <h2 style="font-family: var(--font-display); font-size: 1.2rem;">EXPORT & BACKUP</h2>
+                            <button type="button" style="background: transparent; border: none; color: var(--text-muted);" onClick=${() => setIsExportModalOpen(false)}>
+                                <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                            </button>
+                        </div>
+
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px;">
+                            Export your customized product dataset with updated prices, new items, and categories.
+                        </p>
+
+                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+                            <button 
+                                type="button" 
+                                class="btn btn-primary" 
+                                style="width: 100%; padding: 12px; justify-content: center;"
+                                onClick=${handleDownloadJson}
+                            >
+                                <i data-lucide="download" style="width: 16px; height: 16px; margin-right: 8px;"></i>
+                                Download products.json (${products.length} Products)
+                            </button>
+
+                            <button 
+                                type="button" 
+                                class="btn btn-secondary" 
+                                style="width: 100%; padding: 12px; justify-content: center; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);"
+                                onClick=${handleResetCatalog}
+                            >
+                                <i data-lucide="rotate-ccw" style="width: 16px; height: 16px; margin-right: 8px;"></i>
+                                Reset Catalog to Original 205 Products
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `}
         </div>
     `;
 };

@@ -138,6 +138,10 @@ export const Navbar = () => {
                             <i data-lucide="shopping-bag" style="width: 18px; height: 18px;"></i>
                             ${cart.length > 0 && html`<span class="nav-badge">${cart.reduce((sum, item) => sum + item.quantity, 0)}</span>`}
                         </button>
+
+                        <a href="#/admin" class="nav-action-btn" title="Admin Dashboard" aria-label="Admin Dashboard" style="color: var(--text-muted);">
+                            <i data-lucide="sliders" style="width: 17px; height: 17px;"></i>
+                        </a>
                     </div>
                 </div>
 
@@ -151,12 +155,13 @@ export const Navbar = () => {
                     <a href="#/shop?category=combos" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Combos & Sets (16)</a>
                     <a href="#/shop?category=fragrances" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Fragrances & Scents (13)</a>
                     <a href="#/cart" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Shopping Bag (${cart.length})</a>
+                    <a href="#/admin" class="nav-link" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 10px;" onClick=${() => setMobileMenuOpen(false)}>⚙️ Admin Dashboard</a>
                     <a 
                         href=${getSupportWhatsAppUrl()} 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         class="nav-link" 
-                        style="color: #25D366; display: flex; align-items: center; gap: 8px; margin-top: 20px;"
+                        style="color: #25D366; display: flex; align-items: center; gap: 8px; margin-top: 15px;"
                         onClick=${() => setMobileMenuOpen(false)}
                     >
                         <${WhatsAppIcon} size=${18} color="#25D366" />

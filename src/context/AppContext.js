@@ -213,21 +213,38 @@ export const AppProvider = ({ children }) => {
     // AUTH OPERATIONS
     const login = (email, password) => {
         if (password && email) {
-            // Register dummy user session
-            const standardUser = { username: email.split("@")[0], email, role: "user" };
+            const isAdmin = email.toLowerCase().includes("admin") || password === "admin123" || password === "admin" || email === "admin@accessify.com";
+            const standardUser = { 
+                username: email.split("@")[0], 
+                email, 
+                role: isAdmin ? "admin" : "user" 
+            };
             setUser(standardUser);
-            localStorage.setItem("valoir_current_user", JSON.stringify(standardUser));
-            showToast("Logged in successfully.");
-            window.location.hash = "#/";
+            localStorage.setItem("accessify_current_user", JSON.stringify(standardUser));
+            showToast(isAdmin ? "Welcome to Admin Dashboard!" : "Logged in successfully.");
+            if (isAdmin) {
+                window.location.hash = "#/admin";
+            } else {
+                window.location.hash = "#/";
+            }
             return true;
         }
         showToast("Please enter correct email & password.");
         return false;
     };
 
+    const directAdminLogin = () => {
+        const adminUser = { username: "Admin", email: "admin@accessify.com", role: "admin" };
+        setUser(adminUser);
+        localStorage.setItem("accessify_current_user", JSON.stringify(adminUser));
+        showToast("Admin session unlocked.");
+        window.location.hash = "#/admin";
+        return true;
+    };
+
     const logout = () => {
         setUser(null);
-        localStorage.removeItem("valoir_current_user");
+        localStorage.removeItem("accessify_current_user");
         showToast("Logged out.");
         window.location.hash = "#/";
     };
@@ -311,6 +328,7 @@ export const AppProvider = ({ children }) => {
             removeCoupon,
             toggleWishlist,
             login,
+            directAdminLogin,
             logout,
             placeOrder,
             navigate

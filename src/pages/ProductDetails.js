@@ -397,6 +397,27 @@ export const ProductDetails = () => {
                     </div>
                 </section>
             `}
+
+            <!-- Sticky Mobile Bottom Bar for 1-Tap WhatsApp Ordering -->
+            <div class="mobile-sticky-order-bar">
+                <div class="sticky-order-info">
+                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                        <span class="sticky-order-price">₹${product.price}</span>
+                        ${product.comparePrice > product.price && html`
+                            <span class="sticky-order-compare">₹${product.comparePrice}</span>
+                        `}
+                    </div>
+                    <span class="sticky-order-variant">${selectedVariant}</span>
+                </div>
+                <button 
+                    type="button" 
+                    class="btn-whatsapp sticky-order-btn" 
+                    onClick=${handleWhatsAppOrder}
+                >
+                    <${WhatsAppIcon} size=${18} color="#ffffff" />
+                    <span>Order on WhatsApp</span>
+                </button>
+            </div>
         </div>
     `;
 };

@@ -779,3 +779,278 @@
         max-width: 100%;
     }
 }
+
+/* ============================================================
+   COSMORA-STYLE MOBILE COMPONENTS & STYLES
+   ============================================================ */
+
+/* CATEGORY STORY / BUBBLE CAROUSEL */
+.category-stories-section {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 0 14px;
+}
+
+.category-stories-wrapper {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 2px;
+}
+
+.category-stories-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.category-story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    min-width: 64px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.category-story-item:hover {
+    transform: translateY(-2px);
+}
+
+.category-story-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(37,211,102,0.6));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.25s ease;
+}
+
+.category-story-circle.all-circle {
+    background: rgba(255,255,255,0.06);
+    border: 1px dashed rgba(37,211,102,0.6);
+}
+
+.category-story-item:hover .category-story-circle {
+    box-shadow: 0 0 14px rgba(37, 211, 102, 0.4);
+    transform: scale(1.05);
+}
+
+.category-story-circle img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #111;
+}
+
+.category-story-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* MOBILE BOTTOM NAVIGATION BAR */
+.mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 58px;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--border-color);
+        z-index: 999;
+        justify-content: space-around;
+        align-items: center;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .bottom-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        color: var(--text-muted);
+        font-size: 0.62rem;
+        font-weight: 600;
+        background: transparent;
+        border: none;
+        text-decoration: none;
+        cursor: pointer;
+        padding: 4px 6px;
+        transition: color 0.15s ease;
+    }
+
+    .bottom-nav-item i {
+        width: 19px;
+        height: 19px;
+    }
+
+    .bottom-nav-item.active {
+        color: var(--color-whatsapp);
+    }
+
+    .bottom-nav-icon-wrap {
+        position: relative;
+        display: inline-flex;
+    }
+
+    .bottom-nav-badge {
+        position: absolute;
+        top: -5px;
+        right: -9px;
+        background: var(--color-whatsapp);
+        color: #000;
+        font-size: 0.58rem;
+        font-weight: 800;
+        border-radius: 10px;
+        padding: 1px 5px;
+        min-width: 14px;
+        height: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    body {
+        padding-bottom: 66px;
+    }
+
+    /* STICKY MOBILE WHATSAPP ORDER BAR FOR PRODUCT DETAILS */
+    .mobile-sticky-order-bar {
+        display: flex;
+        position: fixed;
+        bottom: 58px;
+        left: 0;
+        width: 100%;
+        padding: 8px 14px;
+        background: rgba(14, 14, 14, 0.96);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--border-color);
+        z-index: 998;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .sticky-order-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sticky-order-price {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--text-primary);
+    }
+
+    .sticky-order-compare {
+        font-size: 0.78rem;
+        text-decoration: line-through;
+        color: var(--text-muted);
+    }
+
+    .sticky-order-variant {
+        font-size: 0.65rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+    }
+
+    .sticky-order-btn {
+        flex: 1;
+        max-width: 210px;
+        padding: 9px 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: 6px;
+    }
+}
+
+/* 2-COLUMN MOBILE PRODUCT GRID */
+@media (max-width: 640px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .product-card {
+        border-radius: 8px;
+    }
+
+    .product-card-info {
+        padding: 10px;
+    }
+
+    .product-card-title {
+        font-size: 0.78rem;
+        line-height: 1.25;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .product-card-category {
+        font-size: 0.62rem;
+        margin-bottom: 2px;
+    }
+
+    .product-card-price {
+        font-size: 0.92rem !important;
+    }
+
+    .product-card-compare-price {
+        font-size: 0.72rem !important;
+    }
+
+    .btn-whatsapp-sm {
+        padding: 7px 6px !important;
+        font-size: 0.7rem !important;
+        border-radius: 5px;
+    }
+
+    .btn-whatsapp-sm span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .btn-whatsapp-sm svg {
+        width: 14px !important;
+        height: 14px !important;
+        flex-shrink: 0;
+    }
+
+    .product-wishlist-btn {
+        width: 28px;
+        height: 28px;
+        top: 6px;
+        right: 6px;
+    }
+
+    .product-card-badge {
+        font-size: 0.58rem;
+        padding: 2px 5px;
+        top: 6px;
+        left: 6px;
+    }
+}

@@ -30,6 +30,18 @@ const INITIAL_BANNERS = [
     }
 ];
 
+const DEFAULT_CATEGORIES = [
+    "rings",
+    "chains",
+    "bracelets",
+    "combos",
+    "fragrances",
+    "grooming",
+    "limited-edition",
+    "belts",
+    "wallets"
+];
+
 // Helper to check localStorage and initialize
 const getLocalStorageItem = (key, initialValue) => {
     try {
@@ -49,10 +61,10 @@ const setLocalStorageItem = (key, value) => {
     }
 };
 
-// Initial Seeding - ensure 205 products are loaded
-const existingProducts = getLocalStorageItem("products_v2", null);
-if (!existingProducts || existingProducts.length !== INITIAL_PRODUCTS.length) {
-    setLocalStorageItem("products_v2", INITIAL_PRODUCTS);
+// Initial Seeding - ensure products are initialized once without overwriting custom admin changes
+const existingProducts = getLocalStorageItem("products_v3", null);
+if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length === 0) {
+    setLocalStorageItem("products_v3", INITIAL_PRODUCTS);
 }
 
 if (!localStorage.getItem("accessify_coupons")) {
@@ -67,37 +79,109 @@ if (!localStorage.getItem("accessify_orders")) {
 if (!localStorage.getItem("accessify_banners")) {
     setLocalStorageItem("banners", INITIAL_BANNERS);
 }
+if (!localStorage.getItem("accessify_custom_categories")) {
+    setLocalStorageItem("custom_categories", DEFAULT_CATEGORIES);
+}
 
 // Database Engine Export
 export const db = {
     // PRODUCTS
-    getProducts: () => getLocalStorageItem("products_v2", INITIAL_PRODUCTS),
+    getProducts: () => getLocalStorageItem("products_v3", INITIAL_PRODUCTS),
     
     saveProduct: (product) => {
         const products = db.getProducts();
         if (product.id) {
             const index = products.findIndex(p => p.id === product.id);
             if (index !== -1) {
-                products[index] = { ...products[index], ...product };
+                products[index] = { 
+                    ...products[index], 
+                    ...product,
+                    price: Number(product.price) || 0,
+                    comparePrice: Number(product.comparePrice) || Number(product.price) || 0
+                };
             }
         } else {
             const newProduct = {
                 ...product,
                 id: "acc_" + Date.now(),
+                price: Number(product.price) || 0,
+                comparePrice: Number(product.comparePrice) || Number(product.price) || 0,
                 rating: 5.0,
-                numReviews: 0
+                numReviews: 0,
+                images: Array.isArray(product.images) && product.images.length > 0 
+                    ? product.images 
+                    : ["https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp"],
+                variants: Array.isArray(product.variants) ? product.variants : ["Standard"],
+                stock: Number(product.stock) || 10
             };
             products.unshift(newProduct);
         }
-        setLocalStorageItem("products_v2", products);
+        setLocalStorageItem("products_v3", products);
         return true;
+    },
+
+    updateProductPrice: (id, price, comparePrice) => {
+        const products = db.getProducts();
+        const index = products.findIndex(p => p.id === id);
+        if (index !== -1) {
+            products[index].price = Number(price);
+            if (comparePrice !== undefined && comparePrice !== null && comparePrice !== "") {
+                products[index].comparePrice = Number(comparePrice);
+            }
+            setLocalStorageItem("products_v3", products);
+            return products[index];
+        }
+        return null;
+    },
+
+    updateProduct: (id, updatedFields) => {
+        const products = db.getProducts();
+        const index = products.findIndex(p => p.id === id);
+        if (index !== -1) {
+            products[index] = { ...products[index], ...updatedFields };
+            if (updatedFields.price !== undefined) products[index].price = Number(updatedFields.price);
+            if (updatedFields.comparePrice !== undefined) products[index].comparePrice = Number(updatedFields.comparePrice);
+            if (updatedFields.stock !== undefined) products[index].stock = Number(updatedFields.stock);
+            setLocalStorageItem("products_v3", products);
+            return products[index];
+        }
+        return null;
     },
     
     deleteProduct: (id) => {
         const products = db.getProducts();
         const filtered = products.filter(p => p.id !== id);
-        setLocalStorageItem("products_v2", filtered);
+        setLocalStorageItem("products_v3", filtered);
         return true;
+    },
+
+    resetToDefaultProducts: () => {
+        setLocalStorageItem("products_v3", INITIAL_PRODUCTS);
+        return INITIAL_PRODUCTS;
+    },
+
+    exportProductsJson: () => {
+        return JSON.stringify(db.getProducts(), null, 2);
+    },
+
+    // CATEGORIES
+    getCategories: () => {
+        const custom = getLocalStorageItem("custom_categories", DEFAULT_CATEGORIES);
+        const products = db.getProducts();
+        const fromProds = products.map(p => (p.category || "").toLowerCase().trim()).filter(Boolean);
+        const combined = Array.from(new Set([...custom, ...fromProds]));
+        return combined.filter(c => c !== "all");
+    },
+
+    addCategory: (categoryName) => {
+        if (!categoryName) return false;
+        const slug = categoryName.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
+        const current = getLocalStorageItem("custom_categories", DEFAULT_CATEGORIES);
+        if (!current.includes(slug)) {
+            current.push(slug);
+            setLocalStorageItem("custom_categories", current);
+        }
+        return slug;
     },
 
     // COUPONS
@@ -148,7 +232,7 @@ export const db = {
             const totalRating = productReviews.reduce((sum, r) => sum + r.rating, 0);
             products[productIndex].rating = parseFloat((totalRating / productReviews.length).toFixed(1));
             products[productIndex].numReviews = productReviews.length;
-            setLocalStorageItem("products_v2", products);
+            setLocalStorageItem("products_v3", products);
         }
         return newReview;
     },
@@ -174,7 +258,7 @@ export const db = {
                 products[productIndex].stock = Math.max(0, products[productIndex].stock - item.quantity);
             }
         });
-        setLocalStorageItem("products_v2", products);
+        setLocalStorageItem("products_v3", products);
 
         return newOrder;
     },
@@ -198,19 +282,5 @@ export const db = {
         banners[0] = { ...banners[0], ...banner };
         setLocalStorageItem("banners", banners);
         return true;
-    },
-
-    // CATEGORIES
-    getCategories: () => [
-        "all",
-        "rings",
-        "chains",
-        "bracelets",
-        "combos",
-        "fragrances",
-        "grooming",
-        "limited-edition",
-        "belts",
-        "wallets"
-    ]
+    }
 };

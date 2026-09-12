@@ -11,6 +11,7 @@ import { Footer } from './components/Footer.js';
 import { CartDrawer } from './components/CartDrawer.js';
 import { Toast } from './components/Toast.js';
 import { WhatsAppButton } from './components/WhatsAppButton.js';
+import { MobileBottomNav } from './components/MobileBottomNav.js';
 
 // Page Views
 import { Home } from './pages/Home.js';
@@ -24,6 +25,7 @@ import { About } from './pages/About.js';
 import { Contact } from './pages/Contact.js';
 import { PrivacyPolicy } from './pages/PrivacyPolicy.js';
 import { Terms } from './pages/Terms.js';
+import { AdminDashboard } from './pages/AdminDashboard.js';
 
 const html = htm.bind(h);
 
@@ -75,6 +77,9 @@ const App = () => {
         if (routePath === "#/terms") {
             return html`<${Terms} />`;
         }
+        if (routePath.startsWith("#/admin")) {
+            return html`<${AdminDashboard} />`;
+        }
 
         // 404 Fallback View
         return html`
@@ -106,6 +111,9 @@ const App = () => {
 
             <!-- Brand Footer -->
             <${Footer} />
+
+            <!-- Mobile Bottom Bar (Mobile Only) -->
+            <${MobileBottomNav} />
         </div>
     `;
 };

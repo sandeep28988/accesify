@@ -100,6 +100,7 @@ export const Footer = () => {
                 <div class="footer-bottom">
                     <p>© ${new Date().getFullYear()} ACCESSIFY (https://blyo.in/). All rights reserved.</p>
                     <p style="letter-spacing: 0.05em; color: #25D366; font-weight: 600;">OFFICIAL WHATSAPP ORDERING: ${WHATSAPP_DISPLAY}</p>
+                    <p><a href="#/admin" style="color: var(--text-muted); font-size: 0.75rem; text-decoration: none;">⚙️ Store Admin</a></p>
                 </div>
             </div>
         </footer>
