@@ -756,15 +756,29 @@
     }
 }
 
+@media (max-width: 900px) {
+    .nav-location {
+        display: none !important;
+    }
+}
+
 @media (max-width: 768px) {
     .nav-links {
         display: none;
+    }
+    .desktop-text, .desktop-only {
+        display: none !important;
     }
     .mobile-nav-toggle {
         display: block;
     }
     .navbar .container {
-        height: 70px;
+        height: 64px;
+    }
+    .top-announcement-bar {
+        font-size: 0.68rem !important;
+        padding: 5px 8px !important;
+        height: auto !important;
     }
     .footer-grid {
         grid-template-columns: 1fr;
