@@ -210,43 +210,66 @@ export const AppProvider = ({ children }) => {
         });
     };
 
-    // AUTH OPERATIONS
-    const login = (email, password) => {
-        if (password && email) {
-            const isAdmin = email.toLowerCase().includes("admin") || password === "admin123" || password === "admin" || email === "admin@accessify.com";
-            const standardUser = { 
-                username: email.split("@")[0], 
-                email, 
-                role: isAdmin ? "admin" : "user" 
+    // AUTH OPERATIONS - Secured Admin Authentication
+    const login = (emailOrId, password) => {
+        const idTrim = (emailOrId || "").trim();
+        const passTrim = (password || "").trim();
+
+        if (!idTrim || !passTrim) {
+            showToast("Please enter both ID and Password.");
+            return false;
+        }
+
+        // Exact secure admin credentials requested by owner:
+        // ID: 7012400815
+        // Password: adhi7012400815
+        const isAdmin = 
+            (idTrim === "7012400815" || idTrim.toLowerCase() === "admin@accessify.com" || idTrim.toLowerCase() === "admin") && 
+            passTrim === "adhi7012400815";
+
+        if (isAdmin) {
+            const adminUser = { 
+                username: "Admin (7012400815)", 
+                email: "7012400815", 
+                role: "admin" 
             };
-            setUser(standardUser);
-            localStorage.setItem("accessify_current_user", JSON.stringify(standardUser));
-            showToast(isAdmin ? "Welcome to Admin Dashboard!" : "Logged in successfully.");
-            if (isAdmin) {
-                window.location.hash = "#/admin";
-            } else {
-                window.location.hash = "#/";
-            }
+            setUser(adminUser);
+            localStorage.setItem("accessify_current_user", JSON.stringify(adminUser));
+            showToast("Welcome to ACCESSIFY Admin Dashboard!");
+            window.location.hash = "#/admin";
             return true;
         }
-        showToast("Please enter correct email & password.");
-        return false;
+
+        // If attempting admin ID with wrong password
+        if (idTrim === "7012400815" || idTrim.toLowerCase() === "admin@accessify.com" || idTrim.toLowerCase() === "admin") {
+            showToast("Incorrect Admin Password.");
+            return false;
+        }
+
+        // Standard customer login
+        const standardUser = { 
+            username: idTrim.includes("@") ? idTrim.split("@")[0] : idTrim, 
+            email: idTrim, 
+            role: "user" 
+        };
+        setUser(standardUser);
+        localStorage.setItem("accessify_current_user", JSON.stringify(standardUser));
+        showToast("Logged in successfully.");
+        window.location.hash = "#/";
+        return true;
     };
 
     const directAdminLogin = () => {
-        const adminUser = { username: "Admin", email: "admin@accessify.com", role: "admin" };
-        setUser(adminUser);
-        localStorage.setItem("accessify_current_user", JSON.stringify(adminUser));
-        showToast("Admin session unlocked.");
-        window.location.hash = "#/admin";
-        return true;
+        // Disabled for security - credentials required
+        showToast("Admin access is secured. Please enter your ID and password.");
+        return false;
     };
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem("accessify_current_user");
-        showToast("Logged out.");
-        window.location.hash = "#/";
+        showToast("Logged out of Admin.");
+        window.location.hash = "#/admin";
     };
 
     // CART CALCULATIONS

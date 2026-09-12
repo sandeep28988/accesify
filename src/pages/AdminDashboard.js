@@ -18,8 +18,8 @@ export const AdminDashboard = () => {
     } = useContext(AppContext);
 
     // Auth fields for protected screen
-    const [email, setEmail] = useState("admin@accessify.com");
-    const [password, setPassword] = useState("admin123");
+    const [adminId, setAdminId] = useState("");
+    const [password, setPassword] = useState("");
 
     // Filter and Search States
     const [searchQuery, setSearchQuery] = useState("");
@@ -62,71 +62,59 @@ export const AdminDashboard = () => {
     // Handle Admin Login
     const handleLoginSubmit = (e) => {
         e.preventDefault();
-        login(email, password);
+        login(adminId, password);
     };
 
-    // If not authenticated as admin, show login view
+    // If not authenticated as admin, show secured login view
     if (!user || user.role !== "admin") {
         return html`
-            <div class="container anim-fade-in" style="padding-top: 130px; padding-bottom: 90px; max-width: 480px; margin: 0 auto;">
-                <div class="card" style="padding: 36px 28px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color); text-align: center;">
-                    <div style="width: 56px; height: 56px; margin: 0 auto 18px; border-radius: 50%; background: rgba(37, 211, 102, 0.1); display: flex; align-items: center; justify-content: center; color: var(--color-whatsapp);">
-                        <i data-lucide="shield-check" style="width: 28px; height: 28px;"></i>
+            <div class="container anim-fade-in" style="padding-top: 130px; padding-bottom: 90px; max-width: 440px; margin: 0 auto;">
+                <div class="card" style="padding: 36px 28px; border-radius: 12px; background: #111111; border: 1px solid var(--border-color); text-align: center; box-shadow: 0 16px 36px rgba(0,0,0,0.6);">
+                    <div style="width: 56px; height: 56px; margin: 0 auto 18px; border-radius: 50%; background: rgba(37, 211, 102, 0.12); display: flex; align-items: center; justify-content: center; color: var(--color-whatsapp);">
+                        <i data-lucide="lock" style="width: 26px; height: 26px;"></i>
                     </div>
                     
-                    <h2 style="font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 0.05em; margin-bottom: 6px;">
-                        ACCESSIFY ADMIN PANEL
+                    <h2 style="font-family: var(--font-display); font-size: 1.35rem; letter-spacing: 0.06em; margin-bottom: 6px;">
+                        SECURED ADMIN PANEL
                     </h2>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">
-                        Manage product prices, catalog, categories, and inventory.
+                    <p style="color: var(--text-secondary); font-size: 0.82rem; margin-bottom: 24px;">
+                        Authorized store owners only. Enter your Admin ID and Password to manage products & pricing.
                     </p>
 
-                    <!-- Instant 1-Click Access for Owner -->
-                    <button 
-                        type="button" 
-                        class="btn btn-primary" 
-                        style="width: 100%; margin-bottom: 16px; padding: 12px; font-weight: 700;"
-                        onClick=${() => directAdminLogin()}
-                    >
-                        <i data-lucide="unlock" style="width: 16px; height: 16px; margin-right: 8px;"></i>
-                        1-Click Owner Access
-                    </button>
-
-                    <div style="display: flex; align-items: center; margin: 16px 0; color: var(--text-muted); font-size: 0.75rem;">
-                        <span style="flex: 1; height: 1px; background: var(--border-color);"></span>
-                        <span style="padding: 0 10px;">OR USE CREDENTIALS</span>
-                        <span style="flex: 1; height: 1px; background: var(--border-color);"></span>
-                    </div>
-
                     <form onSubmit=${handleLoginSubmit} style="text-align: left;">
-                        <div class="form-group" style="margin-bottom: 14px;">
-                            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Email Address</label>
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px; font-weight: 600;">Admin ID</label>
                             <input 
-                                type="email" 
+                                type="text" 
                                 class="form-control" 
-                                value=${email} 
-                                onInput=${e => setEmail(e.target.value)} 
+                                placeholder="Enter Admin ID"
+                                value=${adminId} 
+                                onInput=${e => setAdminId(e.target.value)} 
                                 required 
+                                autocomplete="username"
                             />
                         </div>
 
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px;">Password</label>
+                        <div class="form-group" style="margin-bottom: 22px;">
+                            <label style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 6px; font-weight: 600;">Password</label>
                             <input 
                                 type="password" 
                                 class="form-control" 
+                                placeholder="Enter Password"
                                 value=${password} 
                                 onInput=${e => setPassword(e.target.value)} 
                                 required 
+                                autocomplete="current-password"
                             />
                         </div>
 
-                        <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 11px;">
-                            Log In to Dashboard
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: 700;">
+                            <i data-lucide="shield-check" style="width: 16px; height: 16px; margin-right: 8px;"></i>
+                            Access Admin Dashboard
                         </button>
                     </form>
 
-                    <div style="margin-top: 24px;">
+                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color);">
                         <a href="#/" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: underline;">
                             ← Return to Customer Storefront
                         </a>
