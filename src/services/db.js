@@ -1,0 +1,216 @@
+// ACCESSIFY (https://blyo.in/) - Unified Database & LocalStorage Service
+import { PRODUCTS_205 } from '../data/products.js';
+
+const INITIAL_PRODUCTS = PRODUCTS_205;
+
+const INITIAL_COUPONS = [
+    { code: "ACCESSIFY10", type: "percentage", value: 10, active: true },
+    { code: "FIRST50", type: "flat", value: 50, active: true },
+    { code: "FREESHIP", type: "flat", value: 30, active: true },
+];
+
+const INITIAL_REVIEWS = [
+    { id: "r1", productId: "acc_3654", author: "Aarav Sharma", rating: 5, date: "2026-05-15", text: "Absolute masterpiece. The buckle weight and chrome polish on this CH97 belt are unmatched." },
+    { id: "r2", productId: "acc_3651", author: "Rohan V.", rating: 5, date: "2026-05-20", text: "Heavy link chain and sharp gothic cross. Looks insane on dark denim." },
+    { id: "r3", productId: "acc_3542", author: "Kabir M.", rating: 5, date: "2026-06-01", text: "Nine Fox Tale ring fits perfectly. Very comfortable and doesn't fade in water." },
+    { id: "r4", productId: "acc_3557", author: "Vikram N.", rating: 5, date: "2026-06-05", text: "Moon bracelet is minimalist yet heavy. High quality 316L stainless steel." }
+];
+
+const INITIAL_ORDERS = [];
+
+const INITIAL_BANNERS = [
+    {
+        id: "b1",
+        title: "GET ACCESSIFIED",
+        subtitle: "STREETWEAR & GOTHIC Y2K ACCESSORIES",
+        description: "Stainless steel rings, heavyweight industrial chains, bracelets, and tactical streetwear essentials.",
+        image: "https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp",
+        ctaText: "EXPLORE 205 PRODUCTS",
+        ctaLink: "#/shop"
+    }
+];
+
+// Helper to check localStorage and initialize
+const getLocalStorageItem = (key, initialValue) => {
+    try {
+        const item = localStorage.getItem(`accessify_${key}`);
+        return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+        console.error("Error accessing localStorage", error);
+        return initialValue;
+    }
+};
+
+const setLocalStorageItem = (key, value) => {
+    try {
+        localStorage.setItem(`accessify_${key}`, JSON.stringify(value));
+    } catch (error) {
+        console.error("Error setting localStorage", error);
+    }
+};
+
+// Initial Seeding - ensure 205 products are loaded
+const existingProducts = getLocalStorageItem("products_v2", null);
+if (!existingProducts || existingProducts.length !== INITIAL_PRODUCTS.length) {
+    setLocalStorageItem("products_v2", INITIAL_PRODUCTS);
+}
+
+if (!localStorage.getItem("accessify_coupons")) {
+    setLocalStorageItem("coupons", INITIAL_COUPONS);
+}
+if (!localStorage.getItem("accessify_reviews")) {
+    setLocalStorageItem("reviews", INITIAL_REVIEWS);
+}
+if (!localStorage.getItem("accessify_orders")) {
+    setLocalStorageItem("orders", INITIAL_ORDERS);
+}
+if (!localStorage.getItem("accessify_banners")) {
+    setLocalStorageItem("banners", INITIAL_BANNERS);
+}
+
+// Database Engine Export
+export const db = {
+    // PRODUCTS
+    getProducts: () => getLocalStorageItem("products_v2", INITIAL_PRODUCTS),
+    
+    saveProduct: (product) => {
+        const products = db.getProducts();
+        if (product.id) {
+            const index = products.findIndex(p => p.id === product.id);
+            if (index !== -1) {
+                products[index] = { ...products[index], ...product };
+            }
+        } else {
+            const newProduct = {
+                ...product,
+                id: "acc_" + Date.now(),
+                rating: 5.0,
+                numReviews: 0
+            };
+            products.unshift(newProduct);
+        }
+        setLocalStorageItem("products_v2", products);
+        return true;
+    },
+    
+    deleteProduct: (id) => {
+        const products = db.getProducts();
+        const filtered = products.filter(p => p.id !== id);
+        setLocalStorageItem("products_v2", filtered);
+        return true;
+    },
+
+    // COUPONS
+    getCoupons: () => getLocalStorageItem("coupons", INITIAL_COUPONS),
+    
+    saveCoupon: (coupon) => {
+        const coupons = db.getCoupons();
+        const existingIndex = coupons.findIndex(c => c.code.toUpperCase() === coupon.code.toUpperCase());
+        if (existingIndex !== -1) {
+            coupons[existingIndex] = { ...coupons[existingIndex], ...coupon };
+        } else {
+            coupons.push({ ...coupon, code: coupon.code.toUpperCase(), active: true });
+        }
+        setLocalStorageItem("coupons", coupons);
+        return true;
+    },
+    
+    deleteCoupon: (code) => {
+        const coupons = db.getCoupons();
+        const filtered = coupons.filter(c => c.code !== code);
+        setLocalStorageItem("coupons", filtered);
+        return true;
+    },
+
+    // REVIEWS
+    getReviews: (productId) => {
+        const reviews = getLocalStorageItem("reviews", INITIAL_REVIEWS);
+        if (productId) {
+            return reviews.filter(r => r.productId === productId);
+        }
+        return reviews;
+    },
+    
+    addReview: (review) => {
+        const reviews = getLocalStorageItem("reviews", INITIAL_REVIEWS);
+        const newReview = {
+            ...review,
+            id: "r_" + Date.now(),
+            date: new Date().toISOString().split("T")[0]
+        };
+        reviews.push(newReview);
+        setLocalStorageItem("reviews", reviews);
+
+        const products = db.getProducts();
+        const productIndex = products.findIndex(p => p.id === review.productId);
+        if (productIndex !== -1) {
+            const productReviews = reviews.filter(r => r.productId === review.productId);
+            const totalRating = productReviews.reduce((sum, r) => sum + r.rating, 0);
+            products[productIndex].rating = parseFloat((totalRating / productReviews.length).toFixed(1));
+            products[productIndex].numReviews = productReviews.length;
+            setLocalStorageItem("products_v2", products);
+        }
+        return newReview;
+    },
+
+    // ORDERS
+    getOrders: () => getLocalStorageItem("orders", INITIAL_ORDERS),
+    
+    createOrder: (orderData) => {
+        const orders = db.getOrders();
+        const newOrder = {
+            ...orderData,
+            id: "ACC-" + Math.floor(1000 + Math.random() * 9000),
+            date: new Date().toISOString(),
+            status: "pending"
+        };
+        orders.unshift(newOrder);
+        setLocalStorageItem("orders", orders);
+
+        const products = db.getProducts();
+        newOrder.items.forEach(item => {
+            const productIndex = products.findIndex(p => p.id === item.id);
+            if (productIndex !== -1) {
+                products[productIndex].stock = Math.max(0, products[productIndex].stock - item.quantity);
+            }
+        });
+        setLocalStorageItem("products_v2", products);
+
+        return newOrder;
+    },
+    
+    updateOrderStatus: (orderId, status) => {
+        const orders = db.getOrders();
+        const index = orders.findIndex(o => o.id === orderId);
+        if (index !== -1) {
+            orders[index].status = status;
+            setLocalStorageItem("orders", orders);
+            return true;
+        }
+        return false;
+    },
+
+    // BANNERS
+    getBanners: () => getLocalStorageItem("banners", INITIAL_BANNERS),
+    
+    updateBanner: (banner) => {
+        const banners = db.getBanners();
+        banners[0] = { ...banners[0], ...banner };
+        setLocalStorageItem("banners", banners);
+        return true;
+    },
+
+    // CATEGORIES
+    getCategories: () => [
+        "all",
+        "rings",
+        "chains",
+        "bracelets",
+        "combos",
+        "fragrances",
+        "grooming",
+        "limited-edition",
+        "belts",
+        "wallets"
+    ]
+};

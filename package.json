@@ -1,0 +1,10 @@
+{
+  "name": "accessify",
+  "version": "1.0.0",
+  "description": "ACCESSIFY - 205 Streetwear & Gothic Y2K Accessories with WhatsApp Ordering",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["accessify", "blyo", "streetwear", "accessories", "whatsapp-orders"]
+}

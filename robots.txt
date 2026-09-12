@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://accessify-store.surge.sh/sitemap.xml
