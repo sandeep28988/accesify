@@ -53,15 +53,14 @@ export const Footer = () => {
 
                     <!-- Collections Column -->
                     <div class="footer-links-col">
-                        <h4>Categories (205)</h4>
+                        <h4>Jewelry Collections</h4>
                         <ul class="footer-links">
                             <li><a href="#/shop?category=rings">Rings (88)</a></li>
                             <li><a href="#/shop?category=chains">Chains & Necklaces (50)</a></li>
-                            <li><a href="#/shop?category=bracelets">Bracelets (21)</a></li>
+                            <li><a href="#/shop?category=bracelets">Bracelets & Cuffs (21)</a></li>
                             <li><a href="#/shop?category=combos">Combos & Sets (16)</a></li>
-                            <li><a href="#/shop?category=fragrances">Fragrances (13)</a></li>
-                            <li><a href="#/shop?category=grooming">Grooming (10)</a></li>
                             <li><a href="#/shop?category=limited-edition">Limited Edition (5)</a></li>
+                            <li><a href="#/shop?category=belts">Belts & Wallets (2)</a></li>
                         </ul>
                     </div>
 

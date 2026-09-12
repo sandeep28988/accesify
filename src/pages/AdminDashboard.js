@@ -329,12 +329,34 @@ export const AdminDashboard = () => {
 
     // Download JSON export
     const handleDownloadJson = () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(db.exportProductsJson());
-        const dlAnchorElem = document.createElement('a');
-        dlAnchorElem.setAttribute("href", dataStr);
-        dlAnchorElem.setAttribute("download", "accessify_products_export.json");
-        dlAnchorElem.click();
-        showToast("Products JSON downloaded.");
+        try {
+            const dataStr = db.exportProductsJson();
+            const blob = new Blob([dataStr], { type: "application/json;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", url);
+            dlAnchorElem.setAttribute("download", `accessify_products_${products.length}_catalog.json`);
+            document.body.appendChild(dlAnchorElem);
+            dlAnchorElem.click();
+            document.body.removeChild(dlAnchorElem);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            showToast(`Downloaded catalog JSON (${products.length} products).`);
+        } catch (err) {
+            console.error("Download JSON error:", err);
+            showToast("Download failed: " + err.message);
+        }
+    };
+
+    // Copy JSON to clipboard
+    const handleCopyJson = () => {
+        try {
+            const dataStr = db.exportProductsJson();
+            navigator.clipboard.writeText(dataStr);
+            showToast(`Copied ${products.length} products JSON to clipboard!`);
+        } catch (err) {
+            console.error("Clipboard copy error:", err);
+            showToast("Could not copy directly. Please select text from the box below.");
+        }
     };
 
     return html`
@@ -609,18 +631,32 @@ export const AdminDashboard = () => {
 
             <!-- PRODUCT ADD / EDIT MODAL -->
             ${isProductModalOpen && html`
-                <div class="modal-overlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                    <div class="card anim-scale-up" style="max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <h2 style="font-family: var(--font-display); font-size: 1.25rem;">
-                                ${modalMode === "edit" ? "EDIT PRODUCT" : "ADD NEW PRODUCT"}
-                            </h2>
+                <div 
+                    class="admin-modal-backdrop" 
+                    style="position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 1; pointer-events: auto;"
+                    onClick=${e => { if (e.target === e.currentTarget) setIsProductModalOpen(false); }}
+                >
+                    <div 
+                        class="card anim-scale-up" 
+                        style="max-width: 620px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px; border-radius: 12px; background: #111111; border: 1px solid var(--border-color); box-shadow: 0 24px 48px rgba(0,0,0,0.9); position: relative; z-index: 100000;"
+                        onClick=${e => e.stopPropagation()}
+                    >
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                            <div>
+                                <h2 style="font-family: var(--font-display); font-size: 1.25rem;">
+                                    ${modalMode === "edit" ? "EDIT PRODUCT" : "ADD NEW PRODUCT"}
+                                </h2>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">
+                                    ${modalMode === "edit" ? "Modify pricing, title, photos, or stock" : "Create a new jewelry piece in your catalog"}
+                                </p>
+                            </div>
                             <button 
                                 type="button" 
-                                style="background: transparent; border: none; color: var(--text-muted); cursor: pointer;"
+                                style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"
                                 onClick=${() => setIsProductModalOpen(false)}
+                                title="Close"
                             >
-                                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+                                ✕
                             </button>
                         </div>
 
@@ -758,7 +794,7 @@ export const AdminDashboard = () => {
                             <div style="display: flex; gap: 20px; margin-bottom: 24px;">
                                 <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
                                     <input type="checkbox" checked=${formFeatured} onChange=${e => setFormFeatured(e.target.checked)} />
-                                    Featured on Home
+                                    Featured Drop
                                 </label>
 
                                 <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
@@ -786,12 +822,24 @@ export const AdminDashboard = () => {
 
             <!-- CATEGORY MANAGER MODAL -->
             ${isCategoryModalOpen && html`
-                <div class="modal-overlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                    <div class="card anim-scale-up" style="max-width: 500px; width: 100%; padding: 26px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <div 
+                    class="admin-modal-backdrop" 
+                    style="position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 1; pointer-events: auto;"
+                    onClick=${e => { if (e.target === e.currentTarget) setIsCategoryModalOpen(false); }}
+                >
+                    <div 
+                        class="card anim-scale-up" 
+                        style="max-width: 500px; width: 100%; padding: 26px; border-radius: 12px; background: #111111; border: 1px solid var(--border-color); box-shadow: 0 24px 48px rgba(0,0,0,0.9); position: relative; z-index: 100000;"
+                        onClick=${e => e.stopPropagation()}
+                    >
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">
                             <h2 style="font-family: var(--font-display); font-size: 1.2rem;">MANAGE CATEGORIES</h2>
-                            <button type="button" style="background: transparent; border: none; color: var(--text-muted);" onClick=${() => setIsCategoryModalOpen(false)}>
-                                <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                            <button 
+                                type="button" 
+                                style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;" 
+                                onClick=${() => setIsCategoryModalOpen(false)}
+                            >
+                                ✕
                             </button>
                         </div>
 
@@ -799,7 +847,7 @@ export const AdminDashboard = () => {
                             <input 
                                 type="text" 
                                 class="form-control" 
-                                placeholder="New category name..." 
+                                placeholder="New category name (e.g. pendants)..." 
                                 value=${newCategoryInput} 
                                 onInput=${e => setNewCategoryInput(e.target.value)} 
                                 style="flex: 1;"
@@ -813,7 +861,7 @@ export const AdminDashboard = () => {
                             <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
                                 <thead>
                                     <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">
-                                        <th style="padding: 8px;">Category</th>
+                                        <th style="padding: 8px; text-align: left;">Category</th>
                                         <th style="padding: 8px; text-align: right;">Product Count</th>
                                     </tr>
                                 </thead>
@@ -823,7 +871,7 @@ export const AdminDashboard = () => {
                                         return html`
                                             <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
                                                 <td style="padding: 10px 8px; font-weight: 600; text-transform: uppercase;">${cat}</td>
-                                                <td style="padding: 10px 8px; text-align: right; color: var(--text-muted);">${count} items</td>
+                                                <td style="padding: 10px 8px; text-align: right; color: var(--color-whatsapp); font-weight: 700;">${count} items</td>
                                             </tr>
                                         `;
                                     })}
@@ -834,40 +882,97 @@ export const AdminDashboard = () => {
                 </div>
             `}
 
-            <!-- EXPORT / BACKUP MODAL -->
+            <!-- EXPORT & BACKUP MODAL -->
             ${isExportModalOpen && html`
-                <div class="modal-overlay" style="position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
-                    <div class="card anim-scale-up" style="max-width: 520px; width: 100%; padding: 26px; border-radius: 12px; background: var(--card-bg); border: 1px solid var(--border-color);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-                            <h2 style="font-family: var(--font-display); font-size: 1.2rem;">EXPORT & BACKUP</h2>
-                            <button type="button" style="background: transparent; border: none; color: var(--text-muted);" onClick=${() => setIsExportModalOpen(false)}>
-                                <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                <div 
+                    class="admin-modal-backdrop" 
+                    style="position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 1; pointer-events: auto;"
+                    onClick=${e => { if (e.target === e.currentTarget) setIsExportModalOpen(false); }}
+                >
+                    <div 
+                        class="card anim-scale-up" 
+                        style="max-width: 580px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 26px; border-radius: 12px; background: #111111; border: 1px solid var(--border-color); box-shadow: 0 24px 48px rgba(0,0,0,0.9); position: relative; z-index: 100000;"
+                        onClick=${e => e.stopPropagation()}
+                    >
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">
+                            <div>
+                                <h2 style="font-family: var(--font-display); font-size: 1.2rem;">EXPORT & BACKUP CATALOG</h2>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">
+                                    ${products.length} products with custom prices & photos
+                                </p>
+                            </div>
+                            <button 
+                                type="button" 
+                                style="background: rgba(255,255,255,0.08); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;" 
+                                onClick=${() => setIsExportModalOpen(false)}
+                            >
+                                ✕
                             </button>
                         </div>
 
-                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 20px;">
-                            Export your customized product dataset with updated prices, new items, and categories.
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 18px;">
+                            Download your product catalog as JSON or copy it directly. Perfect for backups or bulk updates.
                         </p>
 
-                        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
                             <button 
                                 type="button" 
                                 class="btn btn-primary" 
-                                style="width: 100%; padding: 12px; justify-content: center;"
+                                style="width: 100%; padding: 12px; justify-content: center; font-weight: 700;"
                                 onClick=${handleDownloadJson}
                             >
                                 <i data-lucide="download" style="width: 16px; height: 16px; margin-right: 8px;"></i>
-                                Download products.json (${products.length} Products)
+                                Download products.json (${products.length} Items)
                             </button>
 
                             <button 
                                 type="button" 
                                 class="btn btn-secondary" 
-                                style="width: 100%; padding: 12px; justify-content: center; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);"
+                                style="width: 100%; padding: 12px; justify-content: center; font-weight: 700;"
+                                onClick=${handleCopyJson}
+                            >
+                                <i data-lucide="copy" style="width: 16px; height: 16px; margin-right: 8px;"></i>
+                                Copy JSON to Clipboard
+                            </button>
+                        </div>
+
+                        <!-- Raw JSON Preview / Select All for Mobile -->
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Raw JSON Data</span>
+                                <button 
+                                    type="button" 
+                                    style="background: transparent; border: none; color: var(--color-whatsapp); font-size: 0.75rem; cursor: pointer;"
+                                    onClick=${e => {
+                                        const ta = e.currentTarget.closest('.card').querySelector('textarea');
+                                        if (ta) {
+                                            ta.select();
+                                            document.execCommand('copy');
+                                            showToast("Selected and copied JSON!");
+                                        }
+                                    }}
+                                >
+                                    Select & Copy All
+                                </button>
+                            </div>
+                            <textarea 
+                                readonly 
+                                rows="6" 
+                                style="width: 100%; font-family: monospace; font-size: 0.72rem; background: #000; color: #10b981; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; resize: vertical;"
+                                value=${db.exportProductsJson()}
+                                onClick=${e => e.target.select()}
+                            ></textarea>
+                        </div>
+
+                        <div style="padding-top: 14px; border-top: 1px solid var(--border-color);">
+                            <button 
+                                type="button" 
+                                class="btn btn-secondary" 
+                                style="width: 100%; padding: 10px; justify-content: center; color: #ef4444; border-color: rgba(239, 68, 68, 0.3); font-size: 0.8rem;"
                                 onClick=${handleResetCatalog}
                             >
-                                <i data-lucide="rotate-ccw" style="width: 16px; height: 16px; margin-right: 8px;"></i>
-                                Reset Catalog to Original 205 Products
+                                <i data-lucide="rotate-ccw" style="width: 14px; height: 14px; margin-right: 6px;"></i>
+                                Reset Catalog to Default Jewelry Products
                             </button>
                         </div>
                     </div>

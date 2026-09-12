@@ -1,7 +1,11 @@
 // ACCESSIFY (https://blyo.in/) - Unified Database & LocalStorage Service
 import { PRODUCTS_205 } from '../data/products.js';
 
-const INITIAL_PRODUCTS = PRODUCTS_205;
+// Filter out fragrances and grooming as requested - focus 100% on jewelry & streetwear accessories
+const INITIAL_PRODUCTS = PRODUCTS_205.filter(p => 
+    p.category !== "fragrances" && 
+    p.category !== "grooming"
+);
 
 const INITIAL_COUPONS = [
     { code: "ACCESSIFY10", type: "percentage", value: 10, active: true },
@@ -25,7 +29,7 @@ const INITIAL_BANNERS = [
         subtitle: "STREETWEAR & GOTHIC Y2K ACCESSORIES",
         description: "Stainless steel rings, heavyweight industrial chains, bracelets, and tactical streetwear essentials.",
         image: "https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp",
-        ctaText: "EXPLORE 205 PRODUCTS",
+        ctaText: "EXPLORE SHOP",
         ctaLink: "#/shop"
     }
 ];
@@ -35,8 +39,6 @@ const DEFAULT_CATEGORIES = [
     "chains",
     "bracelets",
     "combos",
-    "fragrances",
-    "grooming",
     "limited-edition",
     "belts",
     "wallets"
@@ -61,10 +63,10 @@ const setLocalStorageItem = (key, value) => {
     }
 };
 
-// Initial Seeding - ensure products are initialized once without overwriting custom admin changes
-const existingProducts = getLocalStorageItem("products_v3", null);
+// Seeding - ensure jewelry products are loaded without fragrances/grooming
+const existingProducts = getLocalStorageItem("products_v4", null);
 if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length === 0) {
-    setLocalStorageItem("products_v3", INITIAL_PRODUCTS);
+    setLocalStorageItem("products_v4", INITIAL_PRODUCTS);
 }
 
 if (!localStorage.getItem("accessify_coupons")) {
@@ -79,14 +81,18 @@ if (!localStorage.getItem("accessify_orders")) {
 if (!localStorage.getItem("accessify_banners")) {
     setLocalStorageItem("banners", INITIAL_BANNERS);
 }
-if (!localStorage.getItem("accessify_custom_categories")) {
-    setLocalStorageItem("custom_categories", DEFAULT_CATEGORIES);
+if (!localStorage.getItem("accessify_custom_categories_v4")) {
+    setLocalStorageItem("custom_categories_v4", DEFAULT_CATEGORIES);
 }
 
 // Database Engine Export
 export const db = {
     // PRODUCTS
-    getProducts: () => getLocalStorageItem("products_v3", INITIAL_PRODUCTS),
+    getProducts: () => {
+        const prods = getLocalStorageItem("products_v4", INITIAL_PRODUCTS);
+        // Exclude any legacy fragrance or grooming items
+        return prods.filter(p => p.category !== "fragrances" && p.category !== "grooming");
+    },
     
     saveProduct: (product) => {
         const products = db.getProducts();
@@ -116,7 +122,7 @@ export const db = {
             };
             products.unshift(newProduct);
         }
-        setLocalStorageItem("products_v3", products);
+        setLocalStorageItem("products_v4", products);
         return true;
     },
 
@@ -128,7 +134,7 @@ export const db = {
             if (comparePrice !== undefined && comparePrice !== null && comparePrice !== "") {
                 products[index].comparePrice = Number(comparePrice);
             }
-            setLocalStorageItem("products_v3", products);
+            setLocalStorageItem("products_v4", products);
             return products[index];
         }
         return null;
@@ -142,7 +148,7 @@ export const db = {
             if (updatedFields.price !== undefined) products[index].price = Number(updatedFields.price);
             if (updatedFields.comparePrice !== undefined) products[index].comparePrice = Number(updatedFields.comparePrice);
             if (updatedFields.stock !== undefined) products[index].stock = Number(updatedFields.stock);
-            setLocalStorageItem("products_v3", products);
+            setLocalStorageItem("products_v4", products);
             return products[index];
         }
         return null;
@@ -151,12 +157,13 @@ export const db = {
     deleteProduct: (id) => {
         const products = db.getProducts();
         const filtered = products.filter(p => p.id !== id);
-        setLocalStorageItem("products_v3", filtered);
+        setLocalStorageItem("products_v4", filtered);
         return true;
     },
 
     resetToDefaultProducts: () => {
-        setLocalStorageItem("products_v3", INITIAL_PRODUCTS);
+        setLocalStorageItem("products_v4", INITIAL_PRODUCTS);
+        setLocalStorageItem("custom_categories_v4", DEFAULT_CATEGORIES);
         return INITIAL_PRODUCTS;
     },
 
@@ -166,20 +173,21 @@ export const db = {
 
     // CATEGORIES
     getCategories: () => {
-        const custom = getLocalStorageItem("custom_categories", DEFAULT_CATEGORIES);
+        const custom = getLocalStorageItem("custom_categories_v4", DEFAULT_CATEGORIES);
         const products = db.getProducts();
         const fromProds = products.map(p => (p.category || "").toLowerCase().trim()).filter(Boolean);
         const combined = Array.from(new Set([...custom, ...fromProds]));
-        return combined.filter(c => c !== "all");
+        return combined.filter(c => c !== "all" && c !== "fragrances" && c !== "grooming");
     },
 
     addCategory: (categoryName) => {
         if (!categoryName) return false;
         const slug = categoryName.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
-        const current = getLocalStorageItem("custom_categories", DEFAULT_CATEGORIES);
+        if (slug === "fragrances" || slug === "grooming") return false;
+        const current = getLocalStorageItem("custom_categories_v4", DEFAULT_CATEGORIES);
         if (!current.includes(slug)) {
             current.push(slug);
-            setLocalStorageItem("custom_categories", current);
+            setLocalStorageItem("custom_categories_v4", current);
         }
         return slug;
     },
@@ -232,7 +240,7 @@ export const db = {
             const totalRating = productReviews.reduce((sum, r) => sum + r.rating, 0);
             products[productIndex].rating = parseFloat((totalRating / productReviews.length).toFixed(1));
             products[productIndex].numReviews = productReviews.length;
-            setLocalStorageItem("products_v3", products);
+            setLocalStorageItem("products_v4", products);
         }
         return newReview;
     },
@@ -258,7 +266,7 @@ export const db = {
                 products[productIndex].stock = Math.max(0, products[productIndex].stock - item.quantity);
             }
         });
-        setLocalStorageItem("products_v3", products);
+        setLocalStorageItem("products_v4", products);
 
         return newOrder;
     },

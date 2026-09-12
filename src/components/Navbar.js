@@ -76,19 +76,29 @@ export const Navbar = () => {
 
     return html`
         <div>
-            <!-- Top Announcement Bar matching blyo.in -->
-            <div style="background: #111827; color: #d1d5db; font-size: 0.75rem; padding: 7px 16px; border-bottom: 1px solid var(--border-color); text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
-                <span style="color: #25D366; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                    <${WhatsAppIcon} size=${14} color="#25D366" />
-                    <span>WhatsApp Orders: ${WHATSAPP_DISPLAY}</span>
-                </span>
-                <span style="color: var(--text-muted);">•</span>
-                <span>Free Express Delivery on orders above ₹1,000</span>
-                <span style="color: var(--text-muted);">•</span>
-                <span style="color: #e5e5e5; font-weight: 600;">205 Verified Products</span>
+            <!-- Cosmora Continuous Announcement Ticker Bar -->
+            <div class="marquee-ticker-container" style="background: #0d0d0d; border-bottom: 1px solid var(--border-color); font-size: 0.72rem; padding: 7px 0; height: 32px;">
+                <div class="marquee-ticker-track">
+                    <span class="marquee-ticker-item">⚡ FREE EXPRESS SHIPPING ON ORDERS OVER ₹1,000</span>
+                    <span class="marquee-ticker-dot">•</span>
+                    <span class="marquee-ticker-item">💧 100% WATERPROOF 316L SURGICAL STEEL</span>
+                    <span class="marquee-ticker-dot">•</span>
+                    <span class="marquee-ticker-item" style="color: #25D366; font-weight: 700;">📲 WHATSAPP ORDERS: ${WHATSAPP_DISPLAY}</span>
+                    <span class="marquee-ticker-dot">•</span>
+                    <span class="marquee-ticker-item">🖤 TARNISH-FREE STREETWEAR JEWELRY</span>
+                    <span class="marquee-ticker-dot">•</span>
+                    <span class="marquee-ticker-item">⚡ FREE EXPRESS SHIPPING ON ORDERS OVER ₹1,000</span>
+                    <span class="marquee-ticker-dot">•</span>
+                    <span class="marquee-ticker-item">💧 100% WATERPROOF 316L SURGICAL STEEL</span>
+                    <span class="marquee-ticker-dot">•</span>
+                    <span class="marquee-ticker-item" style="color: #25D366; font-weight: 700;">📲 WHATSAPP ORDERS: ${WHATSAPP_DISPLAY}</span>
+                    <span class="marquee-ticker-dot">•</span>
+                    <span class="marquee-ticker-item">🖤 TARNISH-FREE STREETWEAR JEWELRY</span>
+                    <span class="marquee-ticker-dot">•</span>
+                </div>
             </div>
 
-            <header class="navbar ${isScrolled ? 'scrolled' : ''}" style="top: ${isScrolled ? '0' : '31px'};">
+            <header class="navbar ${isScrolled ? 'scrolled' : ''}" style="top: ${isScrolled ? '0' : '32px'};">
                 <div class="container">
                     <!-- Mobile Menu Button -->
                     <button class="mobile-nav-toggle" onClick=${() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu">
@@ -98,13 +108,13 @@ export const Navbar = () => {
                     <!-- Brand Logo -->
                     <a href="#/" class="nav-brand" style="display: flex; align-items: center; gap: 8px;">
                         <span>ACCESSIFY</span>
-                        <span style="font-size: 0.65rem; background: #25D366; color: #000; font-weight: 800; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.05em;">205 DROPS</span>
+                        <span style="font-size: 0.65rem; background: #25D366; color: #000; font-weight: 800; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.05em;">${products.length} DROPS</span>
                     </a>
 
                     <!-- Nav Links -->
                     <nav class="nav-links">
                         <a href="#/" class="nav-link ${currentRoute === '#/' ? 'active' : ''}">Home</a>
-                        <a href="#/shop" class="nav-link ${currentRoute === '#/shop' || currentRoute.startsWith('#/shop?') ? 'active' : ''}">All Products (205)</a>
+                        <a href="#/shop" class="nav-link ${currentRoute === '#/shop' || currentRoute.startsWith('#/shop?') ? 'active' : ''}">All Products (${products.length})</a>
                         <a href="#/shop?category=rings" class="nav-link ${currentRoute.includes('category=rings') ? 'active' : ''}">Rings</a>
                         <a href="#/shop?category=chains" class="nav-link ${currentRoute.includes('category=chains') ? 'active' : ''}">Chains</a>
                         <a href="#/shop?category=bracelets" class="nav-link ${currentRoute.includes('category=bracelets') ? 'active' : ''}">Bracelets</a>
@@ -113,7 +123,7 @@ export const Navbar = () => {
 
                     <!-- Nav Actions -->
                     <div class="nav-actions">
-                        <button class="nav-action-btn" onClick=${() => setSearchOpen(true)} title="Search 205 Products" aria-label="Search">
+                        <button class="nav-action-btn" onClick=${() => setSearchOpen(true)} title="Search Products" aria-label="Search">
                             <i data-lucide="search" style="width: 18px; height: 18px;"></i>
                         </button>
 
@@ -148,12 +158,11 @@ export const Navbar = () => {
                 <!-- Mobile Navigation Drawer -->
                 <div class="mobile-menu ${mobileMenuOpen ? 'open' : ''}">
                     <a href="#/" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Home</a>
-                    <a href="#/shop" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>All 205 Products</a>
-                    <a href="#/shop?category=rings" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Rings (88)</a>
-                    <a href="#/shop?category=chains" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Chains & Necklaces (50)</a>
-                    <a href="#/shop?category=bracelets" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Bracelets (21)</a>
-                    <a href="#/shop?category=combos" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Combos & Sets (16)</a>
-                    <a href="#/shop?category=fragrances" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Fragrances & Scents (13)</a>
+                    <a href="#/shop" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>All Products (${products.length})</a>
+                    <a href="#/shop?category=rings" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Rings</a>
+                    <a href="#/shop?category=chains" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Chains & Necklaces</a>
+                    <a href="#/shop?category=bracelets" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Bracelets & Cuffs</a>
+                    <a href="#/shop?category=combos" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Combos & Sets</a>
                     <a href="#/cart" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Shopping Bag (${cart.length})</a>
                     <a href="#/admin" class="nav-link" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 10px;" onClick=${() => setMobileMenuOpen(false)}>⚙️ Admin Dashboard</a>
                     <a 

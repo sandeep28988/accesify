@@ -120,15 +120,13 @@ export const Shop = () => {
 
     const displayedProducts = filteredProducts.slice(0, visibleCount);
 
-    // Category labels definition
+    // Category labels definition - 100% jewelry & streetwear accessories
     const categoryDefs = [
-        { id: "all", label: "All Products" },
+        { id: "all", label: "All Drops" },
         { id: "rings", label: "Rings" },
         { id: "chains", label: "Chains & Necklaces" },
-        { id: "bracelets", label: "Bracelets" },
+        { id: "bracelets", label: "Bracelets & Cuffs" },
         { id: "combos", label: "Combos & Sets" },
-        { id: "fragrances", label: "Fragrances" },
-        { id: "grooming", label: "Grooming & Body" },
         { id: "limited-edition", label: "Limited Edition" },
         { id: "belts", label: "Belts" },
         { id: "wallets", label: "Wallets" }
@@ -136,7 +134,7 @@ export const Shop = () => {
 
     const getCategoryCount = (catId) => {
         if (catId === "all") return products.length;
-        return products.filter(p => p.category === catId).length;
+        return products.filter(p => (p.category || "").toLowerCase() === catId.toLowerCase()).length;
     };
 
     return html`
@@ -149,7 +147,7 @@ export const Shop = () => {
                         <span>Instant WhatsApp Orders</span>
                     </span>
                 </div>
-                <h1 class="section-title">205 STREETWEAR ACCESSORIES</h1>
+                <h1 class="section-title">${products.length}+ STREETWEAR ACCESSORIES</h1>
                 ${searchVal && html`
                     <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">
                         Showing search matches for: <strong class="chrome-text">"${searchVal}"</strong> 
@@ -276,8 +274,8 @@ export const Shop = () => {
                         <div style="text-align: center; padding: 100px 0; border: 1px solid var(--border-color); background: var(--bg-secondary);">
                             <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 20px;"></i>
                             <h3 style="font-size: 1.2rem; margin-bottom: 12px;">NO ACCESSORIES MATCH</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">Try resetting your filters or price range to explore all 205 items.</p>
-                            <button class="btn btn-primary" onClick=${handleClearAll}>SHOW ALL 205 PRODUCTS</button>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">Try resetting your filters or price range to explore all accessories.</p>
+                            <button class="btn btn-primary" onClick=${handleClearAll}>SHOW ALL ${products.length} PRODUCTS</button>
                         </div>
                     ` : html`
                         <div>
