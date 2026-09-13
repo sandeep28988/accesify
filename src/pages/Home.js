@@ -31,7 +31,7 @@ export const Home = () => {
         },
         {
             title: "RINGS",
-            image: "https://cdn.zepio.io/blyo/product/77f52605-ed65-425d-bef1-fdeeb6b9df64.webp",
+            image: "assets/images/category-rings.jpg",
             link: "#/shop?category=rings"
         },
         {
