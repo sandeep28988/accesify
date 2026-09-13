@@ -64,7 +64,7 @@ export const Cart = () => {
     const diffToFree = freeThreshold - subtotal;
 
     return html`
-        <div class="container anim-fade-in" style="padding-top: 130px; padding-bottom: 80px;">
+        <div class="container anim-fade-in" style="padding-top: 36px; padding-bottom: 80px;">
             <div class="section-header" style="text-align: left; margin-bottom: 40px;">
                 <span class="section-subtitle">YOUR SELECTION</span>
                 <h1 class="section-title">SHOPPING BAG</h1>
@@ -188,7 +188,7 @@ export const Cart = () => {
                     <!-- Estimated total -->
                     <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 800; border-top: 1px solid var(--border-color); padding-top: 20px; margin-bottom: 24px;">
                         <span>TOTAL</span>
-                        <span style="color: #ffffff;">₹${finalTotal}</span>
+                        <span style="color: var(--text-primary);">₹${finalTotal}</span>
                     </div>
 
                     <!-- Primary WhatsApp Cart Order Button -->

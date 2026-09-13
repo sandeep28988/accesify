@@ -128,7 +128,7 @@ export const ProductDetails = () => {
         : 0;
 
     return html`
-        <div class="container anim-fade-in" style="padding-top: 130px; padding-bottom: 80px;">
+        <div class="container anim-fade-in" style="padding-top: 36px; padding-bottom: 80px;">
             <!-- Breadcrumbs -->
             <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 0.05em;">
                 <a href="#/">Home</a> <span style="margin: 0 8px;">/</span> 

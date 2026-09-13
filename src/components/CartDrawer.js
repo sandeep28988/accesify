@@ -134,7 +134,7 @@ export const CartDrawer = () => {
                         </div>
                         <div class="cart-summary-row total">
                             <span>Estimated Total</span>
-                            <span style="font-size: 1.25rem; font-weight: 800; color: #ffffff;">₹${displayTotal}</span>
+                            <span style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">₹${displayTotal}</span>
                         </div>
 
                         <!-- Main WhatsApp Action -->

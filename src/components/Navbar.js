@@ -11,7 +11,6 @@ export const Navbar = () => {
     const { 
         cart, 
         wishlist, 
-        user, 
         setCartOpen, 
         searchOpen, 
         setSearchOpen, 
@@ -21,17 +20,17 @@ export const Navbar = () => {
         currentRoute 
     } = useContext(AppContext);
 
-    const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
     const searchInputRef = useRef(null);
 
-    // Dynamic scroll tracking
+    // Track hash changes for active nav indicator
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
+        const handleHashChange = () => {
+            setCurrentHash(window.location.hash || '#/');
         };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+        window.addEventListener('hashchange', handleHashChange);
+        return () => window.removeEventListener('hashchange', handleHashChange);
     }, []);
 
     useEffect(() => {
@@ -74,128 +73,153 @@ export const Navbar = () => {
         window.location.hash = `#/product/${productId}`;
     };
 
-    const totalCartAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    // Navigation Category items exactly matching the reference mock
+    const navCategories = [
+        { label: "HOME", href: "#/" },
+        { label: "SHOP ALL", href: "#/shop" },
+        { label: "CHAINS", href: "#/shop?category=chains" },
+        { label: "RINGS", href: "#/shop?category=rings" },
+        { label: "EARRINGS", href: "#/shop?search=earring" },
+        { label: "BRACELET", href: "#/shop?category=bracelets" },
+        { label: "Y2K GOTHIC NECKLACES", href: "#/shop?category=chains&search=gothic" },
+        { label: "ICED OUT JEWELS", href: "#/shop?search=iced" },
+        { label: "SLEEK CHAINS", href: "#/shop?category=chains&search=cross" },
+        { label: "LEGENDARY MONEY SAVER COMBOS", href: "#/shop?category=combos" }
+    ];
+
+    const isLinkActive = (href) => {
+        if (href === "#/") {
+            return currentHash === "#/" || currentHash === "" || currentHash === "#";
+        }
+        return currentHash.startsWith(href);
+    };
 
     return html`
         <div>
-            <!-- Electric Blue Announcement Bar Matching Screenshot -->
-            <div class="top-announcement-bar" style="background: #0052FF; color: #ffffff; font-size: 0.75rem; padding: 6px 16px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; height: 32px; z-index: 101; position: relative;">
-                <span style="background: #000000; color: #ffffff; font-size: 0.62rem; font-weight: 800; padding: 2px 8px; border-radius: 9999px; letter-spacing: 0.06em;">LIMITED DROP</span>
-                <span style="font-weight: 600; display: flex; align-items: center; gap: 6px; font-size: 0.75rem; letter-spacing: 0.02em;">
-                    <span>⚡</span>
-                    <span>${products.length} Accessify Streetwear & Gothic Pieces • Express 2-Day Delivery</span>
-                </span>
+            <!-- Top Announcement Bar Matching Reference Mockup -->
+            <div class="top-announcement-bar">
+                <span>✦ PREMIUM ACCESSORIES | ELEVATE YOUR STYLE ✦</span>
             </div>
 
-            <header class="navbar ${isScrolled ? 'scrolled' : ''}" style="top: ${isScrolled ? '0' : '32px'}; background: #0B0E14; border-bottom: 1px solid rgba(255,255,255,0.08);">
-                <div class="container" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 72px;">
-                    
-                    <!-- Left Section: Mobile Toggle + Brand + Delivery Location -->
-                    <div style="display: flex; align-items: center; gap: 16px; flex-shrink: 0;">
-                        <!-- Mobile Menu Toggle Button -->
-                        <button class="mobile-nav-toggle" onClick=${() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle menu" style="color: #ffffff;">
-                            <i data-lucide=${mobileMenuOpen ? "x" : "menu"}></i>
+            <!-- Header & Navigation Sticky Container -->
+            <header class="navbar">
+                <!-- Tier 1: Main Header Row -->
+                <div class="container header-top-row">
+                    <!-- Left: Search Box Pill -->
+                    <div class="header-search-box">
+                        <i data-lucide="search" style="width: 15px; height: 15px; color: #9CA3AF; flex-shrink: 0;"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Search for products..."
+                            value=${searchQuery}
+                            onInput=${(e) => setSearchQuery(e.target.value)}
+                            onFocus=${() => setSearchOpen(true)}
+                        />
+                    </div>
+
+                    <!-- Center: Gothic Wordmark Logo -->
+                    <a href="#/" class="header-brand-center">
+                        <div class="gothic-brand-title">
+                            <span class="gothic-star">✦</span>
+                            <span>Accessify</span>
+                            <span class="gothic-star">✦</span>
+                        </div>
+                        <div class="brand-subtext">PREMIUM ACCESSORIES | ELEVATE YOUR STYLE</div>
+                    </a>
+
+                    <!-- Right Actions: Account + Cart Bag -->
+                    <div class="header-actions-right">
+                        <!-- Mobile Menu Toggle Button (Visible on Small Screens) -->
+                        <button 
+                            class="header-icon-btn mobile-nav-toggle" 
+                            onClick=${() => setMobileMenuOpen(!mobileMenuOpen)} 
+                            aria-label="Toggle menu"
+                            style="display: none;"
+                        >
+                            <i data-lucide=${mobileMenuOpen ? "x" : "menu"} style="width: 20px; height: 20px;"></i>
                         </button>
 
-                        <!-- Brand: BLYO ● ACCESSIFY -->
-                        <a href="#/" class="nav-brand" style="display: flex; flex-direction: column; text-decoration: none;">
-                            <span style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 900; letter-spacing: 0.04em; color: #ffffff; line-height: 1;">BLYO</span>
-                            <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.62rem; font-weight: 800; color: #10B981; letter-spacing: 0.08em; margin-top: 3px;">
-                                <span style="width: 6px; height: 6px; border-radius: 50%; background: #10B981; display: inline-block;"></span>
-                                ACCESSIFY
-                            </span>
+                        <!-- Account / Admin Link -->
+                        <a href="#/admin" class="header-icon-btn" title="Account / Admin Dashboard" aria-label="Account">
+                            <i data-lucide="user" style="width: 20px; height: 20px; stroke-width: 1.8;"></i>
                         </a>
 
-                        <!-- Delivery to Location Badge (Desktop/Tablet) -->
-                        <div class="nav-location" style="display: flex; align-items: center; gap: 8px; padding-left: 14px; border-left: 1px solid rgba(255,255,255,0.08);">
-                            <i data-lucide="map-pin" style="width: 16px; height: 16px; color: #10B981; flex-shrink: 0;"></i>
-                            <div style="display: flex; flex-direction: column; text-align: left; line-height: 1.2;">
-                                <span style="font-size: 0.62rem; color: #94A3B8;">Delivery to</span>
-                                <span style="font-size: 0.78rem; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 3px; white-space: nowrap;">
-                                    Kerala, Kochi (682001) <span style="font-size: 0.65rem; color: #94A3B8;">▾</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Center Section: Search Bar -->
-                    <div class="nav-search-bar" style="flex: 1; max-width: 520px; position: relative;">
-                        <form onSubmit=${handleSearchSubmit} style="position: relative; width: 100%; display: flex; align-items: center;">
-                            <i data-lucide="search" style="position: absolute; left: 16px; width: 16px; height: 16px; color: #94A3B8; pointer-events: none;"></i>
-                            <input 
-                                type="text" 
-                                placeholder="Search ${products.length} chains, rings, pendants, belts..."
-                                value=${searchQuery}
-                                onInput=${(e) => setSearchQuery(e.target.value)}
-                                onFocus=${() => setSearchOpen(true)}
-                                style="width: 100%; padding: 10px 18px 10px 42px; border-radius: 9999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #ffffff; font-size: 0.82rem; outline: none; transition: border-color 0.2s;"
-                            />
-                        </form>
-                    </div>
-
-                    <!-- Right Section: Wishlist + Green Cart Pill Button + WhatsApp -->
-                    <div class="nav-actions" style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
-                        <!-- Wishlist Link -->
-                        <a href="#/wishlist" class="nav-action-link" style="display: flex; align-items: center; gap: 6px; color: #ffffff; text-decoration: none; font-size: 0.82rem; font-weight: 600; padding: 6px 10px; border-radius: 8px;">
-                            <i data-lucide="heart" style="width: 17px; height: 17px;"></i>
-                            <span class="desktop-text">Wishlist</span>
-                            ${wishlist.length > 0 && html`<span class="nav-badge" style="background: #ef4444; color: #fff;">${wishlist.length}</span>`}
-                        </a>
-
-                        <!-- Bright Green Cart Pill Button -->
+                        <!-- Shopping Bag Icon Button -->
                         <button 
                             type="button" 
-                            class="nav-cart-pill-btn" 
+                            class="header-icon-btn" 
                             onClick=${() => setCartOpen(true)}
-                            style="display: flex; align-items: center; gap: 8px; background: #10B981; color: #000000; border: none; border-radius: 9999px; padding: 8px 16px; font-weight: 800; font-size: 0.82rem; cursor: pointer; transition: transform 0.15s; white-space: nowrap;"
+                            aria-label="Shopping Bag"
+                            title="Shopping Bag (${totalCartCount})"
                         >
-                            <i data-lucide="shopping-cart" style="width: 16px; height: 16px; stroke-width: 2.5;"></i>
-                            <span>Cart</span>
-                            <span style="background: rgba(0,0,0,0.14); padding: 1px 7px; border-radius: 10px; font-size: 0.75rem; font-weight: 800;">
-                                ₹${totalCartAmount}
-                            </span>
+                            <i data-lucide="shopping-bag" style="width: 20px; height: 20px; stroke-width: 1.8;"></i>
+                            ${totalCartCount > 0 && html`
+                                <span class="cart-count-badge">${totalCartCount}</span>
+                            `}
                         </button>
+                    </div>
+                </div>
 
-                        <!-- WhatsApp Helpline Icon -->
+                <!-- Tier 2: Horizontal Category Links Bar -->
+                <nav class="category-nav-bar" aria-label="Category Navigation">
+                    <div class="container">
+                        <ul class="category-nav-links">
+                            ${navCategories.map((item) => html`
+                                <li key=${item.label}>
+                                    <a 
+                                        href=${item.href} 
+                                        class="category-nav-link ${isLinkActive(item.href) ? 'active' : ''}"
+                                    >
+                                        ${item.label}
+                                    </a>
+                                </li>
+                            `)}
+                        </ul>
+                    </div>
+                </nav>
+
+                <!-- Mobile Navigation Drawer -->
+                <div class="mobile-menu ${mobileMenuOpen ? 'open' : ''}">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <span class="brand-subtext" style="font-size: 0.7rem;">✦ ACCESSIFY MENU</span>
+                        <button 
+                            style="background: transparent; border: none; font-size: 1.2rem; cursor: pointer;" 
+                            onClick=${() => setMobileMenuOpen(false)}
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    ${navCategories.map(cat => html`
+                        <a 
+                            href=${cat.href} 
+                            class="nav-link" 
+                            style="font-size: 0.95rem; font-weight: 600; padding: 10px 0; border-bottom: 1px solid #F3F4F6;"
+                            onClick=${() => setMobileMenuOpen(false)}
+                            key=${cat.label}
+                        >
+                            ${cat.label}
+                        </a>
+                    `)}
+
+                    <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 14px;">
+                        <a href="#/admin" class="nav-link" style="color: #6B7280; font-size: 0.85rem;" onClick=${() => setMobileMenuOpen(false)}>
+                            ⚙️ Admin Dashboard
+                        </a>
                         <a 
                             href=${getSupportWhatsAppUrl()} 
                             target="_blank" 
                             rel="noopener noreferrer" 
-                            class="nav-action-btn desktop-only" 
-                            title="Chat with WhatsApp Support"
-                            style="color: #25D366;"
+                            class="btn-whatsapp btn-whatsapp-sm" 
+                            style="width: 100%; border-radius: 9999px; text-decoration: none;"
+                            onClick=${() => setMobileMenuOpen(false)}
                         >
-                            <${WhatsAppIcon} size=${18} color="#25D366" />
-                        </a>
-
-                        <!-- Admin Panel Key -->
-                        <a href="#/admin" class="nav-action-btn" title="Admin Dashboard" style="color: var(--text-muted); opacity: 0.6;">
-                            <i data-lucide="sliders" style="width: 16px; height: 16px;"></i>
+                            <${WhatsAppIcon} size=${16} color="#ffffff" />
+                            <span>WhatsApp: ${WHATSAPP_DISPLAY}</span>
                         </a>
                     </div>
-                </div>
-
-                <!-- Mobile Navigation Drawer -->
-                <div class="mobile-menu ${mobileMenuOpen ? 'open' : ''}">
-                    <a href="#/" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Home</a>
-                    <a href="#/shop" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>All Products (${products.length})</a>
-                    <a href="#/shop?category=rings" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Rings</a>
-                    <a href="#/shop?category=chains" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Chains & Necklaces</a>
-                    <a href="#/shop?category=bracelets" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Bracelets & Cuffs</a>
-                    <a href="#/shop?category=combos" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Combos & Sets</a>
-                    <a href="#/cart" class="nav-link" onClick=${() => setMobileMenuOpen(false)}>Shopping Bag (${cart.length})</a>
-                    <a href="#/admin" class="nav-link" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 10px;" onClick=${() => setMobileMenuOpen(false)}>⚙️ Admin Dashboard</a>
-                    <a 
-                        href=${getSupportWhatsAppUrl()} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        class="nav-link" 
-                        style="color: #25D366; display: flex; align-items: center; gap: 8px; margin-top: 15px;"
-                        onClick=${() => setMobileMenuOpen(false)}
-                    >
-                        <${WhatsAppIcon} size=${18} color="#25D366" />
-                        <span>Order on WhatsApp: ${WHATSAPP_DISPLAY}</span>
-                    </a>
                 </div>
 
                 <!-- Fullscreen Live Search Overlay -->
@@ -206,7 +230,7 @@ export const Navbar = () => {
                             <input 
                                 ref=${searchInputRef}
                                 type="text" 
-                                placeholder="Search across all 205 accessories (e.g. ring, chain, belt, combo)..." 
+                                placeholder="Search accessories (e.g. cross chain, star ring, combo)..." 
                                 value=${searchQuery} 
                                 onInput=${(e) => setSearchQuery(e.target.value)} 
                             />
@@ -219,11 +243,11 @@ export const Navbar = () => {
                         ${filteredSearchProducts.length > 0 && html`
                             <div class="search-results">
                                 ${filteredSearchProducts.map(p => html`
-                                    <div class="search-result-item" key=${p.id} onClick=${() => handleSearchResultClick(p.id)} style="cursor: pointer;">
+                                    <div class="search-result-item" key=${p.id} onClick=${() => handleSearchResultClick(p.id)} style="cursor: pointer; background: #FFFFFF;">
                                         <img class="search-result-img" src=${p.images[0]} alt=${p.name} />
                                         <div class="search-result-info">
-                                            <h4>${p.name}</h4>
-                                            <p>₹${p.price} — in ${p.category}</p>
+                                            <h4 style="color: #111827;">${p.name}</h4>
+                                            <p style="color: #6B7280;">₹${p.price} — in ${p.category}</p>
                                         </div>
                                     </div>
                                 `)}
@@ -232,7 +256,7 @@ export const Navbar = () => {
                         
                         ${searchQuery.trim() !== "" && filteredSearchProducts.length === 0 && html`
                             <p style="margin-top: 40px; text-align: center; color: var(--text-secondary);">
-                                No products found matching "${searchQuery}". Try searching for "cross", "skull", "chain", or "ring".
+                                No products found matching "${searchQuery}". Try searching for "cross", "ring", "chain", or "bracelet".
                             </p>
                         `}
                     </div>

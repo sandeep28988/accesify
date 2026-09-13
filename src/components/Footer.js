@@ -1,107 +1,133 @@
 import { h } from 'https://esm.sh/preact@10.19.3';
-import { useState, useContext, useEffect } from 'https://esm.sh/preact@10.19.3/hooks';
+import { useEffect } from 'https://esm.sh/preact@10.19.3/hooks';
 import htm from 'https://esm.sh/htm@3.1.1';
-import { AppContext } from '../context/AppContext.js';
 import { WhatsAppIcon } from './WhatsAppIcon.js';
 import { WHATSAPP_DISPLAY, getSupportWhatsAppUrl } from '../utils/whatsapp.js';
 
 const html = htm.bind(h);
 
 export const Footer = () => {
-    const [email, setEmail] = useState("");
-    const { showToast } = useContext(AppContext);
-
     useEffect(() => {
         if (window.lucide) {
             window.lucide.createIcons();
         }
     });
 
-    const handleSubscribe = (e) => {
-        e.preventDefault();
-        if (email.trim()) {
-            showToast(`Thank you! "${email}" has been added to our VIP drop alerts.`);
-            setEmail("");
-        }
-    };
-
     return html`
         <footer class="footer">
             <div class="container">
-                <div class="footer-grid">
-                    <!-- Brand info -->
-                    <div class="footer-brand">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
-                            <h3 style="font-size: 1.5rem; letter-spacing: 0.1em; margin-bottom: 0;">ACCESSIFY</h3>
-                            <span style="font-size: 0.65rem; background: #25D366; color: #000; font-weight: 800; padding: 2px 6px; border-radius: 3px;">BLYO</span>
+                <!-- 5-Column Grid Matching Reference Mockup -->
+                <div class="footer-top-grid">
+                    
+                    <!-- Column 1: Brand & Logo -->
+                    <div class="footer-brand-col">
+                        <a href="#/" style="text-decoration: none; margin-bottom: 8px;">
+                            <div class="gothic-brand-title" style="font-size: 2rem; justify-content: flex-start;">
+                                <span class="gothic-star">✦</span>
+                                <span>Accessify</span>
+                                <span class="gothic-star">✦</span>
+                            </div>
+                        </a>
+                        <div class="brand-subtext" style="text-align: left; margin-bottom: 16px;">
+                            PREMIUM ACCESSORIES | ELEVATE YOUR STYLE
                         </div>
-                        <p>Accessify.eco is an online streetwear and fashion accessories brand selling budget-friendly, Gothic- and Y2K-inspired jewelry such as stainless steel rings, chains, necklaces, bracelets, and alternative lifestyle essentials.</p>
+                    </div>
+
+                    <!-- Column 2: SHOP -->
+                    <div>
+                        <div class="footer-col-title">SHOP</div>
+                        <ul class="footer-link-list">
+                            <li><a href="#/">Home</a></li>
+                            <li><a href="#/shop">Shop All</a></li>
+                            <li><a href="#/shop?sort=new">New Arrivals</a></li>
+                            <li><a href="#/shop?sort=bestseller">Best Sellers</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 3: CATEGORIES (Split into 2 Sub-columns) -->
+                    <div>
+                        <div class="footer-col-title">CATEGORIES</div>
+                        <div class="footer-categories-split">
+                            <ul class="footer-link-list">
+                                <li><a href="#/shop?category=chains">Chains</a></li>
+                                <li><a href="#/shop?category=rings">Rings</a></li>
+                                <li><a href="#/shop?search=earring">Earrings</a></li>
+                                <li><a href="#/shop?category=bracelets">Bracelet</a></li>
+                            </ul>
+                            <ul class="footer-link-list">
+                                <li><a href="#/shop?category=chains&search=gothic">Y2K Gothic Necklaces</a></li>
+                                <li><a href="#/shop?search=iced">Iced Out Jewels</a></li>
+                                <li><a href="#/shop?category=chains&search=cross">Sleek Chains</a></li>
+                                <li><a href="#/shop?category=combos">Money Saver Combos</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 4: SUPPORT -->
+                    <div>
+                        <div class="footer-col-title">SUPPORT</div>
+                        <ul class="footer-link-list">
+                            <li><a href="#/contact">Contact Us</a></li>
+                            <li><a href="#/about">FAQs</a></li>
+                            <li><a href="#/about">Shipping & Delivery</a></li>
+                            <li><a href="#/terms">Returns & Exchanges</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 5: CONNECT WITH US -->
+                    <div>
+                        <div class="footer-col-title">CONNECT WITH US</div>
                         
-                        <div style="margin-top: 20px; margin-bottom: 24px;">
-                            <a 
-                                href=${getSupportWhatsAppUrl()} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                class="btn-whatsapp btn-whatsapp-sm" 
-                                style="display: inline-flex;"
-                            >
-                                <${WhatsAppIcon} size=${16} color="#ffffff" />
-                                <span>WhatsApp: ${WHATSAPP_DISPLAY}</span>
+                        <!-- WhatsApp Order Box -->
+                        <a 
+                            href=${getSupportWhatsAppUrl()} 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            class="footer-connect-box"
+                        >
+                            <div style="background: #25D366; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <${WhatsAppIcon} size=${18} color="#ffffff" />
+                            </div>
+                            <div class="footer-connect-text">
+                                <h5>Order on WhatsApp</h5>
+                                <span>${WHATSAPP_DISPLAY}</span>
+                            </div>
+                        </a>
+
+                        <!-- Social Media Icons Row -->
+                        <div class="footer-social-icons">
+                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram">
+                                <i data-lucide="instagram" style="width: 16px; height: 16px;"></i>
+                            </a>
+                            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="TikTok">
+                                <i data-lucide="video" style="width: 16px; height: 16px;"></i>
+                            </a>
+                            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="YouTube">
+                                <i data-lucide="youtube" style="width: 16px; height: 16px;"></i>
+                            </a>
+                            <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Pinterest">
+                                <i data-lucide="share-2" style="width: 16px; height: 16px;"></i>
                             </a>
                         </div>
                     </div>
 
-                    <!-- Collections Column -->
-                    <div class="footer-links-col">
-                        <h4>Jewelry Collections</h4>
-                        <ul class="footer-links">
-                            <li><a href="#/shop?category=rings">Rings (88)</a></li>
-                            <li><a href="#/shop?category=chains">Chains & Necklaces (50)</a></li>
-                            <li><a href="#/shop?category=bracelets">Bracelets & Cuffs (21)</a></li>
-                            <li><a href="#/shop?category=combos">Combos & Sets (16)</a></li>
-                            <li><a href="#/shop?category=limited-edition">Limited Edition (5)</a></li>
-                            <li><a href="#/shop?category=belts">Belts & Wallets (2)</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Trust Column -->
-                    <div class="footer-links-col">
-                        <h4>Guarantees</h4>
-                        <ul class="footer-links">
-                            <li style="color: var(--text-secondary);">✓ 316L Surgical Steel</li>
-                            <li style="color: var(--text-secondary);">✓ Water & Sweat Resistant</li>
-                            <li style="color: var(--text-secondary);">✓ Free Delivery Over ₹1,000</li>
-                            <li style="color: var(--text-secondary);">✓ WhatsApp Instant Confirmation</li>
-                            <li><a href="#/terms">Terms of Service</a></li>
-                            <li><a href="#/privacy">Privacy Policy</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Newsletter Column -->
-                    <div class="footer-newsletter">
-                        <h4>Drop Alerts</h4>
-                        <p>Subscribe for WhatsApp and email alerts on rare limited edition accessories and restocks.</p>
-                        <form class="newsletter-form" onSubmit=${handleSubscribe}>
-                            <input 
-                                type="email" 
-                                placeholder="ENTER YOUR EMAIL" 
-                                value=${email} 
-                                onInput=${(e) => setEmail(e.target.value)} 
-                                required 
-                            />
-                            <button type="submit" aria-label="Subscribe">
-                                <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-                            </button>
-                        </form>
-                    </div>
                 </div>
 
-                <div class="footer-bottom">
-                    <p>© ${new Date().getFullYear()} ACCESSIFY (https://blyo.in/). All rights reserved.</p>
-                    <p style="letter-spacing: 0.05em; color: #25D366; font-weight: 600;">OFFICIAL WHATSAPP ORDERING: ${WHATSAPP_DISPLAY}</p>
-                    <p><a href="#/admin" style="color: var(--text-muted); font-size: 0.75rem; text-decoration: none;">⚙️ Store Admin</a></p>
+                <!-- Bottom Copyright & Policies Bar -->
+                <div class="footer-bottom-bar">
+                    <div>
+                        © 2025 ACCESSIFY. All rights reserved.
+                    </div>
+                    <div class="footer-bottom-links">
+                        <a href="#/privacy">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#/terms">Terms & Conditions</a>
+                        <span>|</span>
+                        <a href="#/admin" style="color: #9CA3AF;">Admin</a>
+                    </div>
                 </div>
             </div>
         </footer>
     `;
 };
+

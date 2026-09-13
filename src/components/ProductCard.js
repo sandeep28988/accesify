@@ -39,7 +39,7 @@ export const ProductCard = ({ product }) => {
     return html`
         <div class="product-card">
             <div class="product-image-container">
-                <a href=${`#/product/${product.id}`} aria-label=${product.name}>
+                <a href=${`#/product/${product.id}`} aria-label=${product.name} style="display: block; width: 100%; height: 100%;">
                     <img class="product-card-img" src=${product.images[0]} alt=${product.name} loading="lazy" />
                 </a>
                 
@@ -53,48 +53,41 @@ export const ProductCard = ({ product }) => {
                             : null
                 }
                 
-                <!-- Wishlist Toggle -->
+                <!-- Wishlist Heart Toggle in Top-Right -->
                 <button 
                     class="product-wishlist-btn ${isWishlisted ? 'active' : ''}" 
                     onClick=${handleWishlistClick}
                     title="Add to Wishlist"
                     aria-label="Add to Wishlist"
                 >
-                    <i data-lucide="heart" style="width: 16px; height: 16px; fill: ${isWishlisted ? 'currentColor' : 'none'};"></i>
+                    <i data-lucide="heart" style="width: 15px; height: 15px; fill: ${isWishlisted ? '#EF4444' : 'none'}; stroke: ${isWishlisted ? '#EF4444' : 'currentColor'};"></i>
                 </button>
-
-                <!-- Quick Add to Cart Panel on Hover -->
-                ${!isOutOfStock && html`
-                    <div class="product-quick-add">
-                        <button class="btn btn-secondary" style="width: 100%; padding: 7px 10px; font-size: 0.75rem;" onClick=${handleQuickAdd}>
-                            + Add to Bag
-                        </button>
-                    </div>
-                `}
             </div>
 
             <div class="product-card-info">
                 <div>
-                    <div class="product-card-category">${product.category}</div>
-                    <a href=${`#/product/${product.id}`}>
+                    <a href=${`#/product/${product.id}`} style="text-decoration: none;">
                         <h3 class="product-card-title">${product.name}</h3>
                     </a>
+                    <div class="product-card-category">${(product.category || "").toUpperCase()}</div>
                 </div>
                 
-                <div class="product-card-price-container" style="margin-top: 10px; margin-bottom: 14px;">
-                    <span class="product-card-price" style="font-weight: 700; font-size: 1.05rem;">₹${product.price}</span>
-                    ${hasDiscount && html`<span class="product-card-compare-price" style="margin-left: 8px; text-decoration: line-through; color: var(--text-muted); font-size: 0.85rem;">₹${product.comparePrice}</span>`}
+                <div class="product-card-price-container">
+                    <span class="product-card-price">₹${product.price ? product.price.toLocaleString('en-IN') : product.price}</span>
+                    ${product.comparePrice > product.price && html`
+                        <span class="product-card-compare-price">MRP ₹${product.comparePrice.toLocaleString('en-IN')}</span>
+                    `}
                 </div>
 
-                <!-- Primary WhatsApp Order Button -->
+                <!-- WhatsApp Order Button Matching Reference Mockup -->
                 <button 
-                    class="btn-whatsapp btn-whatsapp-sm" 
-                    style="width: 100%;" 
+                    class="btn-whatsapp-outline" 
                     onClick=${handleWhatsAppOrder}
                     title="Order this product via WhatsApp"
+                    aria-label="Order through WhatsApp"
                 >
-                    <${WhatsAppIcon} size=${16} color="#ffffff" />
-                    <span>Order through WhatsApp</span>
+                    <${WhatsAppIcon} size=${15} color="#25D366" />
+                    <span>ORDER THROUGH WHATSAPP</span>
                 </button>
             </div>
         </div>

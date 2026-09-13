@@ -1,30 +1,34 @@
-/* VALOIR DESIGN SYSTEM & GLOBAL RESET */
+/* ACCESSIFY DESIGN SYSTEM - PURE WHITE LUXURY & STREETWEAR AESTHETIC */
 :root {
-    --bg-primary: #0a0a0a;
-    --bg-secondary: #121212;
-    --bg-tertiary: #1a1a1a;
-    --border-color: #262626;
-    --border-focus: #404040;
-    --text-primary: #ffffff;
-    --text-secondary: #a3a3a3;
-    --text-muted: #525252;
-    --accent-chrome-solid: #e5e5e5;
-    --accent-chrome-gradient: linear-gradient(135deg, #ffffff 0%, #a3a3a3 50%, #ffffff 100%);
-    --accent-silver: #cccccc;
-    --accent-glow: rgba(255, 255, 255, 0.15);
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-tertiary: #F1F3F5;
+    --border-color: #E5E7EB;
+    --border-light: #F3F4F6;
+    --border-focus: #111827;
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --text-muted: #9CA3AF;
+    --accent-chrome-solid: #111827;
+    --accent-chrome-gradient: linear-gradient(135deg, #111827 0%, #4B5563 100%);
+    --accent-silver: #6B7280;
+    --accent-glow: rgba(0, 0, 0, 0.06);
+    --whatsapp-green: #25D366;
+    --whatsapp-green-dark: #20ba59;
     
-    --font-sans: 'Inter', sans-serif;
-    --font-display: 'Syne', sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    --font-gothic: 'UnifrakturMaguntia', 'Pirata One', 'Cinzel', serif;
     --font-mono: 'Montserrat', sans-serif;
     
-    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-slow: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-slow: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.7);
-    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.9);
-    --shadow-glass: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.09);
+    --shadow-glass: inset 0 1px 0 0 rgba(255, 255, 255, 0.9), 0 4px 20px 0 rgba(0, 0, 0, 0.05);
 }
 
 /* Reset */
@@ -168,9 +172,9 @@ a {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
     transition: all 0.25s ease;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
 }
 
@@ -179,7 +183,49 @@ a {
     color: #ffffff !important;
     border-color: #1da851;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+/* WhatsApp Outline Button - Matches Cosmora Reference Mockup */
+.btn-whatsapp-outline {
+    background-color: #ffffff;
+    color: #25D366 !important;
+    border: 1.5px solid #25D366;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn-whatsapp-outline:hover {
+    background-color: #25D366;
+    color: #ffffff !important;
+    border-color: #25D366;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+
+.btn-whatsapp-outline:hover svg,
+.btn-whatsapp-outline:hover path {
+    fill: #ffffff !important;
+}
+
+.btn-pill {
+    border-radius: 9999px !important;
+    padding: 12px 26px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
 }
 
 .btn-whatsapp-sm {
