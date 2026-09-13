@@ -50,8 +50,19 @@ const App = () => {
         if (routePath.startsWith("#/shop")) {
             return html`<${Shop} />`;
         }
-        if (routePath.startsWith("#/product/")) {
-            return html`<${ProductDetails} />`;
+        const cleanPath = routePath.replace(/^#\/?/, "");
+        const isProductRoute = 
+            routePath.startsWith("#/product/") || 
+            routePath.startsWith("#product/") || 
+            routePath.startsWith("#/products/") || 
+            routePath.startsWith("#products/") ||
+            cleanPath.startsWith("product/") ||
+            cleanPath.startsWith("products/") ||
+            cleanPath === "product" ||
+            cleanPath === "products";
+
+        if (isProductRoute) {
+            return html`<${ProductDetails} key=${currentRoute} />`;
         }
         if (routePath === "#/cart") {
             return html`<${Cart} />`;

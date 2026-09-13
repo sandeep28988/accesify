@@ -65,7 +65,7 @@ const setLocalStorageItem = (key, value) => {
 
 // Seeding - ensure jewelry products are loaded without fragrances/grooming
 const existingProducts = getLocalStorageItem("products_v4", null);
-if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length === 0) {
+if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length < INITIAL_PRODUCTS.length) {
     setLocalStorageItem("products_v4", INITIAL_PRODUCTS);
 }
 
@@ -92,6 +92,51 @@ export const db = {
         const prods = getLocalStorageItem("products_v4", INITIAL_PRODUCTS);
         // Exclude any legacy fragrance or grooming items
         return prods.filter(p => p.category !== "fragrances" && p.category !== "grooming");
+    },
+
+    getProductById: (targetId) => {
+        if (!targetId) return null;
+        const cleanId = String(targetId).trim().toLowerCase();
+        const withoutAcc = cleanId.replace(/^acc_/, "");
+        const prods = db.getProducts();
+
+        // 1. Direct match on id (case-insensitive)
+        let found = prods.find(p => p.id && p.id.toLowerCase() === cleanId);
+        if (found) return found;
+
+        // 2. Match with/without acc_ prefix
+        found = prods.find(p => p.id && p.id.toLowerCase().replace(/^acc_/, "") === withoutAcc);
+        if (found) return found;
+
+        // 3. Match on original_id
+        found = prods.find(p => p.original_id && String(p.original_id).trim() === withoutAcc);
+        if (found) return found;
+
+        // 4. Match on slug
+        found = prods.find(p => p.slug && p.slug.toLowerCase() === cleanId);
+        if (found) return found;
+
+        // 5. Normalized name match
+        found = prods.find(p => {
+            const normName = (p.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+            return normName === cleanId;
+        });
+        if (found) return found;
+
+        // Fallback to full PRODUCTS_205 catalog
+        found = PRODUCTS_205.find(p => p.id && p.id.toLowerCase() === cleanId);
+        if (found) return found;
+
+        found = PRODUCTS_205.find(p => p.id && p.id.toLowerCase().replace(/^acc_/, "") === withoutAcc);
+        if (found) return found;
+
+        found = PRODUCTS_205.find(p => p.original_id && String(p.original_id).trim() === withoutAcc);
+        if (found) return found;
+
+        found = PRODUCTS_205.find(p => p.slug && p.slug.toLowerCase() === cleanId);
+        if (found) return found;
+
+        return null;
     },
     
     saveProduct: (product) => {

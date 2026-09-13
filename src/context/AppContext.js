@@ -9,9 +9,9 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     // Database Loaded States
-    const [products, setProducts] = useState([]);
-    const [coupons, setCoupons] = useState([]);
-    const [orders, setOrders] = useState([]);
+    const [products, setProducts] = useState(() => db.getProducts());
+    const [coupons, setCoupons] = useState(() => db.getCoupons());
+    const [orders, setOrders] = useState(() => db.getOrders());
     
     // Interactive UI States
     const [cart, setCart] = useState([]);
@@ -25,7 +25,7 @@ export const AppProvider = ({ children }) => {
     const [searchQuery, setSearchQuery] = useState("");
     
     // Navigation / Routing State
-    const [currentRoute, setCurrentRoute] = useState("");
+    const [currentRoute, setCurrentRoute] = useState(() => (typeof window !== "undefined" && window.location && window.location.hash) || "#/");
 
     // Coupon Calculations
     const [activeCoupon, setActiveCoupon] = useState(null);

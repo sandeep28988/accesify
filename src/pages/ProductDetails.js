@@ -6,16 +6,88 @@ import { ProductCard } from '../components/ProductCard.js';
 import { WhatsAppIcon } from '../components/WhatsAppIcon.js';
 import { getProductWhatsAppUrl, WHATSAPP_DISPLAY } from '../utils/whatsapp.js';
 import { db } from '../services/db.js';
+import { PRODUCTS_205 } from '../data/products.js';
 
 const html = htm.bind(h);
 
+// Robust extraction of product ID from URL hash or currentRoute
+export const extractProductId = (hashStr) => {
+    const hash = hashStr || (typeof window !== "undefined" ? window.location.hash : "") || "";
+    const cleanHash = hash.replace(/^#\/?/, "");
+    const [pathPart, queryPart] = cleanHash.split("?");
+
+    if (queryPart) {
+        try {
+            const params = new URLSearchParams(queryPart);
+            const qId = params.get("id") || params.get("productId");
+            if (qId) return decodeURIComponent(qId).trim();
+        } catch (e) {}
+    }
+
+    const parts = pathPart.split("/").filter(Boolean);
+    if ((parts[0] === "product" || parts[0] === "products") && parts[1]) {
+        try {
+            return decodeURIComponent(parts[1]).trim();
+        } catch (e) {
+            return parts[1].trim();
+        }
+    }
+    return null;
+};
+
+// Robust multi-format product finder (supports id, original_id, slug, or name)
+export const findProduct = (targetId, productList) => {
+    if (!targetId) return null;
+    const cleanId = String(targetId).trim().toLowerCase();
+    const withoutAcc = cleanId.replace(/^acc_/, "");
+    const list = Array.isArray(productList) && productList.length > 0 ? productList : PRODUCTS_205;
+
+    // 1. Direct match on id (case-insensitive)
+    let found = list.find(p => p.id && p.id.toLowerCase() === cleanId);
+    if (found) return found;
+
+    // 2. Match with/without acc_ prefix
+    found = list.find(p => p.id && p.id.toLowerCase().replace(/^acc_/, "") === withoutAcc);
+    if (found) return found;
+
+    // 3. Match on original_id
+    found = list.find(p => p.original_id && String(p.original_id).trim() === withoutAcc);
+    if (found) return found;
+
+    // 4. Match on slug
+    found = list.find(p => p.slug && p.slug.toLowerCase() === cleanId);
+    if (found) return found;
+
+    // 5. Normalized name match
+    found = list.find(p => {
+        const normName = (p.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        return normName === cleanId;
+    });
+    if (found) return found;
+
+    // 6. Fallback into db helper or full catalog
+    if (db.getProductById) {
+        const fromDb = db.getProductById(targetId);
+        if (fromDb) return fromDb;
+    }
+    if (list !== PRODUCTS_205) {
+        return findProduct(targetId, PRODUCTS_205);
+    }
+    return null;
+};
+
 export const ProductDetails = () => {
-    const { products, addToCart, toggleWishlist, wishlist, showToast } = useContext(AppContext);
+    const { products, addToCart, toggleWishlist, wishlist, showToast, currentRoute } = useContext(AppContext);
     
-    // Component States
-    const [product, setProduct] = useState(null);
+    const targetId = extractProductId(currentRoute || (typeof window !== "undefined" ? window.location.hash : ""));
+    const initialProduct = findProduct(targetId, products && products.length > 0 ? products : PRODUCTS_205);
+
+    // Component States - synchronously resolved so page never flashes "PRODUCT NOT FOUND"
+    const [product, setProduct] = useState(initialProduct);
     const [activeImageIndex, setActiveImageIndex] = useState(0);
-    const [reviews, setReviews] = useState([]);
+    const [reviews, setReviews] = useState(() => {
+        return initialProduct ? db.getReviews(initialProduct.id) : [];
+    });
     
     // Add Review Form States
     const [reviewAuthor, setReviewAuthor] = useState("");
@@ -24,30 +96,18 @@ export const ProductDetails = () => {
 
     const mainImgRef = useRef(null);
 
-    // Fetch Product ID from Hash Routing
-    const getProductId = () => {
-        const hash = window.location.hash || "";
-        const parts = hash.split("/");
-        if (parts[1] === "product" && parts[2]) {
-            return parts[2].split("?")[0];
-        }
-        return null;
-    };
-
-    const productId = getProductId();
-
     useEffect(() => {
         window.scrollTo(0, 0);
-        const pId = getProductId();
-        if (pId) {
-            const found = products.find(p => p.id === pId || p.slug === pId);
-            if (found) {
-                setProduct(found);
-                setActiveImageIndex(0);
-                setReviews(db.getReviews(found.id));
-            }
+        const pId = extractProductId(currentRoute || window.location.hash);
+        const found = findProduct(pId, products && products.length > 0 ? products : PRODUCTS_205);
+        if (found) {
+            setProduct(found);
+            setActiveImageIndex(0);
+            setReviews(db.getReviews(found.id));
+        } else {
+            setProduct(null);
         }
-    }, [productId, products]);
+    }, [currentRoute, products]);
 
     useEffect(() => {
         if (window.lucide) {
@@ -61,7 +121,7 @@ export const ProductDetails = () => {
                 <i data-lucide="alert-triangle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 20px;"></i>
                 <h2>PRODUCT NOT FOUND</h2>
                 <p style="color: var(--text-secondary); margin-top: 12px; margin-bottom: 30px;">The product details you are trying to view does not exist or has been removed.</p>
-                <a href="#/shop" class="btn btn-primary">EXPLORE 205 PRODUCTS</a>
+                <a href="#/shop" class="btn btn-primary">EXPLORE ALL ACCESSORIES</a>
             </div>
         `;
     }
@@ -388,7 +448,7 @@ export const ProductDetails = () => {
                             <span class="sticky-order-compare">₹${product.comparePrice}</span>
                         `}
                     </div>
-                    <span class="sticky-order-variant">${selectedVariant}</span>
+                    <span class="sticky-order-variant">${product.name}</span>
                 </div>
                 <button 
                     type="button" 

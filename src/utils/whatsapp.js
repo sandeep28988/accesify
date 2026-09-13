@@ -17,9 +17,10 @@ export const WHATSAPP_DISPLAY = "+91 7012400815";
  * Please confirm availability and ordering details.”
  */
 export const getProductWhatsAppUrl = (product) => {
-    const origin = window.location.origin;
-    const pathname = window.location.pathname.replace(/\/$/, "");
-    const productUrl = `${origin}${pathname}#/product/${product.id}`;
+    const origin = (typeof window !== "undefined" && window.location && window.location.origin) ? window.location.origin : "https://accessify-store.vercel.app";
+    const rawPath = (typeof window !== "undefined" && window.location && window.location.pathname) ? window.location.pathname.replace(/\/$/, "") : "";
+    const base = `${origin}${rawPath}`;
+    const productUrl = `${base}/#/product/${product.id}`;
 
     const categoryName = product.category
         ? product.category.charAt(0).toUpperCase() + product.category.slice(1)
@@ -48,8 +49,9 @@ export const getProductWhatsAppUrl = (product) => {
  * Please confirm my order and delivery details.”
  */
 export const getCartWhatsAppUrl = (cartItems, totalAmount) => {
-    const origin = window.location.origin;
-    const pathname = window.location.pathname.replace(/\/$/, "");
+    const origin = (typeof window !== "undefined" && window.location && window.location.origin) ? window.location.origin : "https://accessify-store.vercel.app";
+    const rawPath = (typeof window !== "undefined" && window.location && window.location.pathname) ? window.location.pathname.replace(/\/$/, "") : "";
+    const base = `${origin}${rawPath}`;
 
     let message = `Hi! I would like to place an order:\n\n`;
 
@@ -63,7 +65,7 @@ export const getCartWhatsAppUrl = (cartItems, totalAmount) => {
     // Relevant product links
     message += `Product Links:\n`;
     cartItems.forEach((item, index) => {
-        const link = `${origin}${pathname}#/product/${item.id}`;
+        const link = `${base}/#/product/${item.id}`;
         message += `${index + 1}. ${item.name}: ${link}\n`;
     });
 
