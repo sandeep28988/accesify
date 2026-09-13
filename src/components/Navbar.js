@@ -81,11 +81,11 @@ export const Navbar = () => {
         { label: "SHOP ALL", href: "#/shop" },
         { label: "CHAINS", href: "#/shop?category=chains" },
         { label: "RINGS", href: "#/shop?category=rings" },
-        { label: "EARRINGS", href: "#/shop?search=earring" },
+        { label: "EARRINGS", href: "#/shop?category=earrings" },
         { label: "BRACELET", href: "#/shop?category=bracelets" },
-        { label: "Y2K GOTHIC NECKLACES", href: "#/shop?category=chains&search=gothic" },
-        { label: "ICED OUT JEWELS", href: "#/shop?search=iced" },
-        { label: "SLEEK CHAINS", href: "#/shop?category=chains&search=cross" },
+        { label: "Y2K GOTHIC NECKLACES", href: "#/shop?category=y2k-gothic-necklaces" },
+        { label: "ICED OUT JEWELS", href: "#/shop?category=iced-out-jewels" },
+        { label: "SLEEK CHAINS", href: "#/shop?category=sleek-chains" },
         { label: "LEGENDARY MONEY SAVER COMBOS", href: "#/shop?category=combos" }
     ];
 

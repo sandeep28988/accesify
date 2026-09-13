@@ -35,11 +35,14 @@ const INITIAL_BANNERS = [
 ];
 
 const DEFAULT_CATEGORIES = [
-    "rings",
     "chains",
+    "rings",
+    "earrings",
     "bracelets",
+    "sleek-chains",
+    "y2k-gothic-necklaces",
+    "iced-out-jewels",
     "combos",
-    "limited-edition",
     "belts",
     "wallets"
 ];
@@ -64,9 +67,9 @@ const setLocalStorageItem = (key, value) => {
 };
 
 // Seeding - ensure jewelry products are loaded without fragrances/grooming
-const existingProducts = getLocalStorageItem("products_v4", null);
+const existingProducts = getLocalStorageItem("products_v5", null);
 if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length < INITIAL_PRODUCTS.length) {
-    setLocalStorageItem("products_v4", INITIAL_PRODUCTS);
+    setLocalStorageItem("products_v5", INITIAL_PRODUCTS);
 }
 
 if (!localStorage.getItem("accessify_coupons")) {
@@ -81,15 +84,15 @@ if (!localStorage.getItem("accessify_orders")) {
 if (!localStorage.getItem("accessify_banners")) {
     setLocalStorageItem("banners", INITIAL_BANNERS);
 }
-if (!localStorage.getItem("accessify_custom_categories_v4")) {
-    setLocalStorageItem("custom_categories_v4", DEFAULT_CATEGORIES);
+if (!localStorage.getItem("accessify_custom_categories_v5")) {
+    setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
 }
 
 // Database Engine Export
 export const db = {
     // PRODUCTS
     getProducts: () => {
-        const prods = getLocalStorageItem("products_v4", INITIAL_PRODUCTS);
+        const prods = getLocalStorageItem("products_v5", INITIAL_PRODUCTS);
         // Exclude any legacy fragrance or grooming items
         return prods.filter(p => p.category !== "fragrances" && p.category !== "grooming");
     },
@@ -167,7 +170,7 @@ export const db = {
             };
             products.unshift(newProduct);
         }
-        setLocalStorageItem("products_v4", products);
+        setLocalStorageItem("products_v5", products);
         return true;
     },
 
@@ -179,7 +182,7 @@ export const db = {
             if (comparePrice !== undefined && comparePrice !== null && comparePrice !== "") {
                 products[index].comparePrice = Number(comparePrice);
             }
-            setLocalStorageItem("products_v4", products);
+            setLocalStorageItem("products_v5", products);
             return products[index];
         }
         return null;
@@ -193,7 +196,7 @@ export const db = {
             if (updatedFields.price !== undefined) products[index].price = Number(updatedFields.price);
             if (updatedFields.comparePrice !== undefined) products[index].comparePrice = Number(updatedFields.comparePrice);
             if (updatedFields.stock !== undefined) products[index].stock = Number(updatedFields.stock);
-            setLocalStorageItem("products_v4", products);
+            setLocalStorageItem("products_v5", products);
             return products[index];
         }
         return null;
@@ -202,13 +205,13 @@ export const db = {
     deleteProduct: (id) => {
         const products = db.getProducts();
         const filtered = products.filter(p => p.id !== id);
-        setLocalStorageItem("products_v4", filtered);
+        setLocalStorageItem("products_v5", filtered);
         return true;
     },
 
     resetToDefaultProducts: () => {
-        setLocalStorageItem("products_v4", INITIAL_PRODUCTS);
-        setLocalStorageItem("custom_categories_v4", DEFAULT_CATEGORIES);
+        setLocalStorageItem("products_v5", INITIAL_PRODUCTS);
+        setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
         return INITIAL_PRODUCTS;
     },
 
@@ -218,7 +221,7 @@ export const db = {
 
     // CATEGORIES
     getCategories: () => {
-        const custom = getLocalStorageItem("custom_categories_v4", DEFAULT_CATEGORIES);
+        const custom = getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
         const products = db.getProducts();
         const fromProds = products.map(p => (p.category || "").toLowerCase().trim()).filter(Boolean);
         const combined = Array.from(new Set([...custom, ...fromProds]));
@@ -229,10 +232,10 @@ export const db = {
         if (!categoryName) return false;
         const slug = categoryName.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
         if (slug === "fragrances" || slug === "grooming") return false;
-        const current = getLocalStorageItem("custom_categories_v4", DEFAULT_CATEGORIES);
+        const current = getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
         if (!current.includes(slug)) {
             current.push(slug);
-            setLocalStorageItem("custom_categories_v4", current);
+            setLocalStorageItem("custom_categories_v5", current);
         }
         return slug;
     },
@@ -285,7 +288,7 @@ export const db = {
             const totalRating = productReviews.reduce((sum, r) => sum + r.rating, 0);
             products[productIndex].rating = parseFloat((totalRating / productReviews.length).toFixed(1));
             products[productIndex].numReviews = productReviews.length;
-            setLocalStorageItem("products_v4", products);
+            setLocalStorageItem("products_v5", products);
         }
         return newReview;
     },
@@ -311,7 +314,7 @@ export const db = {
                 products[productIndex].stock = Math.max(0, products[productIndex].stock - item.quantity);
             }
         });
-        setLocalStorageItem("products_v4", products);
+        setLocalStorageItem("products_v5", products);
 
         return newOrder;
     },

@@ -1,5 +1,6 @@
 {
   "name": "accessify",
+  "type": "module",
   "version": "1.0.0",
   "description": "ACCESSIFY - 205 Streetwear & Gothic Y2K Accessories with WhatsApp Ordering"
 }

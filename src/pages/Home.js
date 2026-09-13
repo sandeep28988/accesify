@@ -37,7 +37,7 @@ export const Home = () => {
         {
             title: "EARRINGS",
             image: "https://cdn.zepio.io/blyo/product/ea03f2e5-be7b-47ee-9dba-d69fb10c91c3.webp",
-            link: "#/shop?search=earring"
+            link: "#/shop?category=earrings"
         },
         {
             title: "BRACELET",
@@ -47,17 +47,17 @@ export const Home = () => {
         {
             title: "Y2K GOTHIC NECKLACES",
             image: "https://cdn.zepio.io/blyo/product/5fe9bb1a-7231-461f-8a2d-50987ddedc4f.webp",
-            link: "#/shop?category=chains&search=gothic"
+            link: "#/shop?category=y2k-gothic-necklaces"
         },
         {
             title: "ICED OUT JEWELS",
             image: "https://cdn.zepio.io/blyo/product/fb2eb3f3-d297-4bc4-be11-ed1d24b4ebd7.webp",
-            link: "#/shop?search=iced"
+            link: "#/shop?category=iced-out-jewels"
         },
         {
             title: "SLEEK CHAINS",
             image: "assets/images/sleek-chains.jpg",
-            link: "#/shop?category=chains&search=cross"
+            link: "#/shop?category=sleek-chains"
         },
         {
             title: "LEGENDARY MONEY SAVER COMBOS",
@@ -69,18 +69,18 @@ export const Home = () => {
     // Select 6 authentic banger products for the Best Sellers row
     const bestSellers = products.length > 0
         ? [
-            // Look for Cross Pendant Chain
+            // Cross Pendant Chain
             products.find(p => p.name.toLowerCase().includes("cross") && p.category === "chains") || products[0],
-            // Look for Star Ring or Nine Fox Ring
-            products.find(p => p.name.toLowerCase().includes("ring") && (p.name.toLowerCase().includes("fox") || p.name.toLowerCase().includes("sun"))) || products[1],
-            // Look for Earring
-            products.find(p => p.name.toLowerCase().includes("earring")) || products[2],
-            // Look for Bracelet
+            // Authentic Gothic Ring
+            products.find(p => p.category === "rings" && (p.name.toLowerCase().includes("star") || p.name.toLowerCase().includes("viking") || p.name.toLowerCase().includes("ch"))) || products[1],
+            // Gothic Earring
+            products.find(p => p.category === "earrings") || products[2],
+            // Streetwear Bracelet
             products.find(p => p.category === "bracelets") || products[3],
-            // Look for Gothic Necklace
-            products.find(p => p.name.toLowerCase().includes("chromatic") || (p.name.toLowerCase().includes("chain") && p.id !== products[0]?.id)) || products[4],
-            // Look for Iced Out Piece
-            products.find(p => p.name.toLowerCase().includes("ice") || p.category === "limited-edition") || products[5]
+            // Y2K Gothic Necklace
+            products.find(p => p.tags && p.tags.includes("y2k-gothic-necklaces") && p.id !== products[0]?.id) || products[4],
+            // Iced Out Jewel
+            products.find(p => p.tags && p.tags.includes("iced-out-jewels")) || products[5]
           ].filter(Boolean)
         : [];
 

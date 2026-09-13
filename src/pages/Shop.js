@@ -79,9 +79,22 @@ export const Shop = () => {
 
     // Filter Logic
     let filteredProducts = products.filter(product => {
-        // Category Filter
-        if (selectedCategory !== "all" && product.category !== selectedCategory) {
-            return false;
+        // Category / Collection / Subcategory Filter
+        if (selectedCategory !== "all") {
+            const target = selectedCategory.toLowerCase().trim();
+            const prodCat = (product.category || "").toLowerCase().trim();
+            const prodTags = Array.isArray(product.tags) ? product.tags.map(t => String(t).toLowerCase().trim()) : [];
+            
+            const matchPrimary = prodCat === target ||
+                (target === "bracelet" && prodCat === "bracelets") ||
+                (target === "earring" && prodCat === "earrings");
+            const matchTag = prodTags.includes(target) ||
+                (target === "bracelet" && prodTags.includes("bracelets")) ||
+                (target === "earring" && prodTags.includes("earrings"));
+            
+            if (!matchPrimary && !matchTag) {
+                return false;
+            }
         }
         
         // Price Filter
@@ -95,7 +108,8 @@ export const Shop = () => {
             const matchesName = product.name.toLowerCase().includes(query);
             const matchesDesc = (product.description || "").toLowerCase().includes(query);
             const matchesCat = product.category.toLowerCase().includes(query);
-            if (!matchesName && !matchesDesc && !matchesCat) {
+            const matchesTags = Array.isArray(product.tags) && product.tags.some(t => t.toLowerCase().includes(query));
+            if (!matchesName && !matchesDesc && !matchesCat && !matchesTags) {
                 return false;
             }
         }
@@ -120,6 +134,10 @@ export const Shop = () => {
 
     const displayedProducts = filteredProducts.slice(0, visibleCount);
 
+    const categoryTitle = selectedCategory === "all"
+        ? `${products.length}+ STREETWEAR ACCESSORIES`
+        : `${selectedCategory.replace(/-/g, " ").toUpperCase()} COLLECTION`;
+
     return html`
         <div class="container anim-fade-in" style="padding-top: 36px; padding-bottom: 80px;">
             <div class="section-header" style="margin-bottom: 30px; text-align: left;">
@@ -131,7 +149,7 @@ export const Shop = () => {
                     </span>
                 </div>
                 <h1 class="section-title">
-                    ${selectedCategory === "all" ? `${products.length}+ STREETWEAR ACCESSORIES` : `${selectedCategory.toUpperCase()} COLLECTION`}
+                    ${categoryTitle}
                 </h1>
                 ${searchVal && html`
                     <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">

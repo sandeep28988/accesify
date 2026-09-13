@@ -26,7 +26,11 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": true,
     "sku_code": "S5FJM6MY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "belts",
+      "streetwear"
+    ]
   },
   {
     "id": "acc_3653",
@@ -51,7 +55,11 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "79LCUFL2",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "wallets",
+      "streetwear"
+    ]
   },
   {
     "id": "acc_3651",
@@ -76,7 +84,11 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "T1SCC3XJ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3650",
@@ -101,14 +113,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "7HRDQLIN",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3649",
     "original_id": 3649,
     "name": "Minimal Nine Fox Tale",
     "slug": "minimal-nine-fox-tale",
-    "category": "rings",
+    "category": "chains",
     "price": 295,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Minimal Nine Fox Tale. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -128,14 +144,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": true,
     "sku_code": "Y5OERBKT",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3648",
     "original_id": 3648,
     "name": "Minimal sun",
     "slug": "minimal-sun",
-    "category": "rings",
+    "category": "chains",
     "price": 295,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Minimal sun. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -155,14 +175,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "EW8T8ZJY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3647",
     "original_id": 3647,
     "name": "Minimal lizard",
     "slug": "minimal-lizard",
-    "category": "rings",
+    "category": "chains",
     "price": 295,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Minimal lizard. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -182,14 +206,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "QEWTXSTZ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3646",
     "original_id": 3646,
     "name": "Minimal Owl",
     "slug": "minimal-owl",
-    "category": "rings",
+    "category": "chains",
     "price": 295,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Minimal Owl. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -209,14 +237,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "VLAEZLOO",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3645",
     "original_id": 3645,
     "name": "George Of Lydda",
     "slug": "george-of-lydda",
-    "category": "rings",
+    "category": "chains",
     "price": 299,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired George Of Lydda. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -236,14 +268,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": true,
     "sku_code": "G6LKKQES",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3644",
     "original_id": 3644,
     "name": "Minimal Cheers",
     "slug": "minimal-cheers",
-    "category": "rings",
+    "category": "chains",
     "price": 255,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Minimal Cheers. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -262,14 +298,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "UFXSLPKS",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3643",
     "original_id": 3643,
     "name": "Minimal Evil Eye",
     "slug": "minimal-evil-eye",
-    "category": "rings",
+    "category": "chains",
     "price": 295,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Minimal Evil Eye. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -289,14 +329,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "LP8FYXPA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3642",
     "original_id": 3642,
     "name": "Minimal Camping Board",
     "slug": "minimal-camping-board",
-    "category": "rings",
+    "category": "chains",
     "price": 295,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Minimal Camping Board. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -316,14 +360,18 @@ export const PRODUCTS_205 = [
     "featured": true,
     "newArrival": false,
     "sku_code": "R8JAMSWN",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3641",
     "original_id": 3641,
     "name": "Minimal Plane",
     "slug": "minimal-plane",
-    "category": "rings",
+    "category": "chains",
     "price": 295,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Minimal Plane. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -343,14 +391,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "SV7HQNVO",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3640",
     "original_id": 3640,
     "name": "Minimal Tree",
     "slug": "minimal-tree",
-    "category": "rings",
+    "category": "chains",
     "price": 299,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Minimal Tree. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -370,14 +422,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "VABLR5SA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3639",
     "original_id": 3639,
     "name": "Minimal Horsey",
     "slug": "minimal-horsey",
-    "category": "rings",
+    "category": "chains",
     "price": 299,
     "comparePrice": 799,
     "description": "Premium Gothic & Y2K inspired Minimal Horsey. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -397,14 +453,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "GTPYUVRA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3638",
     "original_id": 3638,
     "name": "Silenceline (Gold)",
     "slug": "silenceline-gold",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Silenceline (Gold). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -424,14 +484,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "LXPGXDQR",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3637",
     "original_id": 3637,
     "name": "Silenceline (silver)",
     "slug": "silenceline-silver",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Silenceline (silver). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -451,14 +515,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "QBXF67YB",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3636",
     "original_id": 3636,
     "name": "Mirror Bar Pendant",
     "slug": "mirror-bar-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 285,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Mirror Bar Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -478,14 +546,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "JCPZM5EW",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3635",
     "original_id": 3635,
     "name": "Eclipse Eye",
     "slug": "eclipse-eye",
-    "category": "rings",
+    "category": "chains",
     "price": 285,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Eclipse Eye. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -505,14 +577,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "XQGAU8MD",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3634",
     "original_id": 3634,
     "name": "Venom Link Chain",
     "slug": "venom-link-chain",
-    "category": "rings",
+    "category": "chains",
     "price": 239,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Venom Link Chain. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -532,14 +608,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "DICM0KSA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3633",
     "original_id": 3633,
     "name": "Aure Bar",
     "slug": "aure-bar",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Aure Bar. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -560,7 +640,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "1DA62WNT",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_3632",
@@ -587,14 +671,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "7RYXRLFB",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_3631",
     "original_id": 3631,
     "name": "Obsidian Gem Chain",
     "slug": "obsidian-gem-chain",
-    "category": "rings",
+    "category": "chains",
     "price": 330,
     "comparePrice": 799,
     "description": "Premium Gothic & Y2K inspired Obsidian Gem Chain. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -613,7 +700,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "OSWXDCED",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_3630",
@@ -638,7 +728,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "KDZTO9SI",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3629",
@@ -663,7 +757,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "U0BPZCT3",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3628",
@@ -686,7 +784,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "GAT5J3OG",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "chains"
+    ]
   },
   {
     "id": "acc_3627",
@@ -710,7 +813,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "LUWKVQO8",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3626",
@@ -734,7 +841,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "EO7RWO0O",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_3625",
@@ -759,7 +869,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "IVCM6S68",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3624",
@@ -784,7 +899,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "QLZ3FMY3",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_3623",
@@ -809,7 +927,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "S5AAAJ56",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3622",
@@ -835,7 +957,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "SJJTWZJ9",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3621",
@@ -863,7 +989,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "G5OOHFUJ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_3620",
@@ -890,7 +1019,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "A2DMNWXI",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_3619",
@@ -917,7 +1049,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "CPTKS06B",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_3617",
@@ -945,7 +1080,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "PT3PSJZP",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings",
+      "combos"
+    ]
   },
   {
     "id": "acc_3616",
@@ -971,7 +1110,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "B8WJNV0P",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3615",
@@ -998,7 +1141,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "HQCR6ZZC",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_3614",
@@ -1024,7 +1170,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "YK0L0MQR",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3613",
@@ -1051,7 +1201,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "RXMDXONF",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3612",
@@ -1074,14 +1228,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "YP7SNM6B",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3611",
     "original_id": 3611,
     "name": "Premium Robo Chain",
     "slug": "premium-robo-chain",
-    "category": "rings",
+    "category": "chains",
     "price": 225,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Premium Robo Chain. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1101,7 +1260,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "7RJUTJWW",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_3610",
@@ -1124,7 +1286,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "PON6WBQS",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3609",
@@ -1149,7 +1316,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "IJD4ZODE",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_3608",
@@ -1174,7 +1346,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "BEBBEXMU",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3607",
@@ -1201,7 +1377,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "JDTQSOVY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_3606",
@@ -1228,14 +1407,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "OZ26ACSW",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_3605",
     "original_id": 3605,
     "name": "Dragon cross pendant chain x Dragon’s breath ring combo (Limited edition)",
     "slug": "dragon-cross-pendant-chain-x-dragons-breath-ring-combo-limited-edition",
-    "category": "rings",
+    "category": "combos",
     "price": 299,
     "comparePrice": 799,
     "description": "Premium Gothic & Y2K inspired Dragon cross pendant chain x Dragon’s breath ring combo (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1256,7 +1438,14 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "ZOU2G4WG",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces",
+      "chains",
+      "rings"
+    ]
   },
   {
     "id": "acc_3604",
@@ -1279,7 +1468,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "XIN4NGGA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3603",
@@ -1303,7 +1497,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "OGK5NFGK",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_3602",
@@ -1327,7 +1524,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "LMJJ9TWI",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_3600",
@@ -1351,7 +1551,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "PTUZGWC3",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_3599",
@@ -1375,7 +1578,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "HBNIZ2LE",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_3598",
@@ -1399,7 +1605,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "AEIGFFM9",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3597",
@@ -1424,14 +1634,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "JRCJID5U",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_3596",
     "original_id": 3596,
     "name": "Chrome Heart Earring",
     "slug": "chrome-heart-earring",
-    "category": "rings",
+    "category": "earrings",
     "price": 285,
     "comparePrice": 759,
     "description": "Premium Gothic & Y2K inspired Chrome Heart Earring. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1440,10 +1654,8 @@ export const PRODUCTS_205 = [
       "https://cdn.zepio.io/blyo/product/ade893c7-47f6-4783-b1a2-d48089ca8a25.webp"
     ],
     "variants": [
-      "Size 7 (17.3mm)",
-      "Size 8 (18.1mm)",
-      "Size 9 (19.0mm)",
-      "Size 10 (19.8mm)"
+      "Single Piece",
+      "Pair (2 Pieces)"
     ],
     "stock": 25,
     "rating": 4.5,
@@ -1451,7 +1663,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "F5KGWDVL",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "earrings",
+      "y2k-gothic"
+    ]
   },
   {
     "id": "acc_3000",
@@ -1475,7 +1691,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "TFOSH2QJ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2999",
@@ -1500,7 +1721,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "GDSCKIVV",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2998",
@@ -1525,7 +1750,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "ZD163DVF",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "iced-out-jewels"
+    ]
   },
   {
     "id": "acc_2997",
@@ -1551,14 +1781,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "8YJXHH3A",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2993",
     "original_id": 2993,
     "name": "Spade Cards Pendant",
     "slug": "spade-cards-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 279,
     "comparePrice": 859,
     "description": "Premium Gothic & Y2K inspired Spade Cards Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1577,7 +1810,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "1KAZJVB7",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2992",
@@ -1602,14 +1838,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "VNHE1KWP",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2991",
     "original_id": 2991,
     "name": "Onxy bracelet (Jet black gemstone edition)",
     "slug": "onxy-bracelet-jet-black-gemstone-edition-L7AGA",
-    "category": "chains",
+    "category": "bracelets",
     "price": 299,
     "comparePrice": 999,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -1627,7 +1867,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "WPEJQ9JF",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2989",
@@ -1651,7 +1895,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "57MJ716W",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2988",
@@ -1675,7 +1923,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "SZBHYPPG",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2983",
@@ -1700,7 +1952,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "VFKJFCSS",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2979",
@@ -1724,7 +1980,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "MHTX38PX",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2978",
@@ -1748,7 +2008,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "DVW0ZWHQ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2976",
@@ -1772,14 +2036,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "HLBE0CZN",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_2974",
     "original_id": 2974,
     "name": "Thunder Frost pendent with chain (limited Edition)",
     "slug": "thunder-frost-pendent-with-chain-limited-edition",
-    "category": "limited-edition",
+    "category": "chains",
     "price": 229,
     "comparePrice": 499,
     "description": "Rare limited edition drop. Hand-set micro pave stones with iced chrome finish and custom engraved details. Includes certificate of authenticity.",
@@ -1795,14 +2062,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "TGVW4DFY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "iced-out-jewels",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2973",
     "original_id": 2973,
     "name": "Frost Iced Cuban Chain (Limited edition)",
     "slug": "frost-iced-cuban-chain-limited-edition",
-    "category": "limited-edition",
+    "category": "chains",
     "price": 399,
     "comparePrice": 1399,
     "description": "Rare limited edition drop. Hand-set micro pave stones with iced chrome finish and custom engraved details. Includes certificate of authenticity.",
@@ -1818,7 +2090,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "PBBVVHFO",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "iced-out-jewels",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2972",
@@ -1842,14 +2119,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "OVZI9YHA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "iced-out-jewels"
+    ]
   },
   {
     "id": "acc_2969",
     "original_id": 2969,
     "name": "Dark Reaper combo (Chain + Ring) Limited edition",
     "slug": "dark-reaper-combo-chain-ring-limited-edition",
-    "category": "rings",
+    "category": "combos",
     "price": 399,
     "comparePrice": 999,
     "description": "Premium Gothic & Y2K inspired Dark Reaper combo (Chain + Ring) Limited edition. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1868,14 +2150,20 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "ULR8CNLX",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "chains",
+      "rings"
+    ]
   },
   {
     "id": "acc_2968",
     "original_id": 2968,
     "name": "Devil x Rebellion eye ring combo (Limited edition",
     "slug": "devil-x-rebellion-eye-ring-combo-limited-edition",
-    "category": "rings",
+    "category": "combos",
     "price": 349,
     "comparePrice": 899,
     "description": "Premium Gothic & Y2K inspired Devil x Rebellion eye ring combo (Limited edition. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1894,14 +2182,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "L0HC6SSI",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "rings"
+    ]
   },
   {
     "id": "acc_2967",
     "original_id": 2967,
     "name": "Reaper’s claw x Dragons breath adjustable ring combo (limited edition)",
     "slug": "reapers-claw-x-dragons-breath-adjustable-ring-combo-limited-edition",
-    "category": "rings",
+    "category": "combos",
     "price": 329,
     "comparePrice": 899,
     "description": "Premium Gothic & Y2K inspired Reaper’s claw x Dragons breath adjustable ring combo (limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1920,7 +2213,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "ZAHZX1Q3",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "rings"
+    ]
   },
   {
     "id": "acc_2966",
@@ -1944,7 +2242,14 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "YH5N7KL6",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces",
+      "bracelets",
+      "chains"
+    ]
   },
   {
     "id": "acc_2964",
@@ -1967,7 +2272,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "CHWNHGZ6",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2963",
@@ -1990,7 +2299,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "QTPL2RSF",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "chains"
+    ]
   },
   {
     "id": "acc_2962",
@@ -2013,7 +2327,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "MTXXJSZW",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "chains"
+    ]
   },
   {
     "id": "acc_2961",
@@ -2036,7 +2355,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "FOXOIVUO",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "chains"
+    ]
   },
   {
     "id": "acc_2960",
@@ -2059,7 +2383,13 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "0NEO21GH",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces",
+      "chains"
+    ]
   },
   {
     "id": "acc_2959",
@@ -2082,7 +2412,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "SOIR1S3L",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2957",
@@ -2105,14 +2439,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "MT6QPBCH",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2956",
     "original_id": 2956,
     "name": "Vintage Trident pendant with chain (Limited edition)",
     "slug": "vintage-trident-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 249,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Vintage Trident pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2131,14 +2470,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "VWWO5C5P",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2955",
     "original_id": 2955,
     "name": "Arrowhead worrier pendent chain (Limited edition)",
     "slug": "arrowhead-worrier-pendent-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Arrowhead worrier pendent chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2158,14 +2501,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "PINPNQKN",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2954",
     "original_id": 2954,
     "name": "thunder pendant chain (Limited Edition)",
     "slug": "thunder-pendant-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired thunder pendant chain (Limited Edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2185,14 +2532,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "4CZ99YE5",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2953",
     "original_id": 2953,
     "name": "Divine Jesus pendant chain (Limited Edition",
     "slug": "divine-jesus-pendant-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 249,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Divine Jesus pendant chain (Limited Edition. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2212,14 +2563,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "JHXYFUWP",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2952",
     "original_id": 2952,
     "name": "Obsidian bar pendant chain",
     "slug": "obsidian-bar-pendant-chain",
-    "category": "rings",
+    "category": "chains",
     "price": 239,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Obsidian bar pendant chain. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2239,14 +2595,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "OFVE9MX5",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2951",
     "original_id": 2951,
     "name": "Obsidian Pendant Chain",
     "slug": "obsidian-pendant-chain",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Obsidian Pendant Chain. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2266,14 +2626,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "JIBP5JAL",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2950",
     "original_id": 2950,
     "name": "Ignite titanium bar pendant with chain (Limited edition)",
     "slug": "ignite-titanium-bar-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 219,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Ignite titanium bar pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2293,14 +2656,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "PCRJELYV",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2949",
     "original_id": 2949,
     "name": "Platinum bar pendant chain (Limited Edition)",
     "slug": "platinum-bar-pendant-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 299,
     "comparePrice": 899,
     "description": "Premium Gothic & Y2K inspired Platinum bar pendant chain (Limited Edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2320,7 +2688,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "U0GPWYM6",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2948",
@@ -2344,14 +2717,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "ZE7HBQEP",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2947",
     "original_id": 2947,
     "name": "Iced - out Dollar pendant with chain (Limited edition)",
     "slug": "iced-out-dollar-pendant-with-chain-limited-edition",
-    "category": "limited-edition",
+    "category": "chains",
     "price": 299,
     "comparePrice": 699,
     "description": "Rare limited edition drop. Hand-set micro pave stones with iced chrome finish and custom engraved details. Includes certificate of authenticity.",
@@ -2368,14 +2746,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "8VC4PG28",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "iced-out-jewels",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2946",
     "original_id": 2946,
     "name": "The skull punisher pendant with chain (Limited edition)",
     "slug": "the-skull-punisher-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired The skull punisher pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2394,14 +2777,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "ZEUFO8OS",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2945",
     "original_id": 2945,
     "name": "Ninja sword pendant with chain (Limited edition)",
     "slug": "ninja-sword-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Ninja sword pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2421,14 +2809,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "FWA2MMIY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2944",
     "original_id": 2944,
     "name": "Batman Pendant",
     "slug": "batman-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Batman Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2447,7 +2839,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "VELOCDJB",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2943",
@@ -2471,14 +2867,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "H2APGTLY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2941",
     "original_id": 2941,
     "name": "Eternal cross pendant with chain (Limited edition)",
     "slug": "eternal-cross-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 209,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Eternal cross pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2498,14 +2899,20 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "ZZSRZWSU",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2940",
     "original_id": 2940,
     "name": "Naruto akatsuki cloud pendant with chain (lucifer red edition)",
     "slug": "naruto-akatsuki-cloud-pendant-with-chain-lucifer-red-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Naruto akatsuki cloud pendant with chain (lucifer red edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2525,7 +2932,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "9XXLMT5X",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2939",
@@ -2552,14 +2963,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "CM1IMVQX",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2938",
     "original_id": 2938,
     "name": "Venomous mamba pendant with chain (Limited edition)",
     "slug": "venomous-mamba-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 799,
     "description": "Premium Gothic & Y2K inspired Venomous mamba pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2579,7 +2993,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "FSJS3FN7",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2937",
@@ -2604,14 +3022,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "IYL5IN21",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2936",
     "original_id": 2936,
     "name": "Obsidian angel cross pendant with chain.",
     "slug": "obsidian-angel-cross-pendant-with-chain",
-    "category": "rings",
+    "category": "chains",
     "price": 249,
     "comparePrice": 800,
     "description": "Premium Gothic & Y2K inspired Obsidian angel cross pendant with chain.. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2630,7 +3053,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "ISVJONAL",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2935",
@@ -2653,7 +3080,13 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "9AGOMI6B",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "combos",
+      "limited-edition",
+      "sleek-chains",
+      "chains"
+    ]
   },
   {
     "id": "acc_2934",
@@ -2678,14 +3111,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "QPVENVZM",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2932",
     "original_id": 2932,
     "name": "Silver Trident",
     "slug": "silver-trident",
-    "category": "rings",
+    "category": "chains",
     "price": 219,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Silver Trident. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2705,14 +3143,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "WQD8YZJT",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2931",
     "original_id": 2931,
     "name": "Dark Winged cross pendant chain (Limited Edition)",
     "slug": "dark-winged-cross-pendant-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 239,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Dark Winged cross pendant chain (Limited Edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2732,7 +3173,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "IM2BX31V",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2930",
@@ -2756,7 +3202,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "2Q8025UI",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2929",
@@ -2781,7 +3232,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "HQZJHSOY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2928",
@@ -2806,7 +3262,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "EODMBYNB",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2927",
@@ -2830,14 +3291,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "1CZ50NNZ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2926",
     "original_id": 2926,
     "name": "Retro gothic snake coiled pendant with chain (Limited edition)",
     "slug": "retro-gothic-snake-coiled-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Retro gothic snake coiled pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2858,7 +3324,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "SJ0VMOGB",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2925",
@@ -2883,7 +3354,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "MH2IHXWP",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2924",
@@ -2908,14 +3384,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "OX9R3KKM",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2923",
     "original_id": 2923,
     "name": "Royal kingdom cross pendant with chain (Limited edition)",
     "slug": "royal-kingdom-cross-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 239,
     "comparePrice": 799,
     "description": "Premium Gothic & Y2K inspired Royal kingdom cross pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2934,14 +3415,19 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "YCN4AMK9",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2922",
     "original_id": 2922,
     "name": "Dark winged skull gothic pendant with chain (Limited edition)",
     "slug": "dark-winged-skull-gothic-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 599,
     "description": "Premium Gothic & Y2K inspired Dark winged skull gothic pendant with chain (Limited edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -2961,7 +3447,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "AXGKSI0B",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2921",
@@ -2987,7 +3478,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "RPQZNSUT",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2920",
@@ -3011,14 +3507,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "QYWAWZHR",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2919",
     "original_id": 2919,
     "name": "Venom pendant with chain (Limited Edition)",
     "slug": "venom-pendant-with-chain-limited-edition",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 699,
     "description": "Premium Gothic & Y2K inspired Venom pendant with chain (Limited Edition). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3038,7 +3538,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "T6MM8WLE",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2918",
@@ -3063,7 +3567,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "NEMYJ26I",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2917",
@@ -3088,7 +3596,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "7ENJZSHV",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2916",
@@ -3113,7 +3626,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "YQMUUJLA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2915",
@@ -3138,7 +3655,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "HCSXMACD",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2913",
@@ -3162,7 +3684,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "IETJTTRL",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2912",
@@ -3188,7 +3714,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "UKTVHU1C",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_2911",
@@ -3213,7 +3742,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "AUQZ4RFI",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_2910",
@@ -3239,14 +3771,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "0DWBZV6F",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_2909",
     "original_id": 2909,
     "name": "Frost Iced Cuban Bracelet (Limited Edition)",
     "slug": "frost-iced-cuban-bracelet-limited-edition",
-    "category": "limited-edition",
+    "category": "bracelets",
     "price": 299,
     "comparePrice": 699,
     "description": "Rare limited edition drop. Hand-set micro pave stones with iced chrome finish and custom engraved details. Includes certificate of authenticity.",
@@ -3264,7 +3799,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "XFFCDGOC",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets",
+      "iced-out-jewels",
+      "limited-edition"
+    ]
   },
   {
     "id": "acc_2908",
@@ -3290,7 +3830,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "J9WJGBRE",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_2907",
@@ -3315,7 +3858,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "QNH50AQH",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2906",
@@ -3340,14 +3887,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "29CA35G3",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2905",
     "original_id": 2905,
     "name": "Stoned Spider Pendant",
     "slug": "stoned-spider-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 255,
     "comparePrice": 399,
     "description": "Premium Gothic & Y2K inspired Stoned Spider Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3368,7 +3919,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "2OVKRTZ8",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2904",
@@ -3396,14 +3951,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "LSB4EZQ5",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2903",
     "original_id": 2903,
     "name": "Zeus Supreme Lighting Pendant",
     "slug": "zeus-supreme-lighting-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 399,
     "description": "Premium Gothic & Y2K inspired Zeus Supreme Lighting Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3423,14 +3981,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "IFX5GCSY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2902",
     "original_id": 2902,
     "name": "Plain Cross Chain",
     "slug": "plain-cross-chain",
-    "category": "rings",
+    "category": "chains",
     "price": 175,
     "comparePrice": 245,
     "description": "Premium Gothic & Y2K inspired Plain Cross Chain. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3448,7 +4009,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "B8UNLO3C",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2901",
@@ -3475,7 +4040,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "SETTYUKU",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2900",
@@ -3502,7 +4070,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "I9R69FAE",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings",
+      "y2k-gothic"
+    ]
   },
   {
     "id": "acc_2899",
@@ -3527,7 +4099,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "6B5XGVKS",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2897",
@@ -3554,14 +4130,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "SULLMDIL",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings",
+      "y2k-gothic"
+    ]
   },
   {
     "id": "acc_2896",
     "original_id": 2896,
     "name": "Win Diesel Chain",
     "slug": "win-diesel-chain",
-    "category": "rings",
+    "category": "chains",
     "price": 195,
     "comparePrice": 259,
     "description": "Premium Gothic & Y2K inspired Win Diesel Chain. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3581,7 +4161,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "PGL6W1P3",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2895",
@@ -3606,7 +4189,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "WQ2GAABG",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_2894",
@@ -3633,14 +4219,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "WK24PAN0",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2893",
     "original_id": 2893,
     "name": "pendulam Men's Bar Pendant",
     "slug": "pendulam-mens-bar-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 219,
     "comparePrice": 349,
     "description": "Premium Gothic & Y2K inspired pendulam Men's Bar Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3660,14 +4249,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "FPXG5G5H",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2892",
     "original_id": 2892,
     "name": "Christ Jesus Crucifix Necklace",
     "slug": "christ-jesus-crucifix-necklace",
-    "category": "rings",
+    "category": "chains",
     "price": 259,
     "comparePrice": 399,
     "description": "Premium Gothic & Y2K inspired Christ Jesus Crucifix Necklace. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3687,14 +4280,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "5AW9XMSM",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2891",
     "original_id": 2891,
     "name": "Samurai Stainless Steel Pendant",
     "slug": "samurai-stainless-steel-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 289,
     "description": "Premium Gothic & Y2K inspired Samurai Stainless Steel Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3714,7 +4311,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "BQXEYUID",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2890",
@@ -3740,7 +4341,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "C7H6I7FJ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2889",
@@ -3764,7 +4369,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "GLB9SUNE",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2888",
@@ -3789,14 +4398,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "6QKAWRAA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2887",
     "original_id": 2887,
     "name": "Imperial Valor Pendant",
     "slug": "imperial-valor-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 299,
     "comparePrice": 389,
     "description": "Premium Gothic & Y2K inspired Imperial Valor Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3816,7 +4429,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "1BFPAXVM",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2886",
@@ -3842,14 +4459,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "HYDNWH3N",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2885",
     "original_id": 2885,
     "name": "Gold-Plated Sunburst Openable Box",
     "slug": "gold-plated-sunburst-openable-box",
-    "category": "rings",
+    "category": "chains",
     "price": 349,
     "comparePrice": 499,
     "description": "Premium Gothic & Y2K inspired Gold-Plated Sunburst Openable Box. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3869,14 +4489,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "WBI5LWCM",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2884",
     "original_id": 2884,
     "name": "Poseidon Trident Pendant gold",
     "slug": "poseidon-trident-pendant-gold",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 309,
     "description": "Premium Gothic & Y2K inspired Poseidon Trident Pendant gold. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3895,14 +4519,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "MSHMHU8F",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2883",
     "original_id": 2883,
     "name": "Orbit Star Necklace",
     "slug": "orbit-star-necklace",
-    "category": "rings",
+    "category": "chains",
     "price": 279,
     "comparePrice": 399,
     "description": "Premium Gothic & Y2K inspired Orbit Star Necklace. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3922,14 +4549,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "KRBGR9MJ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2882",
     "original_id": 2882,
     "name": "Beautiful Leaf Necklace",
     "slug": "beautiful-leaf-necklace",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 299,
     "description": "Premium Gothic & Y2K inspired Beautiful Leaf Necklace. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -3949,7 +4580,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "JIQL4XFY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2881",
@@ -3974,14 +4609,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "IYNPDIFQ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2880",
     "original_id": 2880,
     "name": "Mountain Soul Pendant",
     "slug": "mountain-soul-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 299,
     "comparePrice": 399,
     "description": "Premium Gothic & Y2K inspired Mountain Soul Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4002,7 +4641,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "EPQ2XQQ4",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2879",
@@ -4031,7 +4674,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "FKUULTBE",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2878",
@@ -4057,14 +4703,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "OTXRMLHS",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2877",
     "original_id": 2877,
     "name": "Apex Blade Pendant",
     "slug": "apex-blade-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 299,
     "description": "Premium Gothic & Y2K inspired Apex Blade Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4083,7 +4732,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "KW8GBSPN",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains"
+    ]
   },
   {
     "id": "acc_2876",
@@ -4110,14 +4763,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "WCB6PCFN",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "rings"
+    ]
   },
   {
     "id": "acc_2875",
     "original_id": 2875,
     "name": "Venom Drop Earring",
     "slug": "venom-drop-earring",
-    "category": "rings",
+    "category": "earrings",
     "price": 199,
     "comparePrice": 399,
     "description": "Premium Gothic & Y2K inspired Venom Drop Earring. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4125,10 +4781,8 @@ export const PRODUCTS_205 = [
       "https://cdn.zepio.io/blyo/product/168b0fed-456b-4109-b8fd-2277722c3c17.webp"
     ],
     "variants": [
-      "Size 7 (17.3mm)",
-      "Size 8 (18.1mm)",
-      "Size 9 (19.0mm)",
-      "Size 10 (19.8mm)"
+      "Single Piece",
+      "Pair (2 Pieces)"
     ],
     "stock": 25,
     "rating": 4.5,
@@ -4136,7 +4790,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "A5LXE9YB",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "earrings",
+      "y2k-gothic"
+    ]
   },
   {
     "id": "acc_2874",
@@ -4162,14 +4820,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "0LOFQUGC",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2873",
     "original_id": 2873,
     "name": "Whale of Peace Necklace",
     "slug": "whale-of-peace-necklace",
-    "category": "rings",
+    "category": "chains",
     "price": 229,
     "comparePrice": 359,
     "description": "Premium Gothic & Y2K inspired Whale of Peace Necklace. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4189,7 +4851,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "G08AND09",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2872",
@@ -4215,14 +4880,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "G7SODLQ1",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_2871",
     "original_id": 2871,
     "name": "Simple Minimal Cross Pendant",
     "slug": "simple-minimal-cross-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 169,
     "comparePrice": 369,
     "description": "Premium Gothic & Y2K inspired Simple Minimal Cross Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4243,7 +4911,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "9VPOHTEI",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2868",
@@ -4268,14 +4941,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "RKW60VB6",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2867",
     "original_id": 2867,
     "name": "Geometric Triangle Square Pendant",
     "slug": "geometric-triangle-square-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 179,
     "comparePrice": 259,
     "description": "Premium Gothic & Y2K inspired Geometric Triangle Square Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4294,7 +4971,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "YLKTR1C4",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2865",
@@ -4319,7 +4999,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "1XMJE6JP",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2864",
@@ -4345,7 +5029,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "8TG5USNE",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2863",
@@ -4370,14 +5058,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "BQWD674H",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2862",
     "original_id": 2862,
     "name": "Compass pendant chain (Titanium silver)",
     "slug": "compass-pendant-chain-titanium-silver",
-    "category": "rings",
+    "category": "chains",
     "price": 249,
     "comparePrice": 399,
     "description": "Premium Gothic & Y2K inspired Compass pendant chain (Titanium silver). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4397,14 +5089,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "EHJDGQJF",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2861",
     "original_id": 2861,
     "name": "Ace Spade Card Pendant",
     "slug": "ace-spade-card-pendant",
-    "category": "limited-edition",
+    "category": "chains",
     "price": 229,
     "comparePrice": 339,
     "description": "Rare limited edition drop. Hand-set micro pave stones with iced chrome finish and custom engraved details. Includes certificate of authenticity.",
@@ -4421,14 +5116,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "TTGBSLVD",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "iced-out-jewels"
+    ]
   },
   {
     "id": "acc_2860",
     "original_id": 2860,
     "name": "Shadow Sigil Pendant",
     "slug": "shadow-sigil-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 189,
     "comparePrice": 329,
     "description": "Premium Gothic & Y2K inspired Shadow Sigil Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4447,7 +5146,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "CKUYBYXM",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2859",
@@ -4471,7 +5173,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "UWHJPBHA",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2858",
@@ -4496,14 +5202,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "0GAYKAWT",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2857",
     "original_id": 2857,
     "name": "Poseidon Trident Pendant",
     "slug": "poseidon-trident-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 199,
     "comparePrice": 269,
     "description": "Premium Gothic & Y2K inspired Poseidon Trident Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4523,14 +5233,17 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "GAQFI3QC",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains"
+    ]
   },
   {
     "id": "acc_2856",
     "original_id": 2856,
     "name": "Forged Nail Cross Pendant",
     "slug": "forged-nail-cross-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 249,
     "comparePrice": 269,
     "description": "Premium Gothic & Y2K inspired Forged Nail Cross Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4550,14 +5263,18 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "AYIUS4NX",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2854",
     "original_id": 2854,
     "name": "Premium Minimal Cross Pendant",
     "slug": "premium-minimal-cross-pendant",
-    "category": "rings",
+    "category": "chains",
     "price": 249,
     "comparePrice": 369,
     "description": "Premium Gothic & Y2K inspired Premium Minimal Cross Pendant. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -4577,7 +5294,12 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "MDBFRIMI",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "sleek-chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2853",
@@ -4602,7 +5324,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "YJACLG4Y",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2852",
@@ -4627,7 +5353,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "DT3YJEYZ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2866",
@@ -4652,7 +5382,11 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "OTQXATOQ",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "chains",
+      "y2k-gothic-necklaces"
+    ]
   },
   {
     "id": "acc_2855",
@@ -4677,7 +5411,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "BWNLNFGY",
-    "branch_id": 2
+    "branch_id": 2,
+    "tags": [
+      "bracelets"
+    ]
   },
   {
     "id": "acc_2353",
@@ -4700,7 +5437,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "QMZOKMXK",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2352",
@@ -4723,7 +5463,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "ITZMWIZU",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2351",
@@ -4746,7 +5489,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "YKVYIGVA",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2350",
@@ -4769,7 +5515,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "VUA5IQ9H",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2349",
@@ -4792,7 +5541,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "EKY8FB8U",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2348",
@@ -4815,7 +5567,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "FZCTMBAM",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2347",
@@ -4838,7 +5593,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "MIATYXYW",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2346",
@@ -4861,7 +5619,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "UI1ZDCZK",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2345",
@@ -4884,7 +5645,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "KOULSDEA",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2344",
@@ -4907,7 +5671,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "TRZJEO6P",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2343",
@@ -4930,7 +5697,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "3QUTDXIL",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2322",
@@ -4953,7 +5723,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "LH3QQ4LJ",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2321",
@@ -4976,7 +5749,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "XNGSYDZX",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "fragrances"
+    ]
   },
   {
     "id": "acc_2342",
@@ -4999,7 +5775,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "0TME17OV",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2341",
@@ -5022,7 +5801,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "PFB64YNA",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2339",
@@ -5045,7 +5827,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "TG8MTEBR",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2338",
@@ -5068,7 +5853,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "5WE6IT2T",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2337",
@@ -5091,7 +5879,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "J5XHCWNF",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2336",
@@ -5114,7 +5905,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "BIQEQLOU",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2335",
@@ -5137,7 +5931,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "HN00PYZ4",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2334",
@@ -5160,7 +5957,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "C1CYBYHF",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2333",
@@ -5183,7 +5983,10 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": false,
     "sku_code": "8AYFPPME",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   },
   {
     "id": "acc_2331",
@@ -5206,6 +6009,9 @@ export const PRODUCTS_205 = [
     "featured": false,
     "newArrival": true,
     "sku_code": "ZRFPYKWD",
-    "branch_id": 3
+    "branch_id": 3,
+    "tags": [
+      "grooming"
+    ]
   }
 ];
