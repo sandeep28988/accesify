@@ -86,7 +86,7 @@ export const Navbar = () => {
         { label: "Y2K GOTHIC NECKLACES", href: "#/shop?category=y2k-gothic-necklaces" },
         { label: "ICED OUT JEWELS", href: "#/shop?category=iced-out-jewels" },
         { label: "SLEEK CHAINS", href: "#/shop?category=sleek-chains" },
-        { label: "LEGENDARY MONEY SAVER COMBOS", href: "#/shop?category=combos" }
+        { label: "LIMITED EDITION COMBOS", href: "#/shop?category=combos" }
     ];
 
     const isLinkActive = (href) => {

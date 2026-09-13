@@ -51,14 +51,14 @@ export const Footer = () => {
                             <ul class="footer-link-list">
                                 <li><a href="#/shop?category=chains">Chains</a></li>
                                 <li><a href="#/shop?category=rings">Rings</a></li>
-                                <li><a href="#/shop?search=earring">Earrings</a></li>
+                                <li><a href="#/shop?category=earrings">Earrings</a></li>
                                 <li><a href="#/shop?category=bracelets">Bracelet</a></li>
                             </ul>
                             <ul class="footer-link-list">
-                                <li><a href="#/shop?category=chains&search=gothic">Y2K Gothic Necklaces</a></li>
-                                <li><a href="#/shop?search=iced">Iced Out Jewels</a></li>
-                                <li><a href="#/shop?category=chains&search=cross">Sleek Chains</a></li>
-                                <li><a href="#/shop?category=combos">Money Saver Combos</a></li>
+                                <li><a href="#/shop?category=y2k-gothic-necklaces">Y2K Gothic Necklaces</a></li>
+                                <li><a href="#/shop?category=iced-out-jewels">Iced Out Jewels</a></li>
+                                <li><a href="#/shop?category=sleek-chains">Sleek Chains</a></li>
+                                <li><a href="#/shop?category=combos">Limited Edition Combos</a></li>
                             </ul>
                         </div>
                     </div>

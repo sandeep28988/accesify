@@ -60,7 +60,7 @@ export const Home = () => {
             link: "#/shop?category=sleek-chains"
         },
         {
-            title: "LEGENDARY MONEY SAVER COMBOS",
+            title: "LIMITED EDITION COMBOS",
             image: "https://cdn.zepio.io/blyo/product/f631e826-6a7b-4ebb-a6e2-18a2b9bdcca2.webp",
             link: "#/shop?category=combos"
         }

@@ -136,7 +136,9 @@ export const Shop = () => {
 
     const categoryTitle = selectedCategory === "all"
         ? `${products.length}+ STREETWEAR ACCESSORIES`
-        : `${selectedCategory.replace(/-/g, " ").toUpperCase()} COLLECTION`;
+        : selectedCategory === "combos"
+            ? "LIMITED EDITION COMBOS"
+            : `${selectedCategory.replace(/-/g, " ").toUpperCase()} COLLECTION`;
 
     return html`
         <div class="container anim-fade-in" style="padding-top: 36px; padding-bottom: 80px;">
