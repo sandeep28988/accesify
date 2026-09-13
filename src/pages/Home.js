@@ -56,7 +56,7 @@ export const Home = () => {
         },
         {
             title: "SLEEK CHAINS",
-            image: "https://cdn.zepio.io/blyo/product/0e56b4b7-4bdc-4f8b-9e81-185a52a785a9.webp",
+            image: "assets/images/sleek-chains.jpg",
             link: "#/shop?category=chains&search=cross"
         },
         {
