@@ -6,7 +6,7 @@ import { AppContext } from '../context/AppContext.js';
 const html = htm.bind(h);
 
 export const MobileBottomNav = () => {
-    const { currentRoute, cart, wishlist, setCartOpen } = useContext(AppContext);
+    const { currentRoute, cart, wishlist, setCartOpen, searchOpen, setSearchOpen } = useContext(AppContext);
 
     useEffect(() => {
         if (window.lucide) {
@@ -20,7 +20,6 @@ export const MobileBottomNav = () => {
     const isHome = currentRoute === "#/" || currentRoute === "" || currentRoute === "#";
     const isShop = currentRoute.startsWith("#/shop") || currentRoute.startsWith("#/product/");
     const isWishlist = currentRoute === "#/wishlist";
-    const isAdmin = currentRoute.startsWith("#/admin");
 
     return html`
         <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
@@ -33,6 +32,17 @@ export const MobileBottomNav = () => {
                 <i data-lucide="layout-grid"></i>
                 <span>Shop</span>
             </a>
+
+            <button 
+                type="button" 
+                class="bottom-nav-item ${searchOpen ? 'active' : ''}" 
+                onClick=${() => setSearchOpen(true)}
+                aria-label="Search accessories"
+                style="background: transparent; border: none; cursor: pointer;"
+            >
+                <i data-lucide="search"></i>
+                <span>Search</span>
+            </button>
 
             <a href="#/wishlist" class="bottom-nav-item ${isWishlist ? 'active' : ''}">
                 <div class="bottom-nav-icon-wrap">
@@ -49,6 +59,7 @@ export const MobileBottomNav = () => {
                 class="bottom-nav-item" 
                 onClick=${() => setCartOpen(true)}
                 aria-label="Open Shopping Bag"
+                style="background: transparent; border: none; cursor: pointer;"
             >
                 <div class="bottom-nav-icon-wrap">
                     <i data-lucide="shopping-bag"></i>
@@ -58,11 +69,6 @@ export const MobileBottomNav = () => {
                 </div>
                 <span>Bag</span>
             </button>
-
-            <a href="#/admin" class="bottom-nav-item ${isAdmin ? 'active' : ''}">
-                <i data-lucide="sliders"></i>
-                <span>Admin</span>
-            </a>
         </nav>
     `;
 };

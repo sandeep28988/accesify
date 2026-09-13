@@ -15,7 +15,6 @@ export const ProductDetails = () => {
     // Component States
     const [product, setProduct] = useState(null);
     const [activeImageIndex, setActiveImageIndex] = useState(0);
-    const [selectedVariant, setSelectedVariant] = useState("");
     const [reviews, setReviews] = useState([]);
     
     // Add Review Form States
@@ -45,7 +44,6 @@ export const ProductDetails = () => {
             if (found) {
                 setProduct(found);
                 setActiveImageIndex(0);
-                setSelectedVariant(found.variants && found.variants.length > 0 ? found.variants[0] : "Standard");
                 setReviews(db.getReviews(found.id));
             }
         }
@@ -93,12 +91,12 @@ export const ProductDetails = () => {
 
     // WhatsApp Direct Order Handler
     const handleWhatsAppOrder = () => {
-        const url = getProductWhatsAppUrl(product, selectedVariant);
+        const url = getProductWhatsAppUrl(product);
         window.open(url, '_blank', 'noopener,noreferrer');
     };
 
     const handleAddToCart = () => {
-        addToCart(product, 1, selectedVariant);
+        addToCart(product, 1);
     };
 
     // Submit Review Handler
@@ -223,23 +221,6 @@ export const ProductDetails = () => {
 
                     <p class="product-description-text">${product.description}</p>
 
-                    <!-- Variants selectors -->
-                    ${product.variants && product.variants.length > 0 && html`
-                        <div class="product-option-group" style="margin-top: 24px;">
-                            <h3 class="product-option-title">SELECT SIZE / OPTION</h3>
-                            <div class="product-option-variants">
-                                ${product.variants.map(variant => html`
-                                    <button 
-                                        class="variant-btn ${selectedVariant === variant ? 'active' : ''}" 
-                                        onClick=${() => setSelectedVariant(variant)}
-                                        key=${variant}
-                                    >
-                                        ${variant}
-                                    </button>
-                                `)}
-                            </div>
-                        </div>
-                    `}
 
                     <!-- WhatsApp Primary Ordering Action Block -->
                     <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px;">

@@ -16,7 +16,7 @@ export const WHATSAPP_DISPLAY = "+91 7012400815";
  *
  * Please confirm availability and ordering details.”
  */
-export const getProductWhatsAppUrl = (product, selectedVariant = "") => {
+export const getProductWhatsAppUrl = (product) => {
     const origin = window.location.origin;
     const pathname = window.location.pathname.replace(/\/$/, "");
     const productUrl = `${origin}${pathname}#/product/${product.id}`;
@@ -26,7 +26,7 @@ export const getProductWhatsAppUrl = (product, selectedVariant = "") => {
         : "Accessories";
 
     let message = `Hi! I want to order this product:\n\n`;
-    message += `Product: ${product.name}${selectedVariant && selectedVariant !== "Standard" && selectedVariant !== "Standard Edition" ? ` (${selectedVariant})` : ""}\n`;
+    message += `Product: ${product.name}\n`;
     message += `Category: ${categoryName}\n`;
     message += `Price: ₹${product.price}\n`;
     message += `Product Link: ${productUrl}\n\n`;
@@ -54,11 +54,8 @@ export const getCartWhatsAppUrl = (cartItems, totalAmount) => {
     let message = `Hi! I would like to place an order:\n\n`;
 
     cartItems.forEach((item, index) => {
-        const itemVariant = item.variant && item.variant !== "Standard" && item.variant !== "Standard Edition"
-            ? ` (${item.variant})`
-            : "";
         const itemSubtotal = item.price * item.quantity;
-        message += `${index + 1}. ${item.name}${itemVariant} × ${item.quantity} — ₹${itemSubtotal}\n`;
+        message += `${index + 1}. ${item.name} × ${item.quantity} — ₹${itemSubtotal}\n`;
     });
 
     message += `\nTotal: ₹${totalAmount}\n\n`;

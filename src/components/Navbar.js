@@ -107,17 +107,16 @@ export const Navbar = () => {
             <header class="navbar">
                 <!-- Tier 1: Main Header Row -->
                 <div class="container header-top-row">
-                    <!-- Left: Search Box Pill -->
-                    <div class="header-search-box">
-                        <i data-lucide="search" style="width: 15px; height: 15px; color: #9CA3AF; flex-shrink: 0;"></i>
-                        <input 
-                            type="text" 
-                            placeholder="Search for products..."
-                            value=${searchQuery}
-                            onInput=${(e) => setSearchQuery(e.target.value)}
-                            onFocus=${() => setSearchOpen(true)}
-                        />
-                    </div>
+                    <!-- Left: Search Box Pill Button -->
+                    <button 
+                        type="button"
+                        class="header-search-box" 
+                        onClick=${() => setSearchOpen(true)}
+                        aria-label="Search accessories"
+                    >
+                        <i data-lucide="search" style="width: 15px; height: 15px; color: #6B7280; flex-shrink: 0;"></i>
+                        <span class="header-search-text">Search for products...</span>
+                    </button>
 
                     <!-- Center: Gothic Spiky Brand Logo Image -->
                     <a href="#/" class="header-brand-center" aria-label="Accessify Home">
@@ -238,15 +237,37 @@ export const Navbar = () => {
                             </button>
                         </form>
 
+                        <!-- Trending / Popular Quick Searches -->
+                        ${searchQuery.trim() === "" && html`
+                            <div class="search-quick-tags" style="margin-top: 24px;">
+                                <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; color: #9CA3AF; text-transform: uppercase; margin-bottom: 12px;">
+                                    TRENDING SEARCHES
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                    ${["Cross", "Rings", "Chains", "Bracelets", "Gothic", "Iced Out", "Combos"].map(tag => html`
+                                        <button 
+                                            type="button" 
+                                            class="search-tag-chip"
+                                            onClick=${() => setSearchQuery(tag)}
+                                            key=${tag}
+                                            style="background: #F3F4F6; border: 1px solid #E5E7EB; border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 600; color: #374151; cursor: pointer; transition: all 0.15s ease;"
+                                        >
+                                            ${tag}
+                                        </button>
+                                    `)}
+                                </div>
+                            </div>
+                        `}
+
                         <!-- Live Results -->
                         ${filteredSearchProducts.length > 0 && html`
                             <div class="search-results">
                                 ${filteredSearchProducts.map(p => html`
-                                    <div class="search-result-item" key=${p.id} onClick=${() => handleSearchResultClick(p.id)} style="cursor: pointer; background: #FFFFFF;">
+                                    <div class="search-result-item" key=${p.id} onClick=${() => handleSearchResultClick(p.id)}>
                                         <img class="search-result-img" src=${p.images[0]} alt=${p.name} />
                                         <div class="search-result-info">
-                                            <h4 style="color: #111827;">${p.name}</h4>
-                                            <p style="color: #6B7280;">₹${p.price} — in ${p.category}</p>
+                                            <h4>${p.name}</h4>
+                                            <p>₹${p.price} — in ${p.category}</p>
                                         </div>
                                     </div>
                                 `)}
@@ -254,7 +275,7 @@ export const Navbar = () => {
                         `}
                         
                         ${searchQuery.trim() !== "" && filteredSearchProducts.length === 0 && html`
-                            <p style="margin-top: 40px; text-align: center; color: var(--text-secondary);">
+                            <p style="margin-top: 40px; text-align: center; color: #6B7280; font-size: 0.95rem;">
                                 No products found matching "${searchQuery}". Try searching for "cross", "ring", "chain", or "bracelet".
                             </p>
                         `}

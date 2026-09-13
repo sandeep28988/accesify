@@ -132,7 +132,7 @@ export const AppProvider = ({ children }) => {
             return newCart;
         });
         
-        showToast(`Added ${product.name} (${selectedVariant}) to cart.`);
+        showToast(`Added ${product.name} to bag.`);
     };
 
     const removeFromCart = (productId, variant) => {

@@ -89,9 +89,6 @@ export const Cart = () => {
                                             <img class="cart-page-item-img" src=${item.image} alt=${item.name} />
                                             <div class="cart-page-item-info">
                                                 <h4><a href=${`#/product/${item.id}`}>${item.name}</a></h4>
-                                                ${item.variant && item.variant !== "Standard" && item.variant !== "Standard Edition" && html`
-                                                    <p style="margin-top: 4px; color: var(--text-muted); font-size: 0.8rem;">Option: ${item.variant}</p>
-                                                `}
                                                 <p style="margin-top: 8px; font-weight: 700; font-size: 1rem;">₹${item.price}</p>
                                                 <button 
                                                     style="background: transparent; border: none; color: #ef4444; font-size: 0.75rem; text-decoration: underline; margin-top: 12px; cursor: pointer;"

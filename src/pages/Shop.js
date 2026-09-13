@@ -120,23 +120,6 @@ export const Shop = () => {
 
     const displayedProducts = filteredProducts.slice(0, visibleCount);
 
-    // Category labels definition - 100% jewelry & streetwear accessories
-    const categoryDefs = [
-        { id: "all", label: "All Drops" },
-        { id: "rings", label: "Rings" },
-        { id: "chains", label: "Chains & Necklaces" },
-        { id: "bracelets", label: "Bracelets & Cuffs" },
-        { id: "combos", label: "Combos & Sets" },
-        { id: "limited-edition", label: "Limited Edition" },
-        { id: "belts", label: "Belts" },
-        { id: "wallets", label: "Wallets" }
-    ];
-
-    const getCategoryCount = (catId) => {
-        if (catId === "all") return products.length;
-        return products.filter(p => (p.category || "").toLowerCase() === catId.toLowerCase()).length;
-    };
-
     return html`
         <div class="container anim-fade-in" style="padding-top: 36px; padding-bottom: 80px;">
             <div class="section-header" style="margin-bottom: 30px; text-align: left;">
@@ -147,7 +130,9 @@ export const Shop = () => {
                         <span>Instant WhatsApp Orders</span>
                     </span>
                 </div>
-                <h1 class="section-title">${products.length}+ STREETWEAR ACCESSORIES</h1>
+                <h1 class="section-title">
+                    ${selectedCategory === "all" ? `${products.length}+ STREETWEAR ACCESSORIES` : `${selectedCategory.toUpperCase()} COLLECTION`}
+                </h1>
                 ${searchVal && html`
                     <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">
                         Showing search matches for: <strong class="chrome-text">"${searchVal}"</strong> 
@@ -156,32 +141,19 @@ export const Shop = () => {
                 `}
             </div>
 
-            <!-- Horizontal Category Chips (Quick Select) -->
-            <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 24px; -webkit-overflow-scrolling: touch;">
-                ${categoryDefs.map(cat => html`
-                    <button 
-                        class="btn ${selectedCategory === cat.id ? 'btn-primary' : 'btn-secondary'}"
-                        style="padding: 8px 16px; font-size: 0.75rem; white-space: nowrap; border-radius: 20px; text-transform: none; font-weight: 600;"
-                        onClick=${() => { 
-                            setSelectedCategory(cat.id); 
-                            setVisibleCount(24);
-                            window.location.hash = cat.id === 'all' ? '#/shop' : `#/shop?category=${cat.id}`; 
-                        }}
-                        key=${cat.id}
-                    >
-                        ${cat.label} (${getCategoryCount(cat.id)})
-                    </button>
-                `)}
-            </div>
-
             <!-- Sorting & Result Counters Header -->
-            <div class="shop-main-controls" style="margin-bottom: 24px;">
-                <div class="shop-results-count" style="font-weight: 600; font-size: 0.85rem;">
+            <div class="shop-main-controls" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div class="shop-results-count" style="font-weight: 600; font-size: 0.85rem; color: #4B5563;">
                     SHOWING ${Math.min(visibleCount, filteredProducts.length)} OF ${filteredProducts.length} ACCESSORIES
+                    ${selectedCategory !== 'all' && html`
+                        <span style="margin-left: 10px; cursor: pointer; color: #111827; text-decoration: underline; font-size: 0.8rem;" onClick=${() => { setSelectedCategory('all'); window.location.hash = '#/shop'; }}>
+                            (View All)
+                        </span>
+                    `}
                 </div>
                 
                 <div class="shop-sorting">
-                    <select value=${sortBy} onChange=${(e) => setSortBy(e.target.value)} aria-label="Sort products">
+                    <select value=${sortBy} onChange=${(e) => setSortBy(e.target.value)} aria-label="Sort products" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px 14px; font-size: 0.82rem; font-weight: 600; color: #111827;">
                         <option value="default">RECOMMENDED DROPS</option>
                         <option value="price-low">PRICE: LOW TO HIGH</option>
                         <option value="price-high">PRICE: HIGH TO LOW</option>
@@ -191,85 +163,8 @@ export const Shop = () => {
                 </div>
             </div>
 
-            <div class="shop-layout">
-                <!-- Sidebar Filters -->
-                <aside class="shop-sidebar">
-                    <!-- Categories -->
-                    <div class="filter-group">
-                        <h3 class="filter-title">COLLECTIONS</h3>
-                        <ul class="filter-list">
-                            ${categoryDefs.map(cat => html`
-                                <li 
-                                    class="filter-item ${selectedCategory === cat.id ? 'active' : ''}" 
-                                    onClick=${() => { 
-                                        setSelectedCategory(cat.id); 
-                                        setVisibleCount(24);
-                                        window.location.hash = cat.id === 'all' ? '#/shop' : `#/shop?category=${cat.id}`; 
-                                    }}
-                                    key=${cat.id}
-                                >
-                                    <span style="font-size: 0.8rem; letter-spacing: 0.02em;">${cat.label}</span>
-                                    <span style="font-size: 0.75rem; color: var(--text-muted);">(${getCategoryCount(cat.id)})</span>
-                                </li>
-                            `)}
-                        </ul>
-                    </div>
-
-                    <!-- Price Filter -->
-                    <div class="filter-group">
-                        <h3 class="filter-title">PRICE RANGE (₹)</h3>
-                        <form onSubmit=${handlePriceFilterSubmit}>
-                            <div class="price-range-inputs">
-                                <input 
-                                    type="number" 
-                                    class="price-input" 
-                                    placeholder="MIN ₹" 
-                                    value=${minPrice} 
-                                    onInput=${(e) => setMinPrice(e.target.value)} 
-                                />
-                                <span style="color: var(--text-muted);">—</span>
-                                <input 
-                                    type="number" 
-                                    class="price-input" 
-                                    placeholder="MAX ₹" 
-                                    value=${maxPrice} 
-                                    onInput=${(e) => setMaxPrice(e.target.value)} 
-                                />
-                            </div>
-                            <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 16px; padding: 8px; font-size: 0.7rem;">
-                                APPLY FILTER
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- WhatsApp Helpline Box -->
-                    <div style="background: rgba(37, 211, 102, 0.08); border: 1px solid rgba(37, 211, 102, 0.25); border-radius: 6px; padding: 16px; margin-bottom: 24px; text-align: center;">
-                        <div style="display: inline-flex; align-items: center; gap: 6px; color: #25D366; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px;">
-                            <${WhatsAppIcon} size=${18} color="#25D366" />
-                            <span>Direct WhatsApp Shop</span>
-                        </div>
-                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">
-                            Need help sizing or want to place custom bulk order?
-                        </p>
-                        <a 
-                            href=${getSupportWhatsAppUrl()} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            class="btn-whatsapp btn-whatsapp-sm" 
-                            style="width: 100%;"
-                        >
-                            Chat on WhatsApp
-                        </a>
-                    </div>
-
-                    <!-- Reset Options -->
-                    <button class="btn btn-secondary" onClick=${handleClearAll} style="width: 100%; font-size: 0.75rem;">
-                        RESET ALL FILTERS
-                    </button>
-                </aside>
-
-                <!-- Grid Catalog -->
-                <main>
+            <!-- Full-width Product Grid Catalog -->
+            <main>
                     ${filteredProducts.length === 0 ? html`
                         <div style="text-align: center; padding: 100px 0; border: 1px solid var(--border-color); background: var(--bg-secondary);">
                             <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 20px;"></i>
@@ -300,7 +195,6 @@ export const Shop = () => {
                         </div>
                     `}
                 </main>
-            </div>
         </div>
     `;
 };

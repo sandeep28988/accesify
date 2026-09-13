@@ -100,9 +100,6 @@ export const CartDrawer = () => {
                             <div class="cart-item-details">
                                 <div>
                                     <h4 class="cart-item-name">${item.name}</h4>
-                                    ${item.variant && item.variant !== "Standard" && item.variant !== "Standard Edition" && html`
-                                        <p class="cart-item-variant" style="color: var(--text-muted); font-size: 0.75rem;">Option: ${item.variant}</p>
-                                    `}
                                 </div>
                                 <div class="cart-item-price" style="font-weight: 700;">₹${item.price}</div>
                                 <div class="cart-item-controls">
