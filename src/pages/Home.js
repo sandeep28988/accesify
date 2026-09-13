@@ -41,7 +41,7 @@ export const Home = () => {
         },
         {
             title: "BRACELET",
-            image: "https://cdn.zepio.io/blyo/product/63af88b3-d55a-4a02-bcf2-56266fe2b61c.webp",
+            image: "assets/images/category-bracelets.jpg",
             link: "#/shop?category=bracelets"
         },
         {
