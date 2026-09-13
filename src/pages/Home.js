@@ -61,7 +61,7 @@ export const Home = () => {
         },
         {
             title: "LIMITED EDITION COMBOS",
-            image: "https://cdn.zepio.io/blyo/product/f631e826-6a7b-4ebb-a6e2-18a2b9bdcca2.webp",
+            image: "assets/images/category-combos.jpg",
             link: "#/shop?category=combos"
         }
     ];
