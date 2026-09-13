@@ -117,67 +117,16 @@ export const Home = () => {
     return html`
         <div class="home-page anim-fade-in" style="background: #FFFFFF; min-height: 100vh;">
             
-            <!-- 1. HERO SLIDER SECTION MATCHING REFERENCE MOCKUP -->
+            <!-- 1. HERO BANNER SECTION MATCHING USER BRAND GRAPHIC -->
             <section class="cosmora-hero">
                 <div class="container" style="position: relative;">
-                    <!-- Navigation Arrows on outer edges -->
-                    <button 
-                        class="hero-nav-arrow left" 
-                        onClick=${() => setCurrentSlide((currentSlide - 1 + 2) % 2)}
-                        aria-label="Previous slide"
-                    >
-                        <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
-                    </button>
-                    <button 
-                        class="hero-nav-arrow right" 
-                        onClick=${() => setCurrentSlide((currentSlide + 1) % 2)}
-                        aria-label="Next slide"
-                    >
-                        <i data-lucide="chevron-right" style="width: 20px; height: 20px;"></i>
-                    </button>
-
-                    <div class="cosmora-hero-grid">
-                        <!-- Left Column: Headline & CTA -->
-                        <div class="cosmora-hero-left">
-                            <span class="cosmora-hero-tag">ACCESSIFY</span>
-                            
-                            <h1 class="cosmora-hero-title">
-                                ${currentSlide === 0 ? html`MORE THAN JUST<br />ACCESSORIES` : html`BEYOND<br />THE SEEN`}
-                            </h1>
-                            
-                            <p class="cosmora-hero-sub">
-                                ${currentSlide === 0 
-                                    ? "Premium accessories for those who move different." 
-                                    : "Jewellery, chains, rings, bracelets, earrings & more for a bolder you."}
-                            </p>
-                            
-                            <div>
-                                <a 
-                                    href="#/shop" 
-                                    class="btn btn-primary btn-pill" 
-                                    style="box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15); display: inline-flex; align-items: center; gap: 8px;"
-                                >
-                                    <span>SHOP NOW</span>
-                                    <span style="font-size: 1rem;">→</span>
-                                </a>
-                            </div>
-
-                            <!-- Pagination Dots -->
-                            <div class="hero-dots">
-                                <span class="hero-dot ${currentSlide === 0 ? 'active' : ''}" onClick=${() => setCurrentSlide(0)}></span>
-                                <span class="hero-dot ${currentSlide === 1 ? 'active' : ''}" onClick=${() => setCurrentSlide(1)}></span>
-                            </div>
-                        </div>
-
-                        <!-- Right Column: Editorial Hand with Rings & Bracelet Image -->
-                        <a href="#/shop" class="cosmora-hero-right" aria-label="Shop Accessify Collection">
-                            <img 
-                                class="cosmora-hero-img"
-                                src="assets/images/hero-hand.jpg" 
-                                alt="Accessify Streetwear Rings & Bracelet" 
-                            />
-                        </a>
-                    </div>
+                    <a href="#/shop" class="cosmora-hero-banner" aria-label="Shop Beyond The Seen Collection">
+                        <img 
+                            class="cosmora-hero-banner-img" 
+                            src="assets/images/hero-banner.jpg" 
+                            alt="Accessify - Beyond The Seen | Streetwear & Gothic Jewelry" 
+                        />
+                    </a>
                 </div>
             </section>
 
