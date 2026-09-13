@@ -69,14 +69,30 @@
     color: #9CA3AF;
 }
 
-/* Centered Gothic Wordmark */
+/* Centered Gothic Wordmark & Logo */
 .header-brand-center {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
     text-decoration: none;
     user-select: none;
+    padding: 2px 0;
+}
+
+.header-brand-logo-img {
+    height: 48px;
+    width: auto;
+    max-width: 200px;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.header-brand-center:hover .header-brand-logo-img {
+    opacity: 0.82;
+    transform: scale(1.02);
 }
 
 .gothic-brand-title {
@@ -941,15 +957,17 @@
 .cosmora-hero-right {
     position: relative;
     overflow: hidden;
-    background: #000000;
+    background: #F8F9FA;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
+    border-radius: 4px;
 }
 
 @media (max-width: 860px) {
     .cosmora-hero-right {
-        height: 340px;
+        height: 380px;
     }
 }
 
@@ -957,7 +975,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center top;
+    object-position: center center;
+    transition: transform 0.4s ease;
+}
+
+.cosmora-hero-right:hover .cosmora-hero-img {
+    transform: scale(1.02);
 }
 
 .hero-nav-arrow {
@@ -1698,6 +1721,47 @@
     }
     .category-story-label {
         font-size: 0.62rem;
+    }
+}
+
+/* RESPONSIVE HEADER TIER 1 ON TABLET & MOBILE */
+@media (max-width: 768px) {
+    .header-top-row {
+        height: 64px;
+        gap: 8px;
+    }
+    .header-search-box {
+        width: 140px;
+        padding: 6px 12px;
+    }
+    .header-search-box input {
+        font-size: 0.72rem;
+    }
+    .header-brand-logo-img {
+        height: 38px;
+        max-width: 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-top-row {
+        height: 58px;
+        gap: 6px;
+    }
+    .header-search-box {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .header-search-box input {
+        display: none;
+    }
+    .header-brand-logo-img {
+        height: 34px;
+        max-width: 125px;
     }
 }
 

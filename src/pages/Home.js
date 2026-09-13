@@ -142,11 +142,13 @@ export const Home = () => {
                             <span class="cosmora-hero-tag">ACCESSIFY</span>
                             
                             <h1 class="cosmora-hero-title">
-                                MORE THAN JUST<br />ACCESSORIES
+                                ${currentSlide === 0 ? html`MORE THAN JUST<br />ACCESSORIES` : html`BEYOND<br />THE SEEN`}
                             </h1>
                             
                             <p class="cosmora-hero-sub">
-                                Premium accessories for those who move different.
+                                ${currentSlide === 0 
+                                    ? "Premium accessories for those who move different." 
+                                    : "Jewellery, chains, rings, bracelets, earrings & more for a bolder you."}
                             </p>
                             
                             <div>
@@ -167,14 +169,14 @@ export const Home = () => {
                             </div>
                         </div>
 
-                        <!-- Right Column: Editorial Streetwear Model Image -->
-                        <div class="cosmora-hero-right">
+                        <!-- Right Column: Editorial Hand with Rings & Bracelet Image -->
+                        <a href="#/shop" class="cosmora-hero-right" aria-label="Shop Accessify Collection">
                             <img 
                                 class="cosmora-hero-img"
-                                src="https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp" 
-                                alt="Accessify Streetwear Layered Chains" 
+                                src="assets/images/hero-hand.jpg" 
+                                alt="Accessify Streetwear Rings & Bracelet" 
                             />
-                        </div>
+                        </a>
                     </div>
                 </div>
             </section>

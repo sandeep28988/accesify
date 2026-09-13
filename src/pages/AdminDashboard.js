@@ -161,7 +161,7 @@ export const AdminDashboard = () => {
         setFormPrice("");
         setFormComparePrice("");
         setFormDescription("");
-        setFormImages(["https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp"]);
+        setFormImages(["assets/images/hero-hand.jpg"]);
         setFormVariants("Standard, Size 7, Size 8, Size 9");
         setFormStock("25");
         setFormFeatured(false);
@@ -211,7 +211,7 @@ export const AdminDashboard = () => {
             price: Number(formPrice),
             comparePrice: Number(formComparePrice) || Number(formPrice),
             description: formDescription.trim(),
-            images: validImages.length > 0 ? validImages : ["https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp"],
+            images: validImages.length > 0 ? validImages : ["assets/images/hero-hand.jpg"],
             variants: variantsList.length > 0 ? variantsList : ["Standard"],
             stock: Number(formStock) || 0,
             featured: formFeatured,
@@ -512,7 +512,7 @@ export const AdminDashboard = () => {
                                         <!-- Thumbnail -->
                                         <td style="padding: 12px 16px;">
                                             <img 
-                                                src=${product.images && product.images[0] ? product.images[0] : 'https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp'} 
+                                                src=${product.images && product.images[0] ? product.images[0] : 'assets/images/hero-hand.jpg'} 
                                                 alt=${product.name} 
                                                 style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px; background: #1a1a1a;"
                                                 loading="lazy"

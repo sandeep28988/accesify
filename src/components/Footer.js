@@ -21,12 +21,12 @@ export const Footer = () => {
                     
                     <!-- Column 1: Brand & Logo -->
                     <div class="footer-brand-col">
-                        <a href="#/" style="text-decoration: none; margin-bottom: 8px;">
-                            <div class="gothic-brand-title" style="font-size: 2rem; justify-content: flex-start;">
-                                <span class="gothic-star">✦</span>
-                                <span>Accessify</span>
-                                <span class="gothic-star">✦</span>
-                            </div>
+                        <a href="#/" style="text-decoration: none; margin-bottom: 8px; display: inline-block;">
+                            <img 
+                                src="assets/images/accessify-logo.png" 
+                                alt="Accessify" 
+                                style="height: 42px; width: auto; max-width: 170px; display: block; margin-bottom: 8px;" 
+                            />
                         </a>
                         <div class="brand-subtext" style="text-align: left; margin-bottom: 16px;">
                             PREMIUM ACCESSORIES | ELEVATE YOUR STYLE

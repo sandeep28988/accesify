@@ -28,7 +28,7 @@ const INITIAL_BANNERS = [
         title: "GET ACCESSIFIED",
         subtitle: "STREETWEAR & GOTHIC Y2K ACCESSORIES",
         description: "Stainless steel rings, heavyweight industrial chains, bracelets, and tactical streetwear essentials.",
-        image: "https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp",
+        image: "assets/images/hero-hand.jpg",
         ctaText: "EXPLORE SHOP",
         ctaLink: "#/shop"
     }
@@ -116,7 +116,7 @@ export const db = {
                 numReviews: 0,
                 images: Array.isArray(product.images) && product.images.length > 0 
                     ? product.images 
-                    : ["https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp"],
+                    : ["assets/images/hero-hand.jpg"],
                 variants: Array.isArray(product.variants) ? product.variants : ["Standard"],
                 stock: Number(product.stock) || 10
             };

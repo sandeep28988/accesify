@@ -46,7 +46,7 @@ export const About = () => {
                 </div>
                 <div>
                     <img 
-                        src="https://cdn.zepio.io/blyo/branch_image/50b64328-0aad-46ad-beb2-3df2faf9aca7.webp" 
+                        src="assets/images/hero-hand.jpg" 
                         alt="ACCESSIFY Brand" 
                         style="width: 100%; height: 400px; object-fit: cover; border: 1px solid var(--border-color); border-radius: 6px;"
                     />

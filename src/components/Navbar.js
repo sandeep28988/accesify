@@ -119,14 +119,13 @@ export const Navbar = () => {
                         />
                     </div>
 
-                    <!-- Center: Gothic Wordmark Logo -->
-                    <a href="#/" class="header-brand-center">
-                        <div class="gothic-brand-title">
-                            <span class="gothic-star">✦</span>
-                            <span>Accessify</span>
-                            <span class="gothic-star">✦</span>
-                        </div>
-                        <div class="brand-subtext">PREMIUM ACCESSORIES | ELEVATE YOUR STYLE</div>
+                    <!-- Center: Gothic Spiky Brand Logo Image -->
+                    <a href="#/" class="header-brand-center" aria-label="Accessify Home">
+                        <img 
+                            src="assets/images/accessify-logo.png" 
+                            alt="Accessify" 
+                            class="header-brand-logo-img" 
+                        />
                     </a>
 
                     <!-- Right Actions: Account + Cart Bag -->
