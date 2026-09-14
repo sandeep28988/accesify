@@ -144,7 +144,7 @@ export const AdminDashboard = () => {
                     </div>
 
                     <h2 style="font-size: 1.35rem; font-weight: 800; color: #111827; margin-bottom: 4px; letter-spacing: -0.02em;">
-                        BLY0 / ZEPIO ADMIN
+                        ACCESSIFY ADMIN
                     </h2>
                     <p style="font-size: 0.82rem; color: #6b7280; margin-bottom: 24px;">
                         Sign in to access staff dashboard, catalog & orders.
@@ -583,12 +583,12 @@ export const AdminDashboard = () => {
             <aside class="zepio-sidebar ${mobileMenuOpen ? 'open' : ''}">
                 <div class="zepio-sidebar-header">
                     <div class="zepio-brand-info">
-                        <div class="zepio-brand-icon">B</div>
+                        <div class="zepio-brand-icon">A</div>
                         <div>
                             <h3 class="zepio-brand-title">ACCESSIFY</h3>
                             <div class="zepio-brand-sub">
                                 <span class="zepio-status-dot"></span>
-                                Staff Panel (blyo.in)
+                                Staff Panel
                             </div>
                         </div>
                     </div>
