@@ -28,9 +28,6 @@ export const Footer = () => {
                                 style="height: 42px; width: auto; max-width: 170px; display: block; margin-bottom: 8px;" 
                             />
                         </a>
-                        <div class="brand-subtext" style="text-align: left; margin-bottom: 16px;">
-                            PREMIUM ACCESSORIES | ELEVATE YOUR STYLE
-                        </div>
                     </div>
 
                     <!-- Column 2: SHOP -->

@@ -98,11 +98,6 @@ export const Navbar = () => {
 
     return html`
         <div>
-            <!-- Top Announcement Bar Matching Reference Mockup -->
-            <div class="top-announcement-bar">
-                <span>✦ PREMIUM ACCESSORIES | ELEVATE YOUR STYLE ✦</span>
-            </div>
-
             <!-- Header & Navigation Sticky Container -->
             <header class="navbar">
                 <!-- Tier 1: Main Header Row -->
@@ -117,15 +112,6 @@ export const Navbar = () => {
                         <i data-lucide="search" style="width: 15px; height: 15px; color: #6B7280; flex-shrink: 0;"></i>
                         <span class="header-search-text">Search for products...</span>
                     </button>
-
-                    <!-- Center: Gothic Spiky Brand Logo Image -->
-                    <a href="#/" class="header-brand-center" aria-label="Accessify Home">
-                        <img 
-                            src="assets/images/accessify-logo.png" 
-                            alt="Accessify" 
-                            class="header-brand-logo-img" 
-                        />
-                    </a>
 
                     <!-- Right Actions: Account + Cart Bag -->
                     <div class="header-actions-right">
