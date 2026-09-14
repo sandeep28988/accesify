@@ -123,7 +123,7 @@ export const Home = () => {
                     <a href="#/shop" class="cosmora-hero-banner" aria-label="Shop Accessify Collection">
                         <img 
                             class="cosmora-hero-banner-img" 
-                            src="assets/images/hero-banner.jpg" 
+                            src="assets/images/hero-banner.png?v=3" 
                             alt="Accessify | Premium Streetwear & Gothic Jewelry" 
                         />
                     </a>
