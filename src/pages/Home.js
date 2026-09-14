@@ -46,7 +46,7 @@ export const Home = () => {
         },
         {
             title: "Y2K GOTHIC NECKLACES",
-            image: "https://cdn.zepio.io/blyo/product/5fe9bb1a-7231-461f-8a2d-50987ddedc4f.webp",
+            image: "assets/images/category-gothic.jpg",
             link: "#/shop?category=y2k-gothic-necklaces"
         },
         {
