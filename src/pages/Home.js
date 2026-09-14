@@ -51,7 +51,7 @@ export const Home = () => {
         },
         {
             title: "ICED OUT JEWELS",
-            image: "https://cdn.zepio.io/blyo/product/fb2eb3f3-d297-4bc4-be11-ed1d24b4ebd7.webp",
+            image: "assets/images/category-iced-out.jpg",
             link: "#/shop?category=iced-out-jewels"
         },
         {
