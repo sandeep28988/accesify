@@ -645,7 +645,7 @@ export const AdminDashboard = () => {
                         </div>
                     </button>
 
-                    <div class="zepio-nav-section-title">Sales & Orders</div>
+                    <div class="zepio-nav-section-title">Orders & Customers</div>
 
                     <button 
                         type="button" 
@@ -786,22 +786,8 @@ export const AdminDashboard = () => {
                                 </div>
                             </div>
 
-                            <!-- 3 KPI Metric Cards (ju from blyo.in) -->
+                            <!-- KPI Metric Cards (Real Store Stats) -->
                             <div class="zepio-stats-grid">
-                                <div class="zepio-stat-card">
-                                    <div>
-                                        <div class="zepio-stat-label">Total Sales</div>
-                                        <div class="zepio-stat-value">₹${totalRevenue.toLocaleString()}</div>
-                                        <div class="zepio-stat-sub" style="color: #10b981;">
-                                            <i class="ri-arrow-up-line"></i>
-                                            <span>+21% vs previous period</span>
-                                        </div>
-                                    </div>
-                                    <div class="zepio-stat-icon-wrap green">
-                                        <i class="ri-money-rupee-circle-line"></i>
-                                    </div>
-                                </div>
-
                                 <div class="zepio-stat-card">
                                     <div>
                                         <div class="zepio-stat-label">Total Orders</div>
@@ -811,20 +797,33 @@ export const AdminDashboard = () => {
                                         </div>
                                     </div>
                                     <div class="zepio-stat-icon-wrap blue">
-                                        <i class="ri-inbox-archive-line"></i>
+                                        <i class="ri-shopping-bag-3-line"></i>
                                     </div>
                                 </div>
 
                                 <div class="zepio-stat-card">
                                     <div>
-                                        <div class="zepio-stat-label">Average Order Value</div>
-                                        <div class="zepio-stat-value">₹${avgOrderValue.toLocaleString()}</div>
+                                        <div class="zepio-stat-label">Catalog Products</div>
+                                        <div class="zepio-stat-value">${totalProductsCount}</div>
                                         <div class="zepio-stat-sub">
-                                            <span>from ${customersList.length} customers</span>
+                                            <span>Across ${allCategories.length} categories</span>
                                         </div>
                                     </div>
                                     <div class="zepio-stat-icon-wrap purple">
-                                        <i class="ri-copper-coin-fill"></i>
+                                        <i class="ri-box-3-line"></i>
+                                    </div>
+                                </div>
+
+                                <div class="zepio-stat-card">
+                                    <div>
+                                        <div class="zepio-stat-label">Store Customers</div>
+                                        <div class="zepio-stat-value">${customersList.length}</div>
+                                        <div class="zepio-stat-sub">
+                                            <span>Customer directory</span>
+                                        </div>
+                                    </div>
+                                    <div class="zepio-stat-icon-wrap green">
+                                        <i class="ri-user-star-line"></i>
                                     </div>
                                 </div>
                             </div>
@@ -1325,7 +1324,15 @@ export const AdminDashboard = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            ${filteredOrders.map(order => html`
+                                            ${filteredOrders.length === 0 ? html`
+                                                <tr>
+                                                    <td colspan="6" style="text-align: center; padding: 48px 16px; color: #6b7280;">
+                                                        <i class="ri-inbox-line" style="font-size: 2.2rem; color: #9ca3af; display: block; margin-bottom: 8px;"></i>
+                                                        <div style="font-weight: 700; font-size: 0.95rem; color: #374151; margin-bottom: 4px;">No orders yet</div>
+                                                        <div style="font-size: 0.8rem;">New orders placed via WhatsApp or checkout will appear here in real time.</div>
+                                                    </td>
+                                                </tr>
+                                            ` : filteredOrders.map(order => html`
                                                 <tr key=${order.id}>
                                                     <td>
                                                         <div style="font-weight: 700; color: #2563eb;">#${order.id}</div>
@@ -1395,7 +1402,15 @@ export const AdminDashboard = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            ${customersList.map(c => html`
+                                            ${customersList.length === 0 ? html`
+                                                <tr>
+                                                    <td colspan="5" style="text-align: center; padding: 48px 16px; color: #6b7280;">
+                                                        <i class="ri-user-line" style="font-size: 2.2rem; color: #9ca3af; display: block; margin-bottom: 8px;"></i>
+                                                        <div style="font-weight: 700; font-size: 0.95rem; color: #374151; margin-bottom: 4px;">No customer profiles yet</div>
+                                                        <div style="font-size: 0.8rem;">Customers who place orders will automatically be cataloged here.</div>
+                                                    </td>
+                                                </tr>
+                                            ` : customersList.map(c => html`
                                                 <tr key=${c.id}>
                                                     <td>
                                                         <div style="font-weight: 600;">${c.name}</div>

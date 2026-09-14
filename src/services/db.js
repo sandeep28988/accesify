@@ -20,74 +20,7 @@ const INITIAL_REVIEWS = [
     { id: "r4", productId: "acc_3557", author: "Vikram N.", rating: 5, date: "2026-06-05", text: "Moon bracelet is minimalist yet heavy. High quality 316L stainless steel." }
 ];
 
-const INITIAL_ORDERS = [
-    {
-        id: "ACC-9124",
-        date: "2026-09-14T14:15:00.000Z",
-        customer: {
-            name: "Devendra Patel",
-            phone: "+919820144582",
-            email: "devendra.p@gmail.com",
-            address: "402 Skyline Heights, Bandra West, Mumbai, MH 400050"
-        },
-        items: [
-            { id: "acc_3654", name: "CH97 BELT", price: 1499, quantity: 1, image: "assets/images/hero-hand.jpg" },
-            { id: "acc_3596", name: "Chrome Heart Earring", price: 349, quantity: 2, image: "assets/images/category-earrings.jpg" }
-        ],
-        total: 2197,
-        paymentMethod: "Cash on Delivery",
-        status: "processing"
-    },
-    {
-        id: "ACC-8975",
-        date: "2026-09-14T11:42:00.000Z",
-        customer: {
-            name: "Siddharth Rao",
-            phone: "+919940281734",
-            email: "siddharth.rao@yahoo.com",
-            address: "12/A Richmond Road, Ashok Nagar, Bengaluru, KA 560025"
-        },
-        items: [
-            { id: "acc_3651", name: "Gothic Cross Link Chain", price: 799, quantity: 1, image: "assets/images/category-chains.jpg" }
-        ],
-        total: 799,
-        paymentMethod: "WhatsApp Direct Pay",
-        status: "shipped"
-    },
-    {
-        id: "ACC-8610",
-        date: "2026-09-13T19:20:00.000Z",
-        customer: {
-            name: "Ananya Deshmukh",
-            phone: "+919711562890",
-            email: "ananya.d@outlook.com",
-            address: "B-704 Silver Oak, Koregaon Park, Pune, MH 411001"
-        },
-        items: [
-            { id: "acc_3557", name: "Elegant Moon Bracelet", price: 499, quantity: 1, image: "assets/images/category-bracelets.jpg" },
-            { id: "acc_3542", name: "Minimal Nine Fox Tale Ring", price: 399, quantity: 1, image: "assets/images/category-rings.jpg" }
-        ],
-        total: 898,
-        paymentMethod: "Cash on Delivery",
-        status: "delivered"
-    },
-    {
-        id: "ACC-8402",
-        date: "2026-09-13T16:05:00.000Z",
-        customer: {
-            name: "Karan Malhotra",
-            phone: "+919819023411",
-            email: "karan.malhotra@gmail.com",
-            address: "House 24, Sector 15, Chandigarh, CH 160015"
-        },
-        items: [
-            { id: "acc_3652", name: "Ruby Gothic Cross Pendant Combo", price: 1299, quantity: 1, image: "assets/images/category-combos.jpg" }
-        ],
-        total: 1299,
-        paymentMethod: "WhatsApp Direct Pay",
-        status: "pending"
-    }
-];
+const INITIAL_ORDERS = [];
 
 const DEFAULT_SETTINGS = {
     storeName: "ACCESSIFY",
@@ -158,9 +91,24 @@ if (!localStorage.getItem("accessify_coupons")) {
 if (!localStorage.getItem("accessify_reviews")) {
     setLocalStorageItem("reviews", INITIAL_REVIEWS);
 }
-const existingOrders = getLocalStorageItem("orders_v2", null);
-if (!existingOrders || !Array.isArray(existingOrders) || existingOrders.length === 0) {
-    setLocalStorageItem("orders_v2", INITIAL_ORDERS);
+// Clean and migrate orders to v3 (purging all fake/dummy seed orders)
+const MOCK_ORDER_IDS = ["ACC-9124", "ACC-8975", "ACC-8610", "ACC-8402"];
+const cleanOrders = (rawOrders) => {
+    if (!Array.isArray(rawOrders)) return [];
+    return rawOrders.filter(o => o && o.id && !MOCK_ORDER_IDS.includes(o.id));
+};
+
+let existingOrders = getLocalStorageItem("orders_v3", null);
+if (existingOrders === null) {
+    const oldOrders = getLocalStorageItem("orders_v2", []);
+    const sanitized = cleanOrders(oldOrders);
+    setLocalStorageItem("orders_v3", sanitized);
+    try { localStorage.removeItem("accessify_orders_v2"); } catch (e) {}
+} else {
+    const sanitized = cleanOrders(existingOrders);
+    if (sanitized.length !== existingOrders.length) {
+        setLocalStorageItem("orders_v3", sanitized);
+    }
 }
 if (!localStorage.getItem("accessify_settings_v1")) {
     setLocalStorageItem("settings_v1", DEFAULT_SETTINGS);
@@ -378,7 +326,7 @@ export const db = {
     },
 
     // ORDERS
-    getOrders: () => getLocalStorageItem("orders_v2", INITIAL_ORDERS),
+    getOrders: () => getLocalStorageItem("orders_v3", []),
     
     createOrder: (orderData) => {
         const orders = db.getOrders();
@@ -389,7 +337,7 @@ export const db = {
             status: "pending"
         };
         orders.unshift(newOrder);
-        setLocalStorageItem("orders_v2", orders);
+        setLocalStorageItem("orders_v3", orders);
 
         const products = db.getProducts();
         if (Array.isArray(newOrder.items)) {
@@ -410,7 +358,7 @@ export const db = {
         const index = orders.findIndex(o => o.id === orderId);
         if (index !== -1) {
             orders[index].status = status;
-            setLocalStorageItem("orders_v2", orders);
+            setLocalStorageItem("orders_v3", orders);
             return true;
         }
         return false;
