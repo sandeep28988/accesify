@@ -26,7 +26,7 @@ export const Home = () => {
     const categoryCards = [
         {
             title: "CHAINS",
-            image: "https://cdn.zepio.io/blyo/product/b424f5d2-95f5-4860-8ff0-0c75ef914e0b.webp",
+            image: "assets/images/category-chains.jpg",
             link: "#/shop?category=chains"
         },
         {
