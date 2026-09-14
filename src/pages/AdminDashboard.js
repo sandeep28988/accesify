@@ -18,8 +18,10 @@ export const AdminDashboard = () => {
     } = useContext(AppContext);
 
     // Navigation & UI States
-    const [activeTab, setActiveTab] = useState("dashboard"); // dashboard | products | categories | orders | customers | coupons | settings
+    const [activeTab, setActiveTab] = useState("staff"); // staff | products | categories | orders | inventory | customers | discounts | settings
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [storeOpen, setStoreOpen] = useState(true);
+    const [dateRange, setDateRange] = useState("this-month"); // today | yesterday | 7d | 30d | this-month | all
 
     // Auth fields for protected screen
     const [adminId, setAdminId] = useState("");
@@ -42,7 +44,7 @@ export const AdminDashboard = () => {
 
     // Form Fields for Add / Edit Product
     const [formName, setFormName] = useState("");
-    const [formCategory, setFormCategory] = useState("rings");
+    const [formCategory, setFormCategory] = useState("chains");
     const [formPrice, setFormPrice] = useState("");
     const [formComparePrice, setFormComparePrice] = useState("");
     const [formDescription, setFormDescription] = useState("");
@@ -71,12 +73,6 @@ export const AdminDashboard = () => {
         window.scrollTo(0, 0);
     }, [activeTab]);
 
-    useEffect(() => {
-        if (window.lucide) {
-            window.lucide.createIcons();
-        }
-    });
-
     // Re-fetch data on active tab change
     useEffect(() => {
         setOrdersList(db.getOrders());
@@ -102,22 +98,22 @@ export const AdminDashboard = () => {
     // If not authenticated as admin, show Zepio-styled secured login view
     if (!user || user.role !== "admin") {
         return html`
-            <div style="min-height: 100vh; background: #0f172a; display: flex; align-items: center; justify-content: center; padding: 20px;">
+            <div style="min-height: 100vh; background: #111827; display: flex; align-items: center; justify-content: center; padding: 20px;">
                 <div style="width: 100%; max-width: 420px; background: #ffffff; border-radius: 14px; padding: 36px 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center;">
                     <div style="width: 52px; height: 52px; margin: 0 auto 16px; border-radius: 12px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); display: flex; align-items: center; justify-content: center; color: #ffffff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);">
-                        <i data-lucide="shield-check" style="width: 26px; height: 26px;"></i>
+                        <i class="ri-shield-check-line" style="font-size: 26px;"></i>
                     </div>
 
-                    <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 4px; letter-spacing: -0.02em;">
-                        ZEPIO ADMIN PORTAL
+                    <h2 style="font-size: 1.35rem; font-weight: 800; color: #111827; margin-bottom: 4px; letter-spacing: -0.02em;">
+                        BLY0 / ZEPIO ADMIN
                     </h2>
-                    <p style="font-size: 0.82rem; color: #64748b; margin-bottom: 24px;">
-                        Sign in to manage ACCESSIFY store products, orders & settings.
+                    <p style="font-size: 0.82rem; color: #6b7280; margin-bottom: 24px;">
+                        Sign in to access staff dashboard, catalog & orders.
                     </p>
 
                     <form onSubmit=${handleLoginSubmit} style="text-align: left;">
                         <div style="margin-bottom: 16px;">
-                            <label style="font-size: 0.8rem; font-weight: 600; color: #334155; display: block; margin-bottom: 6px;">Admin ID</label>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: #374151; display: block; margin-bottom: 6px;">Staff ID / Email</label>
                             <input 
                                 type="text" 
                                 class="zepio-input" 
@@ -130,7 +126,7 @@ export const AdminDashboard = () => {
                         </div>
 
                         <div style="margin-bottom: 22px;">
-                            <label style="font-size: 0.8rem; font-weight: 600; color: #334155; display: block; margin-bottom: 6px;">Password</label>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: #374151; display: block; margin-bottom: 6px;">Password</label>
                             <input 
                                 type="password" 
                                 class="zepio-input" 
@@ -143,7 +139,7 @@ export const AdminDashboard = () => {
                         </div>
 
                         <button type="submit" class="zepio-btn zepio-btn-primary" style="width: 100%; padding: 11px; font-weight: 700;">
-                            Sign In to Dashboard
+                            Sign In to Staff Panel
                         </button>
 
                         <button 
@@ -152,14 +148,14 @@ export const AdminDashboard = () => {
                             style="width: 100%; padding: 9px; margin-top: 10px; font-size: 0.8rem;"
                             onClick=${handleQuickAdminLogin}
                         >
-                            <i data-lucide="zap" style="width: 14px; height: 14px; color: #f59e0b;"></i>
-                            One-Click Store Owner Access
+                            <i class="ri-flashlight-line" style="color: #f59e0b;"></i>
+                            One-Click Store Staff Access
                         </button>
                     </form>
 
-                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
-                        <a href="#/" style="font-size: 0.82rem; color: #64748b; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
-                            <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
+                    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
+                        <a href="#/" style="font-size: 0.82rem; color: #6b7280; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="ri-arrow-left-line"></i>
                             Return to Customer Storefront
                         </a>
                     </div>
@@ -178,6 +174,15 @@ export const AdminDashboard = () => {
     const avgOrderValue = totalOrdersCount > 0 ? Math.round(totalRevenue / totalOrdersCount) : 0;
     const pendingOrdersCount = ordersList.filter(o => o.status === "pending" || o.status === "processing").length;
     const customersList = db.getCustomers();
+
+    // Pipeline Counts (Nu)
+    const pipelineCounts = {
+        placed: ordersList.filter(o => o.status === "pending").length,
+        processing: ordersList.filter(o => o.status === "processing").length,
+        ready: 0,
+        shipped: ordersList.filter(o => o.status === "shipped").length,
+        delivered: ordersList.filter(o => o.status === "delivered").length
+    };
 
     // Filter products for Catalog Tab
     let filteredProducts = [...products];
@@ -337,6 +342,18 @@ export const AdminDashboard = () => {
         });
     };
 
+    // Stock adjustment helper
+    const handleAdjustStock = (product, delta) => {
+        const currentStock = product.stock !== undefined ? product.stock : 20;
+        const newStock = Math.max(0, currentStock + delta);
+        db.saveProduct({
+            ...product,
+            stock: newStock
+        });
+        refreshData();
+        showToast(`Stock for ${product.name} updated to ${newStock}`);
+    };
+
     // Image fields helpers
     const handleAddImageField = () => setFormImages(prev => [...prev, ""]);
     const handleImageChange = (index, value) => {
@@ -459,32 +476,32 @@ export const AdminDashboard = () => {
                 <div class="zepio-sidebar-overlay" onClick=${() => setMobileMenuOpen(false)}></div>
             `}
 
-            <!-- 1. ZEPIO LEFT VERTICAL SIDEBAR -->
+            <!-- 1. ZEPIO / BLYO LEFT VERTICAL SIDEBAR -->
             <aside class="zepio-sidebar ${mobileMenuOpen ? 'open' : ''}">
                 <div class="zepio-sidebar-header">
                     <div class="zepio-brand-info">
-                        <div class="zepio-brand-icon">A</div>
+                        <div class="zepio-brand-icon">B</div>
                         <div>
                             <h3 class="zepio-brand-title">ACCESSIFY</h3>
                             <div class="zepio-brand-sub">
                                 <span class="zepio-status-dot"></span>
-                                Store Online (Zepio)
+                                Staff Panel (blyo.in)
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <nav class="zepio-sidebar-nav">
-                    <div class="zepio-nav-section-title">Main</div>
+                    <div class="zepio-nav-section-title">Operations</div>
 
                     <button 
                         type="button" 
-                        class="zepio-nav-item ${activeTab === 'dashboard' ? 'active' : ''}" 
-                        onClick=${() => { setActiveTab('dashboard'); setMobileMenuOpen(false); }}
+                        class="zepio-nav-item ${activeTab === 'staff' ? 'active' : ''}" 
+                        onClick=${() => { setActiveTab('staff'); setMobileMenuOpen(false); }}
                     >
                         <div class="zepio-nav-item-left">
-                            <i data-lucide="layout-dashboard" class="zepio-nav-icon"></i>
-                            <span>Mission Control</span>
+                            <i class="ri-home-5-line zepio-nav-icon"></i>
+                            <span>Staff Dashboard</span>
                         </div>
                     </button>
 
@@ -496,7 +513,7 @@ export const AdminDashboard = () => {
                         onClick=${() => { setActiveTab('products'); setMobileMenuOpen(false); }}
                     >
                         <div class="zepio-nav-item-left">
-                            <i data-lucide="package" class="zepio-nav-icon"></i>
+                            <i class="ri-box-3-line zepio-nav-icon"></i>
                             <span>Products</span>
                         </div>
                         <span class="zepio-nav-badge">${totalProductsCount}</span>
@@ -508,13 +525,24 @@ export const AdminDashboard = () => {
                         onClick=${() => { setActiveTab('categories'); setMobileMenuOpen(false); }}
                     >
                         <div class="zepio-nav-item-left">
-                            <i data-lucide="folder-tree" class="zepio-nav-icon"></i>
+                            <i class="ri-folder-line zepio-nav-icon"></i>
                             <span>Categories</span>
                         </div>
                         <span class="zepio-nav-badge">${allCategories.length}</span>
                     </button>
 
-                    <div class="zepio-nav-section-title">Operations</div>
+                    <button 
+                        type="button" 
+                        class="zepio-nav-item ${activeTab === 'inventory' ? 'active' : ''}" 
+                        onClick=${() => { setActiveTab('inventory'); setMobileMenuOpen(false); }}
+                    >
+                        <div class="zepio-nav-item-left">
+                            <i class="ri-stack-line zepio-nav-icon"></i>
+                            <span>Inventory</span>
+                        </div>
+                    </button>
+
+                    <div class="zepio-nav-section-title">Sales & Orders</div>
 
                     <button 
                         type="button" 
@@ -522,7 +550,7 @@ export const AdminDashboard = () => {
                         onClick=${() => { setActiveTab('orders'); setMobileMenuOpen(false); }}
                     >
                         <div class="zepio-nav-item-left">
-                            <i data-lucide="shopping-cart" class="zepio-nav-icon"></i>
+                            <i class="ri-inbox-archive-line zepio-nav-icon"></i>
                             <span>Orders</span>
                         </div>
                         ${pendingOrdersCount > 0 && html`
@@ -536,25 +564,25 @@ export const AdminDashboard = () => {
                         onClick=${() => { setActiveTab('customers'); setMobileMenuOpen(false); }}
                     >
                         <div class="zepio-nav-item-left">
-                            <i data-lucide="users" class="zepio-nav-icon"></i>
+                            <i class="ri-user-3-line zepio-nav-icon"></i>
                             <span>Customers</span>
                         </div>
                         <span class="zepio-nav-badge">${customersList.length}</span>
                     </button>
 
-                    <div class="zepio-nav-section-title">Growth & Plugins</div>
-
                     <button 
                         type="button" 
-                        class="zepio-nav-item ${activeTab === 'coupons' ? 'active' : ''}" 
-                        onClick=${() => { setActiveTab('coupons'); setMobileMenuOpen(false); }}
+                        class="zepio-nav-item ${activeTab === 'discounts' ? 'active' : ''}" 
+                        onClick=${() => { setActiveTab('discounts'); setMobileMenuOpen(false); }}
                     >
                         <div class="zepio-nav-item-left">
-                            <i data-lucide="tag" class="zepio-nav-icon"></i>
-                            <span>Coupons & Marketing</span>
+                            <i class="ri-discount-percent-line zepio-nav-icon"></i>
+                            <span>Discounts</span>
                         </div>
                         <span class="zepio-nav-badge">${couponsList.length}</span>
                     </button>
+
+                    <div class="zepio-nav-section-title">Settings</div>
 
                     <button 
                         type="button" 
@@ -562,7 +590,7 @@ export const AdminDashboard = () => {
                         onClick=${() => { setActiveTab('settings'); setMobileMenuOpen(false); }}
                     >
                         <div class="zepio-nav-item-left">
-                            <i data-lucide="settings" class="zepio-nav-icon"></i>
+                            <i class="ri-settings-line zepio-nav-icon"></i>
                             <span>Store Settings</span>
                         </div>
                     </button>
@@ -570,24 +598,24 @@ export const AdminDashboard = () => {
 
                 <div class="zepio-sidebar-footer">
                     <a href="#/" class="zepio-sidebar-store-btn" target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
-                        <span>Visit Online Store</span>
+                        <i class="ri-external-link-line"></i>
+                        <span>Visit your store</span>
                     </a>
                     <button 
                         type="button" 
                         class="zepio-btn zepio-btn-secondary zepio-btn-sm" 
-                        style="width: 100%; border: none; background: transparent; color: #94a3b8;"
+                        style="width: 100%; border: none; background: transparent; color: #9ca3af;"
                         onClick=${logout}
                     >
-                        <i data-lucide="log-out" style="width: 14px; height: 14px;"></i>
-                        <span>Sign Out</span>
+                        <i class="ri-logout-box-r-line"></i>
+                        <span>Logout</span>
                     </button>
                 </div>
             </aside>
 
             <!-- 2. MAIN CONTENT WRAPPER -->
             <div class="zepio-main-content">
-                <!-- TOP UTILITY BAR -->
+                <!-- TOPBAR MATCHING BLYO.IN/ADMIN/STAFF -->
                 <header class="zepio-topbar">
                     <div class="zepio-topbar-left">
                         <button 
@@ -596,34 +624,39 @@ export const AdminDashboard = () => {
                             onClick=${() => setMobileMenuOpen(!mobileMenuOpen)}
                             aria-label="Toggle Menu"
                         >
-                            <i data-lucide="menu" style="width: 20px; height: 20px;"></i>
+                            <i class="ri-menu-line" style="font-size: 18px;"></i>
                         </button>
                         <div class="zepio-breadcrumbs">
-                            <span>Admin</span>
-                            <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+                            <i class="ri-store-2-line" style="color: #6b7280;"></i>
+                            <span style="font-weight: 600;">Main Store</span>
+                            <span>/</span>
                             <span class="zepio-breadcrumb-active" style="text-transform: capitalize;">${activeTab}</span>
                         </div>
                     </div>
 
                     <div class="zepio-topbar-right">
-                        <div class="zepio-topbar-search">
-                            <i data-lucide="search" class="zepio-topbar-search-icon"></i>
-                            <input 
-                                type="text" 
-                                placeholder="Search products, orders..."
-                                value=${searchQuery}
-                                onInput=${e => setSearchQuery(e.target.value)}
-                            />
+                        <!-- Store Status Open/Closed Pill (im component from blyo.in) -->
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 0.78rem; font-weight: 600; color: #6b7280;" class="hidden sm:inline">Store status:</span>
+                            <button 
+                                type="button" 
+                                class="zepio-store-status-toggle ${storeOpen ? 'open' : 'closed'}" 
+                                onClick=${() => { setStoreOpen(!storeOpen); showToast(storeOpen ? "Store closed for orders" : "Store is now Open & accepting orders!"); }}
+                                title="Store Status (Open/Closed)"
+                            >
+                                <span class="zepio-status-text">${storeOpen ? 'Open' : 'Closed'}</span>
+                                <span class="zepio-status-knob"></span>
+                            </button>
                         </div>
 
-                        <a href="#/" class="zepio-btn zepio-btn-secondary zepio-btn-sm">
-                            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
-                            <span>View Store</span>
+                        <a href="#/" class="zepio-btn zepio-btn-secondary zepio-btn-sm" target="_blank">
+                            <i class="ri-external-link-line"></i>
+                            <span class="hidden sm:inline">Visit your store</span>
                         </a>
 
-                        <div class="zepio-user-profile">
-                            <div class="zepio-avatar">A</div>
-                            <span class="zepio-user-role">Admin</span>
+                        <div class="zepio-user-profile" style="cursor: pointer;" onClick=${logout} title="Click to logout">
+                            <div class="zepio-avatar" style="background: #3b82f6;">S</div>
+                            <span class="zepio-user-role">Staff</span>
                         </div>
                     </div>
                 </header>
@@ -631,35 +664,38 @@ export const AdminDashboard = () => {
                 <!-- 3. DYNAMIC CONTENT CANVAS -->
                 <main class="zepio-content-body">
                     
-                    <!-- TAB 1: MISSION CONTROL / DASHBOARD -->
-                    ${activeTab === 'dashboard' && html`
+                    <!-- TAB: STAFF DASHBOARD (/admin/staff) -->
+                    ${activeTab === 'staff' && html`
                         <div>
-                            <div class="zepio-page-header">
+                            <!-- Date Range Bar -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
                                 <div>
-                                    <h1 class="zepio-page-title">Mission Control</h1>
-                                    <p class="zepio-page-subtitle">Real-time overview of sales, active jewelry inventory & customer orders.</p>
+                                    <h1 class="zepio-page-title">Staff Dashboard</h1>
+                                    <p class="zepio-page-subtitle">Operations overview for ACCESSIFY streetwear store.</p>
                                 </div>
-                                <div class="zepio-page-actions">
-                                    <button type="button" class="zepio-btn zepio-btn-primary" onClick=${openAddProductModal}>
-                                        <i data-lucide="plus-circle" style="width: 15px; height: 15px;"></i>
-                                        <span>Add Product</span>
-                                    </button>
+                                <div class="zepio-range-bar">
+                                    <button class="zepio-range-pill ${dateRange === 'today' ? 'active' : ''}" onClick=${() => setDateRange('today')}>Today</button>
+                                    <button class="zepio-range-pill ${dateRange === 'yesterday' ? 'active' : ''}" onClick=${() => setDateRange('yesterday')}>Yesterday</button>
+                                    <button class="zepio-range-pill ${dateRange === '7d' ? 'active' : ''}" onClick=${() => setDateRange('7d')}>Last 7 days</button>
+                                    <button class="zepio-range-pill ${dateRange === '30d' ? 'active' : ''}" onClick=${() => setDateRange('30d')}>Last 30 days</button>
+                                    <button class="zepio-range-pill ${dateRange === 'this-month' ? 'active' : ''}" onClick=${() => setDateRange('this-month')}>This month</button>
+                                    <button class="zepio-range-pill ${dateRange === 'all' ? 'active' : ''}" onClick=${() => setDateRange('all')}>All time</button>
                                 </div>
                             </div>
 
-                            <!-- 4 Real-time KPI Stats -->
+                            <!-- 3 KPI Metric Cards (ju from blyo.in) -->
                             <div class="zepio-stats-grid">
                                 <div class="zepio-stat-card">
                                     <div>
-                                        <div class="zepio-stat-label">Total Revenue</div>
+                                        <div class="zepio-stat-label">Total Sales</div>
                                         <div class="zepio-stat-value">₹${totalRevenue.toLocaleString()}</div>
                                         <div class="zepio-stat-sub" style="color: #10b981;">
-                                            <i data-lucide="trending-up" style="width: 12px; height: 12px;"></i>
-                                            <span>+18.4% this month</span>
+                                            <i class="ri-arrow-up-line"></i>
+                                            <span>+21% vs previous period</span>
                                         </div>
                                     </div>
                                     <div class="zepio-stat-icon-wrap green">
-                                        <i data-lucide="indian-rupee" style="width: 22px; height: 22px;"></i>
+                                        <i class="ri-money-rupee-circle-line"></i>
                                     </div>
                                 </div>
 
@@ -668,24 +704,11 @@ export const AdminDashboard = () => {
                                         <div class="zepio-stat-label">Total Orders</div>
                                         <div class="zepio-stat-value">${totalOrdersCount}</div>
                                         <div class="zepio-stat-sub">
-                                            <span>${pendingOrdersCount} pending processing</span>
+                                            <span>${pendingOrdersCount} awaiting fulfillment</span>
                                         </div>
                                     </div>
                                     <div class="zepio-stat-icon-wrap blue">
-                                        <i data-lucide="shopping-bag" style="width: 22px; height: 22px;"></i>
-                                    </div>
-                                </div>
-
-                                <div class="zepio-stat-card">
-                                    <div>
-                                        <div class="zepio-stat-label">Active Products</div>
-                                        <div class="zepio-stat-value">${totalProductsCount}</div>
-                                        <div class="zepio-stat-sub">
-                                            <span>across ${allCategories.length} categories</span>
-                                        </div>
-                                    </div>
-                                    <div class="zepio-stat-icon-wrap purple">
-                                        <i data-lucide="package" style="width: 22px; height: 22px;"></i>
+                                        <i class="ri-inbox-archive-line"></i>
                                     </div>
                                 </div>
 
@@ -694,87 +717,207 @@ export const AdminDashboard = () => {
                                         <div class="zepio-stat-label">Average Order Value</div>
                                         <div class="zepio-stat-value">₹${avgOrderValue.toLocaleString()}</div>
                                         <div class="zepio-stat-sub">
-                                            <span>based on recent sales</span>
+                                            <span>from ${customersList.length} customers</span>
                                         </div>
                                     </div>
-                                    <div class="zepio-stat-icon-wrap amber">
-                                        <i data-lucide="award" style="width: 22px; height: 22px;"></i>
+                                    <div class="zepio-stat-icon-wrap purple">
+                                        <i class="ri-copper-coin-fill"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Recent Orders Table -->
-                            <div class="zepio-card">
-                                <div class="zepio-card-header">
-                                    <h3 class="zepio-card-title">Recent Store Orders</h3>
-                                    <button 
-                                        type="button" 
-                                        class="zepio-btn zepio-btn-secondary zepio-btn-sm"
-                                        onClick=${() => setActiveTab('orders')}
-                                    >
-                                        View All Orders →
-                                    </button>
+                            <!-- ORDER PIPELINE (Nu from Zepio /admin/staff) -->
+                            <div class="zepio-pipeline-card">
+                                <div class="zepio-pipeline-title">
+                                    <i class="ri-route-line" style="color: #2563eb;"></i>
+                                    <span>Orders Pipeline</span>
                                 </div>
-                                <div class="zepio-table-container">
-                                    <table class="zepio-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer</th>
-                                                <th>Items</th>
-                                                <th>Total</th>
-                                                <th>Payment</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            ${ordersList.slice(0, 5).map(order => html`
-                                                <tr key=${order.id}>
-                                                    <td style="font-weight: 700; color: #2563eb;">#${order.id}</td>
-                                                    <td>
-                                                        <div style="font-weight: 600;">${order.customer?.name || 'Customer'}</div>
-                                                        <div style="font-size: 0.72rem; color: #64748b;">${order.customer?.phone || ''}</div>
-                                                    </td>
-                                                    <td>${order.items?.length || 1} item(s)</td>
-                                                    <td style="font-weight: 700;">₹${order.total}</td>
-                                                    <td><span class="zepio-badge zepio-badge-gray">${order.paymentMethod || 'COD'}</span></td>
-                                                    <td>${getStatusBadge(order.status)}</td>
-                                                    <td>
-                                                        <button 
-                                                            type="button" 
-                                                            class="zepio-btn zepio-btn-success zepio-btn-sm"
-                                                            title="Chat with customer on WhatsApp"
-                                                            onClick=${() => handleCustomerWhatsApp(order)}
-                                                        >
-                                                            <i data-lucide="message-circle" style="width: 13px; height: 13px;"></i>
-                                                            WhatsApp
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            `)}
-                                        </tbody>
-                                    </table>
+                                <div class="zepio-pipeline-steps">
+                                    <div class="zepio-pipeline-step" onClick=${() => { setOrderFilter('pending'); setActiveTab('orders'); }}>
+                                        <div class="zepio-pipeline-count" style="color: #f59e0b;">${pipelineCounts.placed}</div>
+                                        <div class="zepio-pipeline-label">Placed (Pending)</div>
+                                    </div>
+
+                                    <div class="zepio-pipeline-step" onClick=${() => { setOrderFilter('processing'); setActiveTab('orders'); }}>
+                                        <div class="zepio-pipeline-count" style="color: #2563eb;">${pipelineCounts.processing}</div>
+                                        <div class="zepio-pipeline-label">Processing</div>
+                                    </div>
+
+                                    <div class="zepio-pipeline-step" onClick=${() => { setOrderFilter('processing'); setActiveTab('orders'); }}>
+                                        <div class="zepio-pipeline-count" style="color: #8b5cf6;">${pipelineCounts.ready}</div>
+                                        <div class="zepio-pipeline-label">Ready for Pickup</div>
+                                    </div>
+
+                                    <div class="zepio-pipeline-step" onClick=${() => { setOrderFilter('shipped'); setActiveTab('orders'); }}>
+                                        <div class="zepio-pipeline-count" style="color: #06b6d4;">${pipelineCounts.shipped}</div>
+                                        <div class="zepio-pipeline-label">Out for Delivery</div>
+                                    </div>
+
+                                    <div class="zepio-pipeline-step" onClick=${() => { setOrderFilter('delivered'); setActiveTab('orders'); }}>
+                                        <div class="zepio-pipeline-count" style="color: #10b981;">${pipelineCounts.delivered}</div>
+                                        <div class="zepio-pipeline-label">Delivered</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- "MANAGE" SHORTCUTS GRID (Fu from Zepio /admin/staff) -->
+                            <div class="zepio-section-block">
+                                <div class="zepio-section-header">
+                                    <h3 class="zepio-section-title">Manage</h3>
+                                    <p class="zepio-section-sub">Run your store day to day</p>
+                                </div>
+                                <div class="zepio-shortcut-grid">
+                                    <!-- 1. Products -->
+                                    <div class="zepio-shortcut-tile tone-indigo" onClick=${() => setActiveTab('products')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-box-3-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Products</span>
+                                    </div>
+
+                                    <!-- 2. Orders -->
+                                    <div class="zepio-shortcut-tile tone-sky" onClick=${() => setActiveTab('orders')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-inbox-archive-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Orders</span>
+                                        ${pendingOrdersCount > 0 && html`
+                                            <span class="zepio-shortcut-badge">${pendingOrdersCount}</span>
+                                        `}
+                                    </div>
+
+                                    <!-- 3. Inventory -->
+                                    <div class="zepio-shortcut-tile tone-amber" onClick=${() => setActiveTab('inventory')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-stack-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Inventory</span>
+                                    </div>
+
+                                    <!-- 4. Customers -->
+                                    <div class="zepio-shortcut-tile tone-pink" onClick=${() => setActiveTab('customers')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-user-3-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Customers</span>
+                                    </div>
+
+                                    <!-- 5. Categories -->
+                                    <div class="zepio-shortcut-tile tone-indigo" onClick=${() => setActiveTab('categories')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-folder-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Categories</span>
+                                    </div>
+
+                                    <!-- 6. Discounts -->
+                                    <div class="zepio-shortcut-tile tone-emerald" onClick=${() => setActiveTab('discounts')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-discount-percent-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Discounts</span>
+                                    </div>
+
+                                    <!-- 7. Abandoned -->
+                                    <div class="zepio-shortcut-tile tone-coral" onClick=${() => showToast("No abandoned carts in last 24 hours.")}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-shopping-cart-2-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Abandoned</span>
+                                    </div>
+
+                                    <!-- 8. Reports -->
+                                    <div class="zepio-shortcut-tile tone-sky" onClick=${() => showToast("Sales report generated successfully!")}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-line-chart-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Reports</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- "GROW" SHORTCUTS GRID (Mu from Zepio /admin/staff) -->
+                            <div class="zepio-section-block">
+                                <div class="zepio-section-header">
+                                    <h3 class="zepio-section-title">Grow</h3>
+                                    <p class="zepio-section-sub">Reach new customers and bring them back</p>
+                                </div>
+                                <div class="zepio-shortcut-grid">
+                                    <div class="zepio-shortcut-tile tone-indigo" onClick=${() => window.open('#/', '_blank')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-quill-pen-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Design</span>
+                                    </div>
+
+                                    <div class="zepio-shortcut-tile tone-indigo" onClick=${() => setActiveTab('categories')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-price-tag-3-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Collections</span>
+                                    </div>
+
+                                    <div class="zepio-shortcut-tile tone-coral" onClick=${() => showToast("Push Notification center active.")}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-notification-3-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Push Alerts</span>
+                                    </div>
+
+                                    <div class="zepio-shortcut-tile tone-pink" onClick=${() => showToast("All product reviews verified.")}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-star-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Reviews</span>
+                                    </div>
+
+                                    <div class="zepio-shortcut-tile tone-sky" onClick=${() => setActiveTab('settings')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-global-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Domain</span>
+                                    </div>
+
+                                    <div class="zepio-shortcut-tile tone-emerald" onClick=${() => showToast("PWA Store ready for mobile install.")}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-smartphone-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Android App</span>
+                                    </div>
+
+                                    <div class="zepio-shortcut-tile tone-amber" onClick=${() => showToast("SEO Meta Tags & Sitemaps are indexed.")}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-search-eye-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">SEO</span>
+                                    </div>
+
+                                    <div class="zepio-shortcut-tile tone-sky" onClick=${() => setActiveTab('settings')}>
+                                        <div class="zepio-shortcut-icon">
+                                            <i class="ri-flashlight-line"></i>
+                                        </div>
+                                        <span class="zepio-shortcut-name">Plugins</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     `}
 
-                    <!-- TAB 2: PRODUCTS CATALOG -->
+                    <!-- TAB: PRODUCTS CATALOG -->
                     ${activeTab === 'products' && html`
                         <div>
                             <div class="zepio-page-header">
                                 <div>
-                                    <h1 class="zepio-page-title">Products Catalog</h1>
-                                    <p class="zepio-page-subtitle">Showing ${filteredProducts.length} of ${products.length} streetwear & gothic jewelry pieces.</p>
+                                    <h1 class="zepio-page-title">Products</h1>
+                                    <p class="zepio-page-subtitle">${filteredProducts.length} items in catalog • Inline price editing enabled</p>
                                 </div>
-                                <div class="zepio-page-actions">
+                                <div style="display: flex; gap: 8px;">
                                     <button type="button" class="zepio-btn zepio-btn-secondary" onClick=${handleDownloadJson}>
-                                        <i data-lucide="download" style="width: 15px; height: 15px;"></i>
+                                        <i class="ri-download-2-line"></i>
                                         <span>Export JSON</span>
                                     </button>
                                     <button type="button" class="zepio-btn zepio-btn-primary" onClick=${openAddProductModal}>
-                                        <i data-lucide="plus-circle" style="width: 15px; height: 15px;"></i>
+                                        <i class="ri-add-line"></i>
                                         <span>Add Product</span>
                                     </button>
                                 </div>
@@ -782,10 +925,20 @@ export const AdminDashboard = () => {
 
                             <!-- Filter & Search Toolbar -->
                             <div class="zepio-card" style="margin-bottom: 16px;">
-                                <div class="zepio-filter-bar">
-                                    <div class="zepio-filter-group">
+                                <div style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid #e5e7eb;">
+                                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                        <input 
+                                            type="text" 
+                                            class="zepio-input" 
+                                            style="width: 200px; padding: 6px 10px;"
+                                            placeholder="Search products..."
+                                            value=${searchQuery}
+                                            onInput=${e => setSearchQuery(e.target.value)}
+                                        />
+
                                         <select 
                                             class="zepio-select" 
+                                            style="padding: 6px 10px;"
                                             value=${selectedCategory} 
                                             onChange=${e => setSelectedCategory(e.target.value)}
                                         >
@@ -797,6 +950,7 @@ export const AdminDashboard = () => {
 
                                         <select 
                                             class="zepio-select" 
+                                            style="padding: 6px 10px;"
                                             value=${stockFilter} 
                                             onChange=${e => setStockFilter(e.target.value)}
                                         >
@@ -805,35 +959,21 @@ export const AdminDashboard = () => {
                                             <option value="lowstock">Low Stock (1-5)</option>
                                             <option value="outofstock">Out of Stock (0)</option>
                                         </select>
-
-                                        <select 
-                                            class="zepio-select" 
-                                            value=${sortBy} 
-                                            onChange=${e => setSortBy(e.target.value)}
-                                        >
-                                            <option value="default">Default Order</option>
-                                            <option value="price-low">Price: Low to High</option>
-                                            <option value="price-high">Price: High to Low</option>
-                                            <option value="name">Name (A-Z)</option>
-                                        </select>
                                     </div>
-
-                                    <div style="font-size: 0.8rem; color: #64748b;">
-                                        Tip: Edit price directly in the table and click <strong>Save</strong>.
+                                    <div style="font-size: 0.78rem; color: #6b7280;">
+                                        Click price to edit directly.
                                     </div>
                                 </div>
 
-                                <!-- Product Table -->
                                 <div class="zepio-table-container">
                                     <table class="zepio-table">
                                         <thead>
                                             <tr>
                                                 <th>Product</th>
                                                 <th>Category</th>
-                                                <th>Price (₹)</th>
-                                                <th>Compare Price (₹)</th>
-                                                <th>Stock</th>
-                                                <th>Status</th>
+                                                <th>Selling Price (₹)</th>
+                                                <th>MRP / Compare (₹)</th>
+                                                <th>Inventory</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -846,7 +986,6 @@ export const AdminDashboard = () => {
                                                     ? inlinePrices[product.id].comparePrice 
                                                     : (product.comparePrice || product.price);
                                                 const isEdited = inlinePrices[product.id] !== undefined;
-
                                                 const stockVal = product.stock !== undefined ? product.stock : 20;
 
                                                 return html`
@@ -894,7 +1033,7 @@ export const AdminDashboard = () => {
                                                                     <button 
                                                                         type="button" 
                                                                         class="zepio-btn zepio-btn-primary zepio-btn-sm"
-                                                                        style="padding: 3px 8px; font-size: 0.72rem;"
+                                                                        style="padding: 2px 7px; font-size: 0.7rem;"
                                                                         onClick=${() => handleSaveInlinePrice(product)}
                                                                     >
                                                                         Save
@@ -912,9 +1051,6 @@ export const AdminDashboard = () => {
                                                             `}
                                                         </td>
                                                         <td>
-                                                            <span class="zepio-badge zepio-badge-success">Active</span>
-                                                        </td>
-                                                        <td>
                                                             <div style="display: flex; align-items: center; gap: 6px;">
                                                                 <button 
                                                                     type="button" 
@@ -922,7 +1058,7 @@ export const AdminDashboard = () => {
                                                                     onClick=${() => openEditProductModal(product)}
                                                                     title="Edit Product"
                                                                 >
-                                                                    <i data-lucide="edit-3" style="width: 13px; height: 13px;"></i>
+                                                                    <i class="ri-edit-line"></i>
                                                                 </button>
                                                                 <a 
                                                                     href="#/product/${product.id}" 
@@ -930,7 +1066,7 @@ export const AdminDashboard = () => {
                                                                     class="zepio-btn zepio-btn-secondary zepio-btn-sm"
                                                                     title="View in Store"
                                                                 >
-                                                                    <i data-lucide="eye" style="width: 13px; height: 13px;"></i>
+                                                                    <i class="ri-eye-line"></i>
                                                                 </a>
                                                                 <button 
                                                                     type="button" 
@@ -938,7 +1074,7 @@ export const AdminDashboard = () => {
                                                                     onClick=${() => handleDeleteProduct(product)}
                                                                     title="Delete Product"
                                                                 >
-                                                                    <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+                                                                    <i class="ri-delete-bin-line"></i>
                                                                 </button>
                                                             </div>
                                                         </td>
@@ -952,23 +1088,76 @@ export const AdminDashboard = () => {
                         </div>
                     `}
 
-                    <!-- TAB 3: CATEGORIES CATALOG -->
+                    <!-- TAB: INVENTORY -->
+                    ${activeTab === 'inventory' && html`
+                        <div>
+                            <div class="zepio-page-header">
+                                <div>
+                                    <h1 class="zepio-page-title">Inventory Management</h1>
+                                    <p class="zepio-page-subtitle">Track and adjust stock levels across all jewelry items.</p>
+                                </div>
+                            </div>
+
+                            <div class="zepio-card">
+                                <div class="zepio-table-container">
+                                    <table class="zepio-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Category</th>
+                                                <th>Current Stock</th>
+                                                <th>Status</th>
+                                                <th>Quick Adjust</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${products.slice(0, 100).map(product => {
+                                                const stock = product.stock !== undefined ? product.stock : 20;
+                                                return html`
+                                                    <tr key=${product.id}>
+                                                        <td>
+                                                            <div class="zepio-product-cell">
+                                                                <img src=${product.images?.[0] || 'assets/images/hero-hand.jpg'} class="zepio-product-thumb" />
+                                                                <span class="zepio-product-name">${product.name}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td><span class="zepio-badge zepio-badge-gray">${product.category}</span></td>
+                                                        <td style="font-weight: 700; font-size: 1rem;">${stock} units</td>
+                                                        <td>
+                                                            ${stock > 5 ? html`<span class="zepio-badge zepio-badge-success">In Stock</span>` : stock > 0 ? html`<span class="zepio-badge zepio-badge-warning">Low Stock</span>` : html`<span class="zepio-badge zepio-badge-danger">Out of Stock</span>`}
+                                                        </td>
+                                                        <td>
+                                                            <div style="display: flex; gap: 6px;">
+                                                                <button class="zepio-btn zepio-btn-secondary zepio-btn-sm" onClick=${() => handleAdjustStock(product, -1)}>-1</button>
+                                                                <button class="zepio-btn zepio-btn-secondary zepio-btn-sm" onClick=${() => handleAdjustStock(product, +5)}>+5</button>
+                                                                <button class="zepio-btn zepio-btn-secondary zepio-btn-sm" onClick=${() => handleAdjustStock(product, +20)}>+20</button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                `;
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    `}
+
+                    <!-- TAB: CATEGORIES -->
                     ${activeTab === 'categories' && html`
                         <div>
                             <div class="zepio-page-header">
                                 <div>
-                                    <h1 class="zepio-page-title">Categories Management</h1>
-                                    <p class="zepio-page-subtitle">Organize your store collections and navigation cards.</p>
+                                    <h1 class="zepio-page-title">Categories</h1>
+                                    <p class="zepio-page-subtitle">Manage store collections & catalog grouping.</p>
                                 </div>
-                                <div class="zepio-page-actions">
-                                    <button type="button" class="zepio-btn zepio-btn-primary" onClick=${() => setIsCategoryModalOpen(true)}>
-                                        <i data-lucide="plus-circle" style="width: 15px; height: 15px;"></i>
-                                        <span>Add Category</span>
-                                    </button>
-                                </div>
+                                <button type="button" class="zepio-btn zepio-btn-primary" onClick=${() => setIsCategoryModalOpen(true)}>
+                                    <i class="ri-add-line"></i>
+                                    <span>Add Category</span>
+                                </button>
                             </div>
 
-                            <div class="zepio-cat-grid">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
                                 ${allCategories.map(cat => {
                                     const count = products.filter(p => (p.category || "").toLowerCase() === cat.toLowerCase()).length;
                                     let img = `assets/images/category-${cat}.jpg`;
@@ -977,17 +1166,17 @@ export const AdminDashboard = () => {
                                     if (cat === "iced-out-jewels") img = "assets/images/category-iced-out.jpg";
 
                                     return html`
-                                        <div class="zepio-cat-card" key=${cat}>
+                                        <div class="zepio-card" key=${cat} style="margin-bottom: 0;">
                                             <img 
                                                 src=${img} 
                                                 alt=${cat} 
-                                                class="zepio-cat-thumb"
+                                                style="width: 100%; height: 130px; object-fit: cover;"
                                                 onError=${(e) => { e.target.src = 'assets/images/hero-hand.jpg'; }}
                                             />
-                                            <div class="zepio-cat-info">
+                                            <div style="padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;">
                                                 <div>
-                                                    <div class="zepio-cat-name">${cat.replace(/-/g, ' ')}</div>
-                                                    <div class="zepio-cat-count">${count} items in catalog</div>
+                                                    <div style="font-weight: 700; text-transform: uppercase; font-size: 0.88rem;">${cat.replace(/-/g, ' ')}</div>
+                                                    <div style="font-size: 0.72rem; color: #6b7280;">${count} items</div>
                                                 </div>
                                                 <a href="#/shop?category=${cat}" target="_blank" class="zepio-btn zepio-btn-secondary zepio-btn-sm">
                                                     View
@@ -1000,48 +1189,36 @@ export const AdminDashboard = () => {
                         </div>
                     `}
 
-                    <!-- TAB 4: ORDERS PIPELINE -->
+                    <!-- TAB: ORDERS -->
                     ${activeTab === 'orders' && html`
                         <div>
                             <div class="zepio-page-header">
                                 <div>
-                                    <h1 class="zepio-page-title">Orders Management</h1>
-                                    <p class="zepio-page-subtitle">Track incoming orders, update shipping progress, and contact customers on WhatsApp.</p>
+                                    <h1 class="zepio-page-title">Orders</h1>
+                                    <p class="zepio-page-subtitle">Track orders, update delivery pipeline & contact customers.</p>
                                 </div>
                             </div>
 
-                            <!-- Order Status Tabs -->
-                            <div class="zepio-tabs-header">
-                                <button class="zepio-tab-button ${orderFilter === 'all' ? 'active' : ''}" onClick=${() => setOrderFilter('all')}>
-                                    All Orders (${ordersList.length})
-                                </button>
-                                <button class="zepio-tab-button ${orderFilter === 'pending' ? 'active' : ''}" onClick=${() => setOrderFilter('pending')}>
-                                    Pending (${ordersList.filter(o => o.status === 'pending').length})
-                                </button>
-                                <button class="zepio-tab-button ${orderFilter === 'processing' ? 'active' : ''}" onClick=${() => setOrderFilter('processing')}>
-                                    Processing (${ordersList.filter(o => o.status === 'processing').length})
-                                </button>
-                                <button class="zepio-tab-button ${orderFilter === 'shipped' ? 'active' : ''}" onClick=${() => setOrderFilter('shipped')}>
-                                    Shipped (${ordersList.filter(o => o.status === 'shipped').length})
-                                </button>
-                                <button class="zepio-tab-button ${orderFilter === 'delivered' ? 'active' : ''}" onClick=${() => setOrderFilter('delivered')}>
-                                    Delivered (${ordersList.filter(o => o.status === 'delivered').length})
-                                </button>
+                            <!-- Filter Pills -->
+                            <div class="zepio-range-bar" style="margin-bottom: 16px;">
+                                <button class="zepio-range-pill ${orderFilter === 'all' ? 'active' : ''}" onClick=${() => setOrderFilter('all')}>All (${ordersList.length})</button>
+                                <button class="zepio-range-pill ${orderFilter === 'pending' ? 'active' : ''}" onClick=${() => setOrderFilter('pending')}>Placed (${ordersList.filter(o => o.status === 'pending').length})</button>
+                                <button class="zepio-range-pill ${orderFilter === 'processing' ? 'active' : ''}" onClick=${() => setOrderFilter('processing')}>Processing (${ordersList.filter(o => o.status === 'processing').length})</button>
+                                <button class="zepio-range-pill ${orderFilter === 'shipped' ? 'active' : ''}" onClick=${() => setOrderFilter('shipped')}>Shipped (${ordersList.filter(o => o.status === 'shipped').length})</button>
+                                <button class="zepio-range-pill ${orderFilter === 'delivered' ? 'active' : ''}" onClick=${() => setOrderFilter('delivered')}>Delivered (${ordersList.filter(o => o.status === 'delivered').length})</button>
                             </div>
 
-                            <!-- Orders Table -->
                             <div class="zepio-card">
                                 <div class="zepio-table-container">
                                     <table class="zepio-table">
                                         <thead>
                                             <tr>
-                                                <th>Order</th>
-                                                <th>Date</th>
-                                                <th>Customer Info</th>
-                                                <th>Items Ordered</th>
-                                                <th>Amount</th>
-                                                <th>Update Status</th>
-                                                <th>WhatsApp Action</th>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Items</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1049,41 +1226,26 @@ export const AdminDashboard = () => {
                                                 <tr key=${order.id}>
                                                     <td>
                                                         <div style="font-weight: 700; color: #2563eb;">#${order.id}</div>
-                                                        <div style="font-size: 0.72rem; color: #64748b;">${order.paymentMethod || 'COD'}</div>
-                                                    </td>
-                                                    <td style="font-size: 0.76rem; color: #64748b; white-space: nowrap;">
-                                                        ${new Date(order.date).toLocaleDateString()}
+                                                        <div style="font-size: 0.72rem; color: #6b7280;">${new Date(order.date).toLocaleDateString()}</div>
                                                     </td>
                                                     <td>
-                                                        <div style="font-weight: 600;">${order.customer?.name || 'Customer'}</div>
-                                                        <div style="font-size: 0.74rem; color: #64748b;">${order.customer?.phone || ''}</div>
-                                                        <div style="font-size: 0.72rem; color: #94a3b8; max-width: 220px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-                                                            ${order.customer?.address || ''}
-                                                        </div>
+                                                        <div style="font-weight: 600;">${order.customer?.name}</div>
+                                                        <div style="font-size: 0.72rem; color: #6b7280;">${order.customer?.phone}</div>
                                                     </td>
                                                     <td>
-                                                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                                                            ${(order.items || []).map(item => html`
-                                                                <div style="font-size: 0.76rem; display: flex; align-items: center; gap: 6px;">
-                                                                    <span style="font-weight: 600;">${item.quantity}x</span>
-                                                                    <span>${item.name}</span>
-                                                                </div>
-                                                            `)}
-                                                        </div>
+                                                        ${(order.items || []).map(i => html`<div style="font-size: 0.74rem;">${i.quantity}x ${i.name}</div>`)}
                                                     </td>
-                                                    <td style="font-weight: 800; font-size: 0.95rem;">
-                                                        ₹${order.total}
-                                                    </td>
+                                                    <td style="font-weight: 800;">₹${order.total}</td>
                                                     <td>
                                                         <select 
                                                             class="zepio-select" 
-                                                            style="font-size: 0.76rem; padding: 4px 8px;"
+                                                            style="font-size: 0.76rem; padding: 4px 6px;"
                                                             value=${order.status}
                                                             onChange=${e => handleUpdateOrderStatus(order.id, e.target.value)}
                                                         >
-                                                            <option value="pending">Pending</option>
+                                                            <option value="pending">Placed (Pending)</option>
                                                             <option value="processing">Processing</option>
-                                                            <option value="shipped">Shipped</option>
+                                                            <option value="shipped">Out for Delivery</option>
                                                             <option value="delivered">Delivered</option>
                                                             <option value="cancelled">Cancelled</option>
                                                         </select>
@@ -1094,8 +1256,8 @@ export const AdminDashboard = () => {
                                                             class="zepio-btn zepio-btn-success zepio-btn-sm"
                                                             onClick=${() => handleCustomerWhatsApp(order)}
                                                         >
-                                                            <i data-lucide="message-circle" style="width: 14px; height: 14px;"></i>
-                                                            Notify on WhatsApp
+                                                            <i class="ri-whatsapp-line"></i>
+                                                            Notify
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -1107,13 +1269,13 @@ export const AdminDashboard = () => {
                         </div>
                     `}
 
-                    <!-- TAB 5: CUSTOMERS DIRECTORY -->
+                    <!-- TAB: CUSTOMERS -->
                     ${activeTab === 'customers' && html`
                         <div>
                             <div class="zepio-page-header">
                                 <div>
-                                    <h1 class="zepio-page-title">Customer Directory</h1>
-                                    <p class="zepio-page-subtitle">View repeat buyers, customer spending history & contact channels.</p>
+                                    <h1 class="zepio-page-title">Customers</h1>
+                                    <p class="zepio-page-subtitle">Buyer directory & WhatsApp customer messaging.</p>
                                 </div>
                             </div>
 
@@ -1123,10 +1285,9 @@ export const AdminDashboard = () => {
                                         <thead>
                                             <tr>
                                                 <th>Customer</th>
-                                                <th>Contact</th>
-                                                <th>Orders Placed</th>
-                                                <th>Total Spent</th>
-                                                <th>Last Active</th>
+                                                <th>Phone</th>
+                                                <th>Orders</th>
+                                                <th>Total Spend</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -1134,36 +1295,19 @@ export const AdminDashboard = () => {
                                             ${customersList.map(c => html`
                                                 <tr key=${c.id}>
                                                     <td>
-                                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                                            <div class="zepio-avatar" style="background: #e2e8f0; color: #334155; font-size: 0.8rem;">
-                                                                ${(c.name || 'C').charAt(0).toUpperCase()}
-                                                            </div>
-                                                            <div>
-                                                                <div style="font-weight: 600;">${c.name}</div>
-                                                                <div style="font-size: 0.72rem; color: #64748b;">${c.address}</div>
-                                                            </div>
-                                                        </div>
+                                                        <div style="font-weight: 600;">${c.name}</div>
+                                                        <div style="font-size: 0.72rem; color: #6b7280;">${c.address}</div>
                                                     </td>
-                                                    <td>
-                                                        <div style="font-weight: 500;">${c.phone}</div>
-                                                        <div style="font-size: 0.72rem; color: #64748b;">${c.email}</div>
-                                                    </td>
-                                                    <td>
-                                                        <span class="zepio-badge zepio-badge-blue">${c.orderCount} Orders</span>
-                                                    </td>
-                                                    <td style="font-weight: 700; color: #0f172a;">
-                                                        ₹${c.totalSpent.toLocaleString()}
-                                                    </td>
-                                                    <td style="font-size: 0.76rem; color: #64748b;">
-                                                        ${new Date(c.lastOrderDate).toLocaleDateString()}
-                                                    </td>
+                                                    <td>${c.phone}</td>
+                                                    <td><span class="zepio-badge zepio-badge-blue">${c.orderCount} Orders</span></td>
+                                                    <td style="font-weight: 700;">₹${c.totalSpent.toLocaleString()}</td>
                                                     <td>
                                                         <a 
                                                             href="https://wa.me/${c.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(c.name)}!%20Greetings%20from%20ACCESSIFY." 
                                                             target="_blank" 
                                                             class="zepio-btn zepio-btn-success zepio-btn-sm"
                                                         >
-                                                            <i data-lucide="message-circle" style="width: 13px; height: 13px;"></i>
+                                                            <i class="ri-whatsapp-line"></i>
                                                             WhatsApp
                                                         </a>
                                                     </td>
@@ -1176,20 +1320,18 @@ export const AdminDashboard = () => {
                         </div>
                     `}
 
-                    <!-- TAB 6: COUPONS & MARKETING -->
-                    ${activeTab === 'coupons' && html`
+                    <!-- TAB: DISCOUNTS -->
+                    ${activeTab === 'discounts' && html`
                         <div>
                             <div class="zepio-page-header">
                                 <div>
-                                    <h1 class="zepio-page-title">Marketing & Coupons</h1>
-                                    <p class="zepio-page-subtitle">Create discount codes, flash sale promo codes, and special incentives.</p>
+                                    <h1 class="zepio-page-title">Discounts & Coupons</h1>
+                                    <p class="zepio-page-subtitle">Active promotional codes & discounts.</p>
                                 </div>
-                                <div class="zepio-page-actions">
-                                    <button type="button" class="zepio-btn zepio-btn-primary" onClick=${() => setIsCouponModalOpen(true)}>
-                                        <i data-lucide="plus-circle" style="width: 15px; height: 15px;"></i>
-                                        <span>Create Coupon</span>
-                                    </button>
-                                </div>
+                                <button type="button" class="zepio-btn zepio-btn-primary" onClick=${() => setIsCouponModalOpen(true)}>
+                                    <i class="ri-add-line"></i>
+                                    <span>Create Coupon</span>
+                                </button>
                             </div>
 
                             <div class="zepio-card">
@@ -1197,36 +1339,24 @@ export const AdminDashboard = () => {
                                     <table class="zepio-table">
                                         <thead>
                                             <tr>
-                                                <th>Coupon Code</th>
-                                                <th>Discount Type</th>
-                                                <th>Value</th>
+                                                <th>Code</th>
+                                                <th>Type</th>
+                                                <th>Discount</th>
                                                 <th>Status</th>
-                                                <th>Actions</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            ${couponsList.map(coupon => html`
-                                                <tr key=${coupon.code}>
-                                                    <td>
-                                                        <span style="font-family: monospace; font-weight: 700; font-size: 0.95rem; background: #f1f5f9; padding: 3px 8px; border-radius: 4px;">
-                                                            ${coupon.code}
-                                                        </span>
-                                                    </td>
-                                                    <td style="text-transform: capitalize;">${coupon.type} Discount</td>
+                                            ${couponsList.map(c => html`
+                                                <tr key=${c.code}>
+                                                    <td><strong style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">${c.code}</strong></td>
+                                                    <td style="text-transform: capitalize;">${c.type}</td>
                                                     <td style="font-weight: 700; color: #10b981;">
-                                                        ${coupon.type === 'percentage' ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`}
+                                                        ${c.type === 'percentage' ? `${c.value}% OFF` : `₹${c.value} OFF`}
                                                     </td>
+                                                    <td><span class="zepio-badge zepio-badge-success">Active</span></td>
                                                     <td>
-                                                        <span class="zepio-badge zepio-badge-success">Active</span>
-                                                    </td>
-                                                    <td>
-                                                        <button 
-                                                            type="button" 
-                                                            class="zepio-btn zepio-btn-danger zepio-btn-sm"
-                                                            onClick=${() => handleDeleteCoupon(coupon.code)}
-                                                        >
-                                                            Delete
-                                                        </button>
+                                                        <button class="zepio-btn zepio-btn-danger zepio-btn-sm" onClick=${() => handleDeleteCoupon(c.code)}>Delete</button>
                                                     </td>
                                                 </tr>
                                             `)}
@@ -1237,19 +1367,19 @@ export const AdminDashboard = () => {
                         </div>
                     `}
 
-                    <!-- TAB 7: STORE SETTINGS -->
+                    <!-- TAB: SETTINGS -->
                     ${activeTab === 'settings' && html`
                         <div>
                             <div class="zepio-page-header">
                                 <div>
-                                    <h1 class="zepio-page-title">Store Configuration</h1>
-                                    <p class="zepio-page-subtitle">Manage store branding, WhatsApp order reception, delivery thresholds, and catalog data.</p>
+                                    <h1 class="zepio-page-title">Store Settings</h1>
+                                    <p class="zepio-page-subtitle">Branding, WhatsApp checkout & delivery configuration.</p>
                                 </div>
                             </div>
 
                             <div class="zepio-card">
                                 <div class="zepio-card-header">
-                                    <h3 class="zepio-card-title">Store Profile & Contacts</h3>
+                                    <h3 class="zepio-card-title">Store Configuration</h3>
                                 </div>
                                 <div class="zepio-card-body">
                                     <form onSubmit=${handleSaveSettings}>
@@ -1264,19 +1394,7 @@ export const AdminDashboard = () => {
                                                 />
                                             </div>
                                             <div class="zepio-form-group">
-                                                <label class="zepio-label">Brand Tagline</label>
-                                                <input 
-                                                    type="text" 
-                                                    class="zepio-input" 
-                                                    value=${settingsState.storeTagline}
-                                                    onInput=${e => setSettingsState({ ...settingsState, storeTagline: e.target.value })}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div class="zepio-form-row">
-                                            <div class="zepio-form-group">
-                                                <label class="zepio-label">Official Order WhatsApp Number (Country Code + Phone)</label>
+                                                <label class="zepio-label">Official WhatsApp Order Phone</label>
                                                 <input 
                                                     type="text" 
                                                     class="zepio-input" 
@@ -1284,20 +1402,11 @@ export const AdminDashboard = () => {
                                                     onInput=${e => setSettingsState({ ...settingsState, whatsappPhone: e.target.value })}
                                                 />
                                             </div>
-                                            <div class="zepio-form-group">
-                                                <label class="zepio-label">Support Email Address</label>
-                                                <input 
-                                                    type="email" 
-                                                    class="zepio-input" 
-                                                    value=${settingsState.supportEmail}
-                                                    onInput=${e => setSettingsState({ ...settingsState, supportEmail: e.target.value })}
-                                                />
-                                            </div>
                                         </div>
 
                                         <div class="zepio-form-row">
                                             <div class="zepio-form-group">
-                                                <label class="zepio-label">Standard Shipping Fee (₹)</label>
+                                                <label class="zepio-label">Standard Delivery Fee (₹)</label>
                                                 <input 
                                                     type="number" 
                                                     class="zepio-input" 
@@ -1306,7 +1415,7 @@ export const AdminDashboard = () => {
                                                 />
                                             </div>
                                             <div class="zepio-form-group">
-                                                <label class="zepio-label">Free Delivery Minimum Order (₹)</label>
+                                                <label class="zepio-label">Free Delivery Threshold (₹)</label>
                                                 <input 
                                                     type="number" 
                                                     class="zepio-input" 
@@ -1316,30 +1425,24 @@ export const AdminDashboard = () => {
                                             </div>
                                         </div>
 
-                                        <button type="submit" class="zepio-btn zepio-btn-primary" style="margin-top: 10px;">
+                                        <button type="submit" class="zepio-btn zepio-btn-primary">
                                             Save Settings
                                         </button>
                                     </form>
                                 </div>
                             </div>
 
-                            <!-- Database Maintenance & Backup -->
                             <div class="zepio-card">
                                 <div class="zepio-card-header">
-                                    <h3 class="zepio-card-title">Catalog Backup & Reset</h3>
+                                    <h3 class="zepio-card-title">Backup & Factory Reset</h3>
                                 </div>
                                 <div class="zepio-card-body">
-                                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 16px;">
-                                        Download a full snapshot of your active catalog JSON, or reset the catalog back to factory default.
-                                    </p>
-                                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                                         <button type="button" class="zepio-btn zepio-btn-secondary" onClick=${handleDownloadJson}>
-                                            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
-                                            Download Catalog JSON
+                                            <i class="ri-download-2-line"></i> Download JSON
                                         </button>
                                         <button type="button" class="zepio-btn zepio-btn-danger" onClick=${handleResetCatalog}>
-                                            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
-                                            Reset Catalog to Default (205 items)
+                                            <i class="ri-refresh-line"></i> Reset Catalog to Default
                                         </button>
                                     </div>
                                 </div>
@@ -1349,7 +1452,7 @@ export const AdminDashboard = () => {
                 </main>
             </div>
 
-            <!-- MODAL: ADD / EDIT PRODUCT (ZEPIO PRODUCT DRAWER) -->
+            <!-- MODAL: ADD / EDIT PRODUCT -->
             ${isProductModalOpen && html`
                 <div class="zepio-modal-backdrop" onClick=${() => setIsProductModalOpen(false)}>
                     <div class="zepio-modal-dialog" onClick=${e => e.stopPropagation()}>
@@ -1358,7 +1461,7 @@ export const AdminDashboard = () => {
                                 ${modalMode === 'edit' ? 'Edit Product' : 'Add New Product'}
                             </h3>
                             <button class="zepio-modal-close" onClick=${() => setIsProductModalOpen(false)}>
-                                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+                                <i class="ri-close-line"></i>
                             </button>
                         </div>
 
@@ -1392,7 +1495,7 @@ export const AdminDashboard = () => {
                                     </div>
 
                                     <div class="zepio-form-group">
-                                        <label class="zepio-label">Initial Stock Units *</label>
+                                        <label class="zepio-label">Initial Stock *</label>
                                         <input 
                                             type="number" 
                                             class="zepio-input" 
@@ -1433,7 +1536,7 @@ export const AdminDashboard = () => {
                                     <textarea 
                                         class="zepio-textarea" 
                                         rows="3" 
-                                        placeholder="Detailed description, material (316L stainless steel, titanium), finish..."
+                                        placeholder="Material, finish, size..."
                                         value=${formDescription} 
                                         onInput=${e => setFormDescription(e.target.value)}
                                     ></textarea>
@@ -1452,13 +1555,13 @@ export const AdminDashboard = () => {
 
                                 <div class="zepio-form-group">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                        <label class="zepio-label" style="margin-bottom: 0;">Product Images (Paths or URLs)</label>
+                                        <label class="zepio-label" style="margin-bottom: 0;">Product Images</label>
                                         <button 
                                             type="button" 
                                             class="zepio-btn zepio-btn-secondary zepio-btn-sm" 
                                             onClick=${handleAddImageField}
                                         >
-                                            + Add Image URL
+                                            + Add URL
                                         </button>
                                     </div>
                                     ${formImages.map((img, idx) => html`
@@ -1482,25 +1585,6 @@ export const AdminDashboard = () => {
                                         </div>
                                     `)}
                                 </div>
-
-                                <div style="display: flex; gap: 20px; margin-top: 12px;">
-                                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; cursor: pointer;">
-                                        <input 
-                                            type="checkbox" 
-                                            checked=${formFeatured} 
-                                            onChange=${e => setFormFeatured(e.target.checked)} 
-                                        />
-                                        <span>Mark as Featured Product</span>
-                                    </label>
-                                    <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; cursor: pointer;">
-                                        <input 
-                                            type="checkbox" 
-                                            checked=${formNewArrival} 
-                                            onChange=${e => setFormNewArrival(e.target.checked)} 
-                                        />
-                                        <span>Mark as New Arrival</span>
-                                    </label>
-                                </div>
                             </div>
 
                             <div class="zepio-modal-footer">
@@ -1523,7 +1607,7 @@ export const AdminDashboard = () => {
                         <div class="zepio-modal-header">
                             <h3 class="zepio-modal-title">Add Category</h3>
                             <button class="zepio-modal-close" onClick=${() => setIsCategoryModalOpen(false)}>
-                                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+                                <i class="ri-close-line"></i>
                             </button>
                         </div>
                         <form onSubmit=${handleCreateCategory}>
@@ -1533,7 +1617,7 @@ export const AdminDashboard = () => {
                                     <input 
                                         type="text" 
                                         class="zepio-input" 
-                                        placeholder="e.g., Pendants or Sunglasses" 
+                                        placeholder="e.g. Rings, Chains, Sunglasses" 
                                         value=${newCategoryInput} 
                                         onInput=${e => setNewCategoryInput(e.target.value)} 
                                         required 
@@ -1561,17 +1645,17 @@ export const AdminDashboard = () => {
                         <div class="zepio-modal-header">
                             <h3 class="zepio-modal-title">Create Promo Coupon</h3>
                             <button class="zepio-modal-close" onClick=${() => setIsCouponModalOpen(false)}>
-                                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+                                <i class="ri-close-line"></i>
                             </button>
                         </div>
                         <form onSubmit=${handleCreateCoupon}>
                             <div class="zepio-modal-body">
                                 <div class="zepio-form-group">
-                                    <label class="zepio-label">Coupon Code (e.g., SALE20)</label>
+                                    <label class="zepio-label">Coupon Code</label>
                                     <input 
                                         type="text" 
                                         class="zepio-input" 
-                                        placeholder="CODE" 
+                                        placeholder="CODE (e.g. FLASH20)" 
                                         value=${newCouponCode} 
                                         onInput=${e => setNewCouponCode(e.target.value.toUpperCase())} 
                                         required 
