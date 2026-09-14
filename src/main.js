@@ -10,7 +10,6 @@ import { Navbar } from './components/Navbar.js';
 import { Footer } from './components/Footer.js';
 import { CartDrawer } from './components/CartDrawer.js';
 import { Toast } from './components/Toast.js';
-import { WhatsAppButton } from './components/WhatsAppButton.js';
 import { MobileBottomNav } from './components/MobileBottomNav.js';
 
 // Page Views
@@ -109,7 +108,6 @@ const App = () => {
         <div style="display: flex; flex-direction: column; min-height: 100vh;">
             <!-- Floating Elements -->
             <${Toast} />
-            <${WhatsAppButton} />
             <${CartDrawer} />
 
             <!-- Core Navigation Bar -->
