@@ -104,6 +104,16 @@ const App = () => {
         `;
     };
 
+    // Standalone Dedicated Layout for Zepio-style Admin Dashboard
+    if (currentRoute.startsWith("#/admin")) {
+        return html`
+            <div style="min-height: 100vh; background-color: var(--zepio-bg, #f8fafc);">
+                <${Toast} />
+                <${AdminDashboard} />
+            </div>
+        `;
+    }
+
     return html`
         <div style="display: flex; flex-direction: column; min-height: 100vh;">
             <!-- Floating Elements -->

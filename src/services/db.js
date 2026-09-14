@@ -20,7 +20,87 @@ const INITIAL_REVIEWS = [
     { id: "r4", productId: "acc_3557", author: "Vikram N.", rating: 5, date: "2026-06-05", text: "Moon bracelet is minimalist yet heavy. High quality 316L stainless steel." }
 ];
 
-const INITIAL_ORDERS = [];
+const INITIAL_ORDERS = [
+    {
+        id: "ACC-9124",
+        date: "2026-09-14T14:15:00.000Z",
+        customer: {
+            name: "Devendra Patel",
+            phone: "+919820144582",
+            email: "devendra.p@gmail.com",
+            address: "402 Skyline Heights, Bandra West, Mumbai, MH 400050"
+        },
+        items: [
+            { id: "acc_3654", name: "CH97 BELT", price: 1499, quantity: 1, image: "assets/images/hero-hand.jpg" },
+            { id: "acc_3596", name: "Chrome Heart Earring", price: 349, quantity: 2, image: "assets/images/category-earrings.jpg" }
+        ],
+        total: 2197,
+        paymentMethod: "Cash on Delivery",
+        status: "processing"
+    },
+    {
+        id: "ACC-8975",
+        date: "2026-09-14T11:42:00.000Z",
+        customer: {
+            name: "Siddharth Rao",
+            phone: "+919940281734",
+            email: "siddharth.rao@yahoo.com",
+            address: "12/A Richmond Road, Ashok Nagar, Bengaluru, KA 560025"
+        },
+        items: [
+            { id: "acc_3651", name: "Gothic Cross Link Chain", price: 799, quantity: 1, image: "assets/images/category-chains.jpg" }
+        ],
+        total: 799,
+        paymentMethod: "WhatsApp Direct Pay",
+        status: "shipped"
+    },
+    {
+        id: "ACC-8610",
+        date: "2026-09-13T19:20:00.000Z",
+        customer: {
+            name: "Ananya Deshmukh",
+            phone: "+919711562890",
+            email: "ananya.d@outlook.com",
+            address: "B-704 Silver Oak, Koregaon Park, Pune, MH 411001"
+        },
+        items: [
+            { id: "acc_3557", name: "Elegant Moon Bracelet", price: 499, quantity: 1, image: "assets/images/category-bracelets.jpg" },
+            { id: "acc_3542", name: "Minimal Nine Fox Tale Ring", price: 399, quantity: 1, image: "assets/images/category-rings.jpg" }
+        ],
+        total: 898,
+        paymentMethod: "Cash on Delivery",
+        status: "delivered"
+    },
+    {
+        id: "ACC-8402",
+        date: "2026-09-13T16:05:00.000Z",
+        customer: {
+            name: "Karan Malhotra",
+            phone: "+919819023411",
+            email: "karan.malhotra@gmail.com",
+            address: "House 24, Sector 15, Chandigarh, CH 160015"
+        },
+        items: [
+            { id: "acc_3652", name: "Ruby Gothic Cross Pendant Combo", price: 1299, quantity: 1, image: "assets/images/category-combos.jpg" }
+        ],
+        total: 1299,
+        paymentMethod: "WhatsApp Direct Pay",
+        status: "pending"
+    }
+];
+
+const DEFAULT_SETTINGS = {
+    storeName: "ACCESSIFY",
+    storeTagline: "PREMIUM STREETWEAR & GOTHIC JEWELRY",
+    whatsappPhone: "917012400815",
+    supportEmail: "orders@accessify.store",
+    currency: "₹",
+    deliveryFee: 50,
+    freeDeliveryThreshold: 999,
+    codEnabled: true,
+    whatsappCheckoutEnabled: true,
+    upiId: "accessify@upi"
+};
 
 const INITIAL_BANNERS = [
     {
@@ -78,8 +158,12 @@ if (!localStorage.getItem("accessify_coupons")) {
 if (!localStorage.getItem("accessify_reviews")) {
     setLocalStorageItem("reviews", INITIAL_REVIEWS);
 }
-if (!localStorage.getItem("accessify_orders")) {
-    setLocalStorageItem("orders", INITIAL_ORDERS);
+const existingOrders = getLocalStorageItem("orders_v2", null);
+if (!existingOrders || !Array.isArray(existingOrders) || existingOrders.length === 0) {
+    setLocalStorageItem("orders_v2", INITIAL_ORDERS);
+}
+if (!localStorage.getItem("accessify_settings_v1")) {
+    setLocalStorageItem("settings_v1", DEFAULT_SETTINGS);
 }
 if (!localStorage.getItem("accessify_banners")) {
     setLocalStorageItem("banners", INITIAL_BANNERS);
@@ -294,7 +378,7 @@ export const db = {
     },
 
     // ORDERS
-    getOrders: () => getLocalStorageItem("orders", INITIAL_ORDERS),
+    getOrders: () => getLocalStorageItem("orders_v2", INITIAL_ORDERS),
     
     createOrder: (orderData) => {
         const orders = db.getOrders();
@@ -305,16 +389,18 @@ export const db = {
             status: "pending"
         };
         orders.unshift(newOrder);
-        setLocalStorageItem("orders", orders);
+        setLocalStorageItem("orders_v2", orders);
 
         const products = db.getProducts();
-        newOrder.items.forEach(item => {
-            const productIndex = products.findIndex(p => p.id === item.id);
-            if (productIndex !== -1) {
-                products[productIndex].stock = Math.max(0, products[productIndex].stock - item.quantity);
-            }
-        });
-        setLocalStorageItem("products_v5", products);
+        if (Array.isArray(newOrder.items)) {
+            newOrder.items.forEach(item => {
+                const productIndex = products.findIndex(p => p.id === item.id);
+                if (productIndex !== -1) {
+                    products[productIndex].stock = Math.max(0, (products[productIndex].stock || 20) - (item.quantity || 1));
+                }
+            });
+            setLocalStorageItem("products_v5", products);
+        }
 
         return newOrder;
     },
@@ -324,10 +410,47 @@ export const db = {
         const index = orders.findIndex(o => o.id === orderId);
         if (index !== -1) {
             orders[index].status = status;
-            setLocalStorageItem("orders", orders);
+            setLocalStorageItem("orders_v2", orders);
             return true;
         }
         return false;
+    },
+
+    // CUSTOMERS (Derived from order book and user profiles)
+    getCustomers: () => {
+        const orders = db.getOrders();
+        const map = {};
+        orders.forEach(order => {
+            const phone = (order.customer && order.customer.phone) ? String(order.customer.phone).trim() : "Unknown";
+            if (!map[phone]) {
+                map[phone] = {
+                    id: "cust_" + phone.replace(/[^0-9]/g, ""),
+                    name: (order.customer && order.customer.name) || "Valued Customer",
+                    phone: phone,
+                    email: (order.customer && order.customer.email) || "N/A",
+                    address: (order.customer && order.customer.address) || "N/A",
+                    orderCount: 0,
+                    totalSpent: 0,
+                    lastOrderDate: order.date
+                };
+            }
+            map[phone].orderCount += 1;
+            map[phone].totalSpent += (Number(order.total) || 0);
+            if (new Date(order.date) > new Date(map[phone].lastOrderDate)) {
+                map[phone].lastOrderDate = order.date;
+            }
+        });
+        return Object.values(map);
+    },
+
+    // SETTINGS (Store information, WhatsApp numbers, shipping rules)
+    getSettings: () => getLocalStorageItem("settings_v1", DEFAULT_SETTINGS),
+
+    updateSettings: (newSettings) => {
+        const current = db.getSettings();
+        const updated = { ...current, ...newSettings };
+        setLocalStorageItem("settings_v1", updated);
+        return updated;
     },
 
     // BANNERS
