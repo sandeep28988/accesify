@@ -120,11 +120,11 @@ export const Home = () => {
             <!-- 1. HERO BANNER SECTION MATCHING USER BRAND GRAPHIC -->
             <section class="cosmora-hero">
                 <div class="container" style="position: relative;">
-                    <a href="#/shop" class="cosmora-hero-banner" aria-label="Shop Beyond The Seen Collection">
+                    <a href="#/shop" class="cosmora-hero-banner" aria-label="Shop Accessify Collection">
                         <img 
                             class="cosmora-hero-banner-img" 
                             src="assets/images/hero-banner.jpg" 
-                            alt="Accessify - Beyond The Seen | Streetwear & Gothic Jewelry" 
+                            alt="Accessify | Premium Streetwear & Gothic Jewelry" 
                         />
                     </a>
                 </div>
