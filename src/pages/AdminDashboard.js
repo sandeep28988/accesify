@@ -6,6 +6,42 @@ import { db } from '../services/db.js';
 
 const html = htm.bind(h);
 
+// In-browser client-side image compression & optimization helper
+const compressImage = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                const maxDim = 900;
+                if (width > maxDim || height > maxDim) {
+                    if (width > height) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                // Clean compressed JPEG data URL (~50-80KB)
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                resolve(dataUrl);
+            };
+            img.onerror = () => reject(new Error("Failed to process image file"));
+            img.src = e.target.result;
+        };
+        reader.onerror = () => reject(new Error("Failed to read file from device"));
+        reader.readAsDataURL(file);
+    });
+};
+
 export const AdminDashboard = () => {
     const { 
         user, 
@@ -48,7 +84,10 @@ export const AdminDashboard = () => {
     const [formPrice, setFormPrice] = useState("");
     const [formComparePrice, setFormComparePrice] = useState("");
     const [formDescription, setFormDescription] = useState("");
-    const [formImages, setFormImages] = useState(["assets/images/hero-hand.jpg"]);
+    const [formImages, setFormImages] = useState([]);
+    const [isDragOver, setIsDragOver] = useState(false);
+    const [showUrlInput, setShowUrlInput] = useState(false);
+    const [urlInputValue, setUrlInputValue] = useState("");
     const [formVariants, setFormVariants] = useState("");
     const [formStock, setFormStock] = useState("25");
     const [formFeatured, setFormFeatured] = useState(false);
@@ -232,7 +271,9 @@ export const AdminDashboard = () => {
         setFormPrice("");
         setFormComparePrice("");
         setFormDescription("");
-        setFormImages(["assets/images/hero-hand.jpg"]);
+        setFormImages([]);
+        setShowUrlInput(false);
+        setUrlInputValue("");
         setFormVariants("Standard, Size 7, Size 8, Size 9");
         setFormStock("25");
         setFormFeatured(false);
@@ -249,7 +290,9 @@ export const AdminDashboard = () => {
         setFormPrice(String(product.price || ""));
         setFormComparePrice(String(product.comparePrice || product.price || ""));
         setFormDescription(product.description || "");
-        setFormImages(product.images && product.images.length > 0 ? [...product.images] : ["assets/images/hero-hand.jpg"]);
+        setFormImages(product.images && product.images.length > 0 ? [...product.images] : []);
+        setShowUrlInput(false);
+        setUrlInputValue("");
         setFormVariants(Array.isArray(product.variants) ? product.variants.join(", ") : "Standard");
         setFormStock(String(product.stock !== undefined ? product.stock : 20));
         setFormFeatured(Boolean(product.featured));
@@ -354,16 +397,76 @@ export const AdminDashboard = () => {
         showToast(`Stock for ${product.name} updated to ${newStock}`);
     };
 
-    // Image fields helpers
-    const handleAddImageField = () => setFormImages(prev => [...prev, ""]);
-    const handleImageChange = (index, value) => {
-        setFormImages(prev => {
-            const next = [...prev];
-            next[index] = value;
-            return next;
-        });
+    // Real Device Image Upload & Optimization Helpers
+    const processImageFiles = async (files) => {
+        if (!files || files.length === 0) return;
+        const validFiles = Array.from(files).filter(f => f.type && f.type.startsWith("image/"));
+        if (validFiles.length === 0) {
+            showToast("Please select valid image files (JPG, PNG, WEBP, etc.)");
+            return;
+        }
+        showToast(`Processing ${validFiles.length} image${validFiles.length > 1 ? 's' : ''}...`);
+        try {
+            const compressedResults = await Promise.all(
+                validFiles.map(file => compressImage(file))
+            );
+            setFormImages(prev => [...prev, ...compressedResults]);
+            showToast(`Added ${compressedResults.length} photo${compressedResults.length > 1 ? 's' : ''}!`);
+        } catch (err) {
+            console.error("Image processing error:", err);
+            showToast("Error processing image file from device");
+        }
     };
-    const handleRemoveImageField = (index) => setFormImages(prev => prev.filter((_, i) => i !== index));
+
+    const handleFileUpload = (e) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            processImageFiles(files);
+        }
+        e.target.value = "";
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragOver(false);
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            processImageFiles(e.dataTransfer.files);
+        }
+    };
+
+    const handleRemoveImage = (indexToRemove) => {
+        setFormImages(prev => prev.filter((_, idx) => idx !== indexToRemove));
+    };
+
+    const handleSetCover = (indexToCover) => {
+        setFormImages(prev => {
+            if (indexToCover <= 0 || indexToCover >= prev.length) return prev;
+            const target = prev[indexToCover];
+            const remaining = prev.filter((_, idx) => idx !== indexToCover);
+            return [target, ...remaining];
+        });
+        showToast("Set as primary cover photo!");
+    };
+
+    const handleAddUrlImage = () => {
+        if (!urlInputValue.trim()) return;
+        setFormImages(prev => [...prev, urlInputValue.trim()]);
+        setUrlInputValue("");
+        setShowUrlInput(false);
+    };
 
     // Category Creation
     const handleCreateCategory = (e) => {
@@ -1554,36 +1657,106 @@ export const AdminDashboard = () => {
                                 </div>
 
                                 <div class="zepio-form-group">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                        <label class="zepio-label" style="margin-bottom: 0;">Product Images</label>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <label class="zepio-label" style="margin-bottom: 0;">
+                                            Product Photos <span style="font-weight: 400; color: #6b7280; font-size: 0.76rem;">(First photo is primary cover)</span>
+                                        </label>
                                         <button 
                                             type="button" 
                                             class="zepio-btn zepio-btn-secondary zepio-btn-sm" 
-                                            onClick=${handleAddImageField}
+                                            style="font-size: 0.75rem; padding: 4px 10px;"
+                                            onClick=${() => setShowUrlInput(!showUrlInput)}
                                         >
-                                            + Add URL
+                                            <i class="ri-link" style="margin-right: 4px;"></i>
+                                            ${showUrlInput ? 'Hide URL' : '+ Add via URL'}
                                         </button>
                                     </div>
-                                    ${formImages.map((img, idx) => html`
-                                        <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center;" key=${idx}>
+
+                                    <!-- Hidden File Input for Device Photos -->
+                                    <input 
+                                        type="file" 
+                                        id="zepio-product-file-input" 
+                                        accept="image/*" 
+                                        multiple 
+                                        style="display: none;" 
+                                        onChange=${handleFileUpload} 
+                                    />
+
+                                    <!-- Drag and Drop Dropzone -->
+                                    <div 
+                                        class=${`zepio-upload-dropzone ${isDragOver ? 'dragover' : ''}`}
+                                        onClick=${() => {
+                                            const el = document.getElementById('zepio-product-file-input');
+                                            if (el) el.click();
+                                        }}
+                                        onDragOver=${handleDragOver}
+                                        onDragEnter=${handleDragOver}
+                                        onDragLeave=${handleDragLeave}
+                                        onDrop=${handleDrop}
+                                    >
+                                        <i class="ri-upload-cloud-2-line zepio-upload-icon"></i>
+                                        <div class="zepio-upload-title">Click to upload or drag & drop photos</div>
+                                        <div class="zepio-upload-sub">Upload from phone or PC (JPG, PNG, WEBP — auto-optimized)</div>
+                                    </div>
+
+                                    <!-- Optional URL input bar if toggled -->
+                                    ${showUrlInput && html`
+                                        <div style="display: flex; gap: 8px; margin-top: 10px;">
                                             <input 
                                                 type="text" 
                                                 class="zepio-input" 
-                                                placeholder="assets/images/... or https://..." 
-                                                value=${img} 
-                                                onInput=${e => handleImageChange(idx, e.target.value)} 
+                                                placeholder="Enter image URL (e.g. https://... or assets/images/...)"
+                                                value=${urlInputValue} 
+                                                onInput=${e => setUrlInputValue(e.target.value)}
+                                                onKeyDown=${e => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        handleAddUrlImage();
+                                                    }
+                                                }}
                                             />
-                                            ${formImages.length > 1 && html`
-                                                <button 
-                                                    type="button" 
-                                                    class="zepio-btn zepio-btn-danger zepio-btn-sm" 
-                                                    onClick=${() => handleRemoveImageField(idx)}
-                                                >
-                                                    ✕
-                                                </button>
-                                            `}
+                                            <button 
+                                                type="button" 
+                                                class="zepio-btn zepio-btn-primary zepio-btn-sm" 
+                                                onClick=${handleAddUrlImage}
+                                            >
+                                                Add
+                                            </button>
                                         </div>
-                                    `)}
+                                    `}
+
+                                    <!-- Uploaded Images Thumbnails Grid -->
+                                    ${formImages.length > 0 && html`
+                                        <div class="zepio-image-grid">
+                                            ${formImages.map((img, idx) => html`
+                                                <div class="zepio-image-preview-card" key=${idx}>
+                                                    <img src=${img} alt="Product photo ${idx + 1}" class="zepio-image-preview-img" />
+                                                    
+                                                    ${idx === 0 ? html`
+                                                        <span class="zepio-cover-badge">COVER</span>
+                                                    ` : html`
+                                                        <button 
+                                                            type="button" 
+                                                            title="Set as Primary Cover"
+                                                            style="position: absolute; bottom: 4px; left: 4px; background: rgba(17, 24, 39, 0.75); color: #fff; border: none; border-radius: 4px; font-size: 9px; font-weight: 600; padding: 2px 6px; cursor: pointer; z-index: 10;"
+                                                            onClick=${() => handleSetCover(idx)}
+                                                        >
+                                                            Set Cover
+                                                        </button>
+                                                    `}
+
+                                                    <button 
+                                                        type="button" 
+                                                        class="zepio-image-remove-btn" 
+                                                        title="Remove photo"
+                                                        onClick=${() => handleRemoveImage(idx)}
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            `)}
+                                        </div>
+                                    `}
                                 </div>
                             </div>
 
