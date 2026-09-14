@@ -36,7 +36,7 @@ export const Home = () => {
         },
         {
             title: "EARRINGS",
-            image: "https://cdn.zepio.io/blyo/product/ea03f2e5-be7b-47ee-9dba-d69fb10c91c3.webp",
+            image: "assets/images/category-earrings.jpg",
             link: "#/shop?category=earrings"
         },
         {
