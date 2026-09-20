@@ -81,7 +81,7 @@ const setLocalStorageItem = (key, value) => {
 
 // Seeding - ensure jewelry products are loaded without fragrances/grooming
 const existingProducts = getLocalStorageItem("products_v5", null);
-if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length < INITIAL_PRODUCTS.length) {
+if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length === 0) {
     setLocalStorageItem("products_v5", INITIAL_PRODUCTS);
 }
 
@@ -175,33 +175,63 @@ export const db = {
     },
     
     saveProduct: (product) => {
+        if (!product || typeof product !== "object") return false;
         const products = db.getProducts();
-        if (product.id) {
-            const index = products.findIndex(p => p.id === product.id);
-            if (index !== -1) {
-                products[index] = { 
-                    ...products[index], 
-                    ...product,
-                    price: Number(product.price) || 0,
-                    comparePrice: Number(product.comparePrice) || Number(product.price) || 0
-                };
-            }
-        } else {
-            const newProduct = {
+        const targetId = product.id ? String(product.id).trim() : null;
+        const index = targetId ? products.findIndex(p => p.id === targetId) : -1;
+
+        if (index !== -1) {
+            // Update existing product
+            products[index] = { 
+                ...products[index], 
                 ...product,
-                id: "acc_" + Date.now(),
+                id: targetId,
+                name: (product.name || products[index].name || "Product").trim(),
                 price: Number(product.price) || 0,
                 comparePrice: Number(product.comparePrice) || Number(product.price) || 0,
-                rating: 5.0,
-                numReviews: 0,
+                stock: product.stock !== undefined ? Number(product.stock) : (products[index].stock || 20),
+                status: product.status || products[index].status || "active",
+                images: Array.isArray(product.images) && product.images.length > 0 
+                    ? product.images 
+                    : (products[index].images || ["assets/images/hero-hand.jpg"])
+            };
+        } else {
+            // Create new product and add to beginning of list
+            const generatedId = targetId || `acc_custom_${Date.now()}`;
+            const slug = (product.name || "product")
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-|-$/g, "");
+
+            const newProduct = {
+                id: generatedId,
+                original_id: Date.now(),
+                name: (product.name || "New Product").trim(),
+                slug: slug,
+                category: product.category || "chains",
+                price: Number(product.price) || 0,
+                comparePrice: Number(product.comparePrice) || Number(product.price) || 0,
+                description: (product.description || "").trim(),
                 images: Array.isArray(product.images) && product.images.length > 0 
                     ? product.images 
                     : ["assets/images/hero-hand.jpg"],
-                variants: Array.isArray(product.variants) ? product.variants : ["Standard"],
-                stock: Number(product.stock) || 10
+                variants: Array.isArray(product.variants) && product.variants.length > 0 
+                    ? product.variants 
+                    : ["Standard"],
+                stock: product.stock !== undefined ? Number(product.stock) : 25,
+                status: product.status || "active",
+                sku_code: product.sku_code || `ACC-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+                featured: Boolean(product.featured),
+                newArrival: product.newArrival !== undefined ? Boolean(product.newArrival) : true,
+                rating: Number(product.rating) || 4.9,
+                numReviews: Number(product.numReviews) || 1,
+                tags: Array.isArray(product.tags) && product.tags.length > 0 
+                    ? product.tags 
+                    : [product.category || "chains"]
             };
             products.unshift(newProduct);
         }
+
         setLocalStorageItem("products_v5", products);
         return true;
     },

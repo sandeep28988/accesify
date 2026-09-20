@@ -90,8 +90,12 @@ export const AdminDashboard = () => {
     const [urlInputValue, setUrlInputValue] = useState("");
     const [formVariants, setFormVariants] = useState("");
     const [formStock, setFormStock] = useState("25");
+    const [formSku, setFormSku] = useState("");
+    const [formStatus, setFormStatus] = useState("active");
+    const [formTags, setFormTags] = useState("");
     const [formFeatured, setFormFeatured] = useState(false);
     const [formNewArrival, setFormNewArrival] = useState(false);
+    const [isSavingProduct, setIsSavingProduct] = useState(false);
 
     // Form for Coupon
     const [newCouponCode, setNewCouponCode] = useState("");
@@ -276,6 +280,9 @@ export const AdminDashboard = () => {
         setUrlInputValue("");
         setFormVariants("Standard, Size 7, Size 8, Size 9");
         setFormStock("25");
+        setFormSku(`ACC-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
+        setFormStatus("active");
+        setFormTags("");
         setFormFeatured(false);
         setFormNewArrival(true);
         setIsProductModalOpen(true);
@@ -293,47 +300,77 @@ export const AdminDashboard = () => {
         setFormImages(product.images && product.images.length > 0 ? [...product.images] : []);
         setShowUrlInput(false);
         setUrlInputValue("");
-        setFormVariants(Array.isArray(product.variants) ? product.variants.join(", ") : "Standard");
+        setFormVariants(Array.isArray(product.variants) ? product.variants.join(", ") : (product.variants || "Standard"));
         setFormStock(String(product.stock !== undefined ? product.stock : 20));
+        setFormSku(product.sku_code || `ACC-${product.id}`);
+        setFormStatus(product.status || "active");
+        setFormTags(Array.isArray(product.tags) ? product.tags.join(", ") : (product.tags || ""));
         setFormFeatured(Boolean(product.featured));
         setFormNewArrival(Boolean(product.newArrival));
         setIsProductModalOpen(true);
     };
 
     // Save Product
-    const handleSaveProduct = (e) => {
-        e.preventDefault();
+    const handleSaveProduct = async (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+
         if (!formName.trim()) {
             showToast("Product name is required.");
             return;
         }
-        if (!formPrice || Number(formPrice) <= 0) {
-            showToast("Valid price is required.");
+        const parsedPrice = parseFloat(formPrice);
+        if (isNaN(parsedPrice) || parsedPrice <= 0) {
+            showToast("Please enter a valid selling price greater than ₹0.");
             return;
         }
 
-        const validImages = formImages.filter(img => img && img.trim());
+        setIsSavingProduct(true);
+        try {
+            const validImages = formImages.filter(img => img && img.trim());
+            const parsedComparePrice = formComparePrice ? parseFloat(formComparePrice) : parsedPrice;
+            const parsedStock = parseInt(formStock, 10);
 
-        const productData = {
-            id: modalMode === "edit" ? editingProductId : `acc_custom_${Date.now()}`,
-            name: formName.trim(),
-            category: formCategory,
-            price: parseFloat(formPrice),
-            comparePrice: formComparePrice ? parseFloat(formComparePrice) : parseFloat(formPrice),
-            description: formDescription.trim(),
-            images: validImages.length > 0 ? validImages : ["assets/images/hero-hand.jpg"],
-            variants: formVariants.split(",").map(v => v.trim()).filter(Boolean),
-            stock: parseInt(formStock, 10) || 20,
-            featured: formFeatured,
-            newArrival: formNewArrival,
-            rating: 4.8,
-            numReviews: 12
-        };
+            const parsedTags = formTags
+                ? formTags.split(",").map(t => t.trim().toLowerCase()).filter(Boolean)
+                : [formCategory || "chains"];
 
-        db.saveProduct(productData);
-        refreshData();
-        setIsProductModalOpen(false);
-        showToast(modalMode === "edit" ? "Product updated successfully!" : "New product created successfully!");
+            const parsedVariants = formVariants
+                ? formVariants.split(",").map(v => v.trim()).filter(Boolean)
+                : ["Standard"];
+
+            const productData = {
+                id: modalMode === "edit" ? editingProductId : `acc_custom_${Date.now()}`,
+                name: formName.trim(),
+                category: formCategory || "chains",
+                price: parsedPrice,
+                comparePrice: isNaN(parsedComparePrice) ? parsedPrice : parsedComparePrice,
+                description: formDescription.trim(),
+                images: validImages.length > 0 ? validImages : ["assets/images/hero-hand.jpg"],
+                variants: parsedVariants.length > 0 ? parsedVariants : ["Standard"],
+                stock: isNaN(parsedStock) ? 20 : parsedStock,
+                sku_code: formSku ? formSku.trim() : `ACC-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+                status: formStatus || "active",
+                tags: parsedTags,
+                featured: Boolean(formFeatured),
+                newArrival: Boolean(formNewArrival),
+                rating: 4.9,
+                numReviews: 1
+            };
+
+            const success = db.saveProduct(productData);
+            if (success) {
+                if (refreshData) refreshData();
+                setIsProductModalOpen(false);
+                showToast(modalMode === "edit" ? "Product updated successfully!" : "New product created and live in store!");
+            } else {
+                showToast("Failed to save product. Please try again.");
+            }
+        } catch (err) {
+            console.error("Error saving product:", err);
+            showToast("Error saving product: " + (err.message || "Unknown error"));
+        } finally {
+            setIsSavingProduct(false);
+        }
     };
 
     // Delete Product
@@ -738,6 +775,17 @@ export const AdminDashboard = () => {
                     </div>
 
                     <div class="zepio-topbar-right">
+                        <!-- Add Product Quick Button -->
+                        <button 
+                            type="button" 
+                            class="zepio-btn zepio-btn-primary zepio-btn-sm" 
+                            onClick=${openAddProductModal}
+                            title="Add New Product"
+                        >
+                            <i class="ri-add-line"></i>
+                            <span>Add Product</span>
+                        </button>
+
                         <!-- Store Status Open/Closed Pill (im component from blyo.in) -->
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <span style="font-size: 0.78rem; font-weight: 600; color: #6b7280;" class="hidden sm:inline">Store status:</span>
@@ -770,19 +818,29 @@ export const AdminDashboard = () => {
                     <!-- TAB: STAFF DASHBOARD (/admin/staff) -->
                     ${activeTab === 'staff' && html`
                         <div>
-                            <!-- Date Range Bar -->
+                            <!-- Date Range & Action Bar -->
                             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
                                 <div>
                                     <h1 class="zepio-page-title">Staff Dashboard</h1>
                                     <p class="zepio-page-subtitle">Operations overview for ACCESSIFY streetwear store.</p>
                                 </div>
-                                <div class="zepio-range-bar">
-                                    <button class="zepio-range-pill ${dateRange === 'today' ? 'active' : ''}" onClick=${() => setDateRange('today')}>Today</button>
-                                    <button class="zepio-range-pill ${dateRange === 'yesterday' ? 'active' : ''}" onClick=${() => setDateRange('yesterday')}>Yesterday</button>
-                                    <button class="zepio-range-pill ${dateRange === '7d' ? 'active' : ''}" onClick=${() => setDateRange('7d')}>Last 7 days</button>
-                                    <button class="zepio-range-pill ${dateRange === '30d' ? 'active' : ''}" onClick=${() => setDateRange('30d')}>Last 30 days</button>
-                                    <button class="zepio-range-pill ${dateRange === 'this-month' ? 'active' : ''}" onClick=${() => setDateRange('this-month')}>This month</button>
-                                    <button class="zepio-range-pill ${dateRange === 'all' ? 'active' : ''}" onClick=${() => setDateRange('all')}>All time</button>
+                                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                    <button 
+                                        type="button" 
+                                        class="zepio-btn zepio-btn-primary zepio-btn-sm" 
+                                        onClick=${openAddProductModal}
+                                    >
+                                        <i class="ri-add-line"></i>
+                                        <span>Add Product</span>
+                                    </button>
+                                    <div class="zepio-range-bar">
+                                        <button class="zepio-range-pill ${dateRange === 'today' ? 'active' : ''}" onClick=${() => setDateRange('today')}>Today</button>
+                                        <button class="zepio-range-pill ${dateRange === 'yesterday' ? 'active' : ''}" onClick=${() => setDateRange('yesterday')}>Yesterday</button>
+                                        <button class="zepio-range-pill ${dateRange === '7d' ? 'active' : ''}" onClick=${() => setDateRange('7d')}>Last 7 days</button>
+                                        <button class="zepio-range-pill ${dateRange === '30d' ? 'active' : ''}" onClick=${() => setDateRange('30d')}>Last 30 days</button>
+                                        <button class="zepio-range-pill ${dateRange === 'this-month' ? 'active' : ''}" onClick=${() => setDateRange('this-month')}>This month</button>
+                                        <button class="zepio-range-pill ${dateRange === 'all' ? 'active' : ''}" onClick=${() => setDateRange('all')}>All time</button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1102,7 +1160,7 @@ export const AdminDashboard = () => {
                                                                 />
                                                                 <div>
                                                                     <span class="zepio-product-name">${product.name}</span>
-                                                                    <div class="zepio-product-meta">ID: ${product.id} ${product.featured ? '• ✦ Featured' : ''}</div>
+                                                                    <div class="zepio-product-meta">ID: ${product.id} ${product.sku_code ? `• SKU: ${product.sku_code}` : ''} ${product.status === 'inactive' ? '• (Inactive)' : ''} ${product.featured ? '• ✦ Featured' : ''}</div>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -1613,13 +1671,13 @@ export const AdminDashboard = () => {
                                     </div>
 
                                     <div class="zepio-form-group">
-                                        <label class="zepio-label">Initial Stock *</label>
+                                        <label class="zepio-label">Product SKU / Code</label>
                                         <input 
-                                            type="number" 
+                                            type="text" 
                                             class="zepio-input" 
-                                            value=${formStock} 
-                                            onInput=${e => setFormStock(e.target.value)} 
-                                            required 
+                                            placeholder="e.g., ACC-GOTH-01" 
+                                            value=${formSku} 
+                                            onInput=${e => setFormSku(e.target.value)} 
                                         />
                                     </div>
                                 </div>
@@ -1631,6 +1689,8 @@ export const AdminDashboard = () => {
                                             type="number" 
                                             class="zepio-input" 
                                             placeholder="499" 
+                                            min="1"
+                                            step="any"
                                             value=${formPrice} 
                                             onInput=${e => setFormPrice(e.target.value)} 
                                             required 
@@ -1643,9 +1703,39 @@ export const AdminDashboard = () => {
                                             type="number" 
                                             class="zepio-input" 
                                             placeholder="999" 
+                                            min="0"
+                                            step="any"
                                             value=${formComparePrice} 
                                             onInput=${e => setFormComparePrice(e.target.value)} 
                                         />
+                                    </div>
+                                </div>
+
+                                <div class="zepio-form-row">
+                                    <div class="zepio-form-group">
+                                        <label class="zepio-label">Initial Stock Quantity *</label>
+                                        <input 
+                                            type="number" 
+                                            class="zepio-input" 
+                                            placeholder="25"
+                                            min="0"
+                                            value=${formStock} 
+                                            onInput=${e => setFormStock(e.target.value)} 
+                                            required 
+                                        />
+                                    </div>
+
+                                    <div class="zepio-form-group">
+                                        <label class="zepio-label">Status</label>
+                                        <select 
+                                            class="zepio-select" 
+                                            style="width: 100%;"
+                                            value=${formStatus} 
+                                            onChange=${e => setFormStatus(e.target.value)}
+                                        >
+                                            <option value="active">Active (Visible in Store)</option>
+                                            <option value="inactive">Inactive (Hidden)</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -1654,21 +1744,56 @@ export const AdminDashboard = () => {
                                     <textarea 
                                         class="zepio-textarea" 
                                         rows="3" 
-                                        placeholder="Material, finish, size..."
+                                        placeholder="Material, finish, size, streetwear details..."
                                         value=${formDescription} 
                                         onInput=${e => setFormDescription(e.target.value)}
                                     ></textarea>
                                 </div>
 
-                                <div class="zepio-form-group">
-                                    <label class="zepio-label">Variants (Comma-separated sizes)</label>
-                                    <input 
-                                        type="text" 
-                                        class="zepio-input" 
-                                        placeholder="Standard, Size 7, Size 8, Size 9" 
-                                        value=${formVariants} 
-                                        onInput=${e => setFormVariants(e.target.value)} 
-                                    />
+                                <div class="zepio-form-row">
+                                    <div class="zepio-form-group">
+                                        <label class="zepio-label">Variants (Comma-separated sizes / styles)</label>
+                                        <input 
+                                            type="text" 
+                                            class="zepio-input" 
+                                            placeholder="Standard, Size 7, Size 8, Size 9" 
+                                            value=${formVariants} 
+                                            onInput=${e => setFormVariants(e.target.value)} 
+                                        />
+                                    </div>
+
+                                    <div class="zepio-form-group">
+                                        <label class="zepio-label">Tags (Comma-separated search keywords)</label>
+                                        <input 
+                                            type="text" 
+                                            class="zepio-input" 
+                                            placeholder="streetwear, gothic, silver, chain" 
+                                            value=${formTags} 
+                                            onInput=${e => setFormTags(e.target.value)} 
+                                        />
+                                    </div>
+                                </div>
+
+                                <!-- Badges & Visibility Toggles -->
+                                <div style="display: flex; gap: 16px; flex-wrap: wrap; background: #f8fafc; padding: 10px 14px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 600; color: #374151;">
+                                        <input 
+                                            type="checkbox" 
+                                            checked=${formFeatured} 
+                                            onChange=${e => setFormFeatured(e.target.checked)} 
+                                            style="width: 16px; height: 16px; cursor: pointer; accent-color: #3b82f6;" 
+                                        />
+                                        <span>Featured Product (Highlight on homepage)</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 600; color: #374151;">
+                                        <input 
+                                            type="checkbox" 
+                                            checked=${formNewArrival} 
+                                            onChange=${e => setFormNewArrival(e.target.checked)} 
+                                            style="width: 16px; height: 16px; cursor: pointer; accent-color: #3b82f6;" 
+                                        />
+                                        <span>New Arrival Badge</span>
+                                    </label>
                                 </div>
 
                                 <div class="zepio-form-group">
@@ -1779,8 +1904,13 @@ export const AdminDashboard = () => {
                                 <button type="button" class="zepio-btn zepio-btn-secondary" onClick=${() => setIsProductModalOpen(false)}>
                                     Cancel
                                 </button>
-                                <button type="submit" class="zepio-btn zepio-btn-primary">
-                                    ${modalMode === 'edit' ? 'Update Product' : 'Create Product'}
+                                <button type="submit" class="zepio-btn zepio-btn-primary" disabled=${isSavingProduct}>
+                                    ${isSavingProduct ? html`
+                                        <span style="display: inline-flex; align-items: center; gap: 6px;">
+                                            <i class="ri-loader-4-line ri-spin"></i>
+                                            <span>Saving...</span>
+                                        </span>
+                                    ` : (modalMode === 'edit' ? 'Update Product' : 'Create Product')}
                                 </button>
                             </div>
                         </form>
