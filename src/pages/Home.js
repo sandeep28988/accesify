@@ -11,15 +11,20 @@ export const Home = () => {
     const [openFaq, setOpenFaq] = useState(null);
     const [currentSlide, setCurrentSlide] = useState(0);
 
+    // Scroll to top only once when the Home page mounts
     useEffect(() => {
         window.scrollTo(0, 0);
+    }, []);
+
+    // Re-initialize Lucide icons when products change
+    useEffect(() => {
         if (window.lucide) {
             window.lucide.createIcons();
         }
-    }, [products, openFaq]);
+    }, [products]);
 
     const toggleFaq = (index) => {
-        setOpenFaq(openFaq === index ? null : index);
+        setOpenFaq(prev => prev === index ? null : index);
     };
 
     // 8 Categories matching reference mock with authentic jewelry thumbnails
@@ -246,7 +251,19 @@ export const Home = () => {
                         <div>
                             ${faqQuestionsLeft.map((faq, idx) => html`
                                 <div class="faq-item" key=${faq.q}>
-                                    <div class="faq-question" onClick=${() => toggleFaq(`l-${idx}`)}>
+                                    <div 
+                                        class="faq-question" 
+                                        role="button"
+                                        tabindex="0"
+                                        aria-expanded=${openFaq === `l-${idx}`}
+                                        onClick=${(e) => { e.preventDefault(); toggleFaq(`l-${idx}`); }}
+                                        onKeyDown=${(e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                toggleFaq(`l-${idx}`);
+                                            }
+                                        }}
+                                    >
                                         <span>${faq.q}</span>
                                         <span class="faq-toggle-icon">${openFaq === `l-${idx}` ? '−' : '+'}</span>
                                     </div>
@@ -261,7 +278,19 @@ export const Home = () => {
                         <div>
                             ${faqQuestionsRight.map((faq, idx) => html`
                                 <div class="faq-item" key=${faq.q}>
-                                    <div class="faq-question" onClick=${() => toggleFaq(`r-${idx}`)}>
+                                    <div 
+                                        class="faq-question" 
+                                        role="button"
+                                        tabindex="0"
+                                        aria-expanded=${openFaq === `r-${idx}`}
+                                        onClick=${(e) => { e.preventDefault(); toggleFaq(`r-${idx}`); }}
+                                        onKeyDown=${(e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                toggleFaq(`r-${idx}`);
+                                            }
+                                        }}
+                                    >
                                         <span>${faq.q}</span>
                                         <span class="faq-toggle-icon">${openFaq === `r-${idx}` ? '−' : '+'}</span>
                                     </div>

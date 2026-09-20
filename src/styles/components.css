@@ -1285,11 +1285,17 @@
     color: #111827;
     padding: 8px 0;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
     transition: color 0.15s;
 }
 
 .faq-question:hover {
     color: #000000;
+}
+
+.faq-question:focus-visible {
+    outline: 2px solid #111827;
+    outline-offset: 2px;
 }
 
 .faq-toggle-icon {
