@@ -1322,7 +1322,7 @@ export const AdminDashboard = () => {
                                     const count = products.filter(p => (p.category || "").toLowerCase() === cat.toLowerCase()).length;
                                     let img = `assets/images/category-${cat}.jpg`;
                                     if (cat === "sleek-chains") img = "assets/images/sleek-chains.jpg";
-                                    if (cat === "y2k-gothic-necklaces") img = "assets/images/category-gothic.jpg";
+                                    if (cat === "y2k-gothic-necklaces") img = "assets/images/category-gothic.jpg?v=2";
                                     if (cat === "iced-out-jewels") img = "assets/images/category-iced-out.jpg";
 
                                     return html`

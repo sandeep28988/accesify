@@ -51,7 +51,7 @@ export const Home = () => {
         },
         {
             title: "Y2K GOTHIC NECKLACES",
-            image: "assets/images/category-gothic.jpg",
+            image: "assets/images/category-gothic.jpg?v=2",
             link: "#/shop?category=y2k-gothic-necklaces"
         },
         {
