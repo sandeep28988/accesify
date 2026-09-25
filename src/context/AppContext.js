@@ -59,10 +59,18 @@ export const AppProvider = ({ children }) => {
         const savedUser = localStorage.getItem("accessify_current_user") || localStorage.getItem("valoir_current_user");
         if (savedUser) setUser(JSON.parse(savedUser));
 
-        // Read initial URL Hash
+        // Read initial URL Hash (and support ?product=<id> query param from WhatsApp links)
         const handleHashChange = () => {
-            const hash = window.location.hash || "#/";
-            setCurrentRoute(hash);
+            let hash = window.location.hash || "";
+            if ((!hash || hash === "#/") && window.location.search) {
+                const params = new URLSearchParams(window.location.search);
+                const prodId = params.get("product");
+                if (prodId) {
+                    hash = `#/product/${prodId}`;
+                    window.location.hash = hash;
+                }
+            }
+            setCurrentRoute(hash || "#/");
         };
         
         handleHashChange();

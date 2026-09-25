@@ -1,4 +1,4 @@
-// WhatsApp Order Helpers for ACCESSIFY (https://blyo.in/)
+// WhatsApp Order Helpers for ACCESSIFY (https://accessify-store.vercel.app/)
 // Official Order WhatsApp Number: +91 7012400815
 
 export const WHATSAPP_PHONE = "917012400815";
@@ -20,7 +20,9 @@ export const getProductWhatsAppUrl = (product) => {
     const origin = (typeof window !== "undefined" && window.location && window.location.origin) ? window.location.origin : "https://accessify-store.vercel.app";
     const rawPath = (typeof window !== "undefined" && window.location && window.location.pathname) ? window.location.pathname.replace(/\/$/, "") : "";
     const base = `${origin}${rawPath}`;
-    const productUrl = `${base}/#/product/${product.id}`;
+    // Including ?product=<id> before the hash ensures WhatsApp's link preview crawler
+    // fetches the fresh ACCESSIFY Open Graph preview instead of any cached root URL preview.
+    const productUrl = `${base}/?product=${encodeURIComponent(product.id)}#/product/${product.id}`;
 
     const categoryName = product.category
         ? product.category.charAt(0).toUpperCase() + product.category.slice(1)
@@ -65,7 +67,7 @@ export const getCartWhatsAppUrl = (cartItems, totalAmount) => {
     // Relevant product links
     message += `Product Links:\n`;
     cartItems.forEach((item, index) => {
-        const link = `${base}/#/product/${item.id}`;
+        const link = `${base}/?product=${encodeURIComponent(item.id)}#/product/${item.id}`;
         message += `${index + 1}. ${item.name}: ${link}\n`;
     });
 
