@@ -357,9 +357,9 @@ export const AdminDashboard = () => {
                 numReviews: 1
             };
 
-            const success = db.saveProduct(productData);
+            const success = await db.saveProduct(productData);
             if (success) {
-                if (refreshData) refreshData();
+                if (refreshData) await refreshData();
                 setIsProductModalOpen(false);
                 showToast(modalMode === "edit" ? "Product updated successfully!" : "New product created and live in store!");
             } else {
@@ -374,11 +374,11 @@ export const AdminDashboard = () => {
     };
 
     // Delete Product
-    const handleDeleteProduct = (product) => {
+    const handleDeleteProduct = async (product) => {
         const confirmDelete = window.confirm(`Are you sure you want to delete "${product.name}"?`);
         if (confirmDelete) {
-            db.deleteProduct(product.id);
-            refreshData();
+            await db.deleteProduct(product.id);
+            if (refreshData) await refreshData();
             showToast(`Deleted ${product.name}`);
         }
     };
@@ -394,7 +394,7 @@ export const AdminDashboard = () => {
         }));
     };
 
-    const handleSaveInlinePrice = (product) => {
+    const handleSaveInlinePrice = async (product) => {
         const edits = inlinePrices[product.id];
         if (!edits) return;
 
@@ -406,13 +406,13 @@ export const AdminDashboard = () => {
             return;
         }
 
-        db.saveProduct({
+        await db.saveProduct({
             ...product,
             price: newPrice,
             comparePrice: isNaN(newComparePrice) ? newPrice : newComparePrice
         });
 
-        refreshData();
+        if (refreshData) await refreshData();
         showToast(`Updated price for ${product.name}`);
 
         setInlinePrices(prev => {
@@ -423,14 +423,14 @@ export const AdminDashboard = () => {
     };
 
     // Stock adjustment helper
-    const handleAdjustStock = (product, delta) => {
+    const handleAdjustStock = async (product, delta) => {
         const currentStock = product.stock !== undefined ? product.stock : 20;
         const newStock = Math.max(0, currentStock + delta);
-        db.saveProduct({
+        await db.saveProduct({
             ...product,
             stock: newStock
         });
-        refreshData();
+        if (refreshData) await refreshData();
         showToast(`Stock for ${product.name} updated to ${newStock}`);
     };
 
@@ -589,11 +589,11 @@ export const AdminDashboard = () => {
     };
 
     // Reset Catalog
-    const handleResetCatalog = () => {
-        if (window.confirm("Reset all products back to the original 205 authentic products? Any customized changes will be replaced.")) {
-            db.resetToDefaultProducts();
-            refreshData();
-            showToast("Catalog reset to original 205 products.");
+    const handleResetCatalog = async () => {
+        if (window.confirm("Reset all products back to the original authentic products? Any customized changes will be replaced.")) {
+            await db.resetToDefaultProducts();
+            if (refreshData) await refreshData();
+            showToast("Catalog reset to original authentic products.");
         }
     };
 

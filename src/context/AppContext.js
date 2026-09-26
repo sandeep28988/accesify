@@ -30,12 +30,58 @@ export const AppProvider = ({ children }) => {
     // Coupon Calculations
     const [activeCoupon, setActiveCoupon] = useState(null);
 
-    // Initial Load & Synchronisation
+    // Initial Load & Synchronisation with Central Persistent Cloud Database
     useEffect(() => {
-        // Load initial values from DB service
+        // Load initial synchronous cache from DB service
         setProducts(db.getProducts());
         setCoupons(db.getCoupons());
         setOrders(db.getOrders());
+
+        // Perform initial network sync with central persistent database immediately
+        db.syncWithCentralDb().then(synced => {
+            if (synced && Array.isArray(synced) && synced.length > 0) {
+                setProducts(synced);
+            }
+        });
+
+        // Listen for catalog update events
+        const handleCatalogUpdated = (e) => {
+            if (e.detail && Array.isArray(e.detail.products)) {
+                setProducts(e.detail.products);
+            }
+        };
+        window.addEventListener("accessify:catalog_updated", handleCatalogUpdated);
+
+        // When visitor switches tabs or returns from Instagram app / lock screen
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "visible") {
+                db.syncWithCentralDb().then(synced => {
+                    if (synced && Array.isArray(synced)) {
+                        setProducts(synced);
+                    }
+                });
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        // When window regains focus
+        const handleWindowFocus = () => {
+            db.syncWithCentralDb().then(synced => {
+                if (synced && Array.isArray(synced)) {
+                    setProducts(synced);
+                }
+            });
+        };
+        window.addEventListener("focus", handleWindowFocus);
+
+        // Periodic background revalidation (every 30 seconds)
+        const syncInterval = setInterval(() => {
+            db.syncWithCentralDb().then(synced => {
+                if (synced && Array.isArray(synced)) {
+                    setProducts(synced);
+                }
+            });
+        }, 30000);
         
         // Load initial local states
         const savedCart = localStorage.getItem("accessify_cart") || localStorage.getItem("valoir_cart");
@@ -59,14 +105,14 @@ export const AppProvider = ({ children }) => {
         const savedUser = localStorage.getItem("accessify_current_user") || localStorage.getItem("valoir_current_user");
         if (savedUser) setUser(JSON.parse(savedUser));
 
-        // Read initial URL Hash (and support ?product=<id> query param from WhatsApp links)
+        // Read initial URL Hash (supports direct hash, ?product=<id> from WhatsApp, and Instagram bio links)
         const handleHashChange = () => {
             let hash = window.location.hash || "";
             if ((!hash || hash === "#/") && window.location.search) {
                 const params = new URLSearchParams(window.location.search);
-                const prodId = params.get("product");
+                const prodId = params.get("product") || params.get("productId") || params.get("id") || params.get("p");
                 if (prodId) {
-                    hash = `#/product/${prodId}`;
+                    hash = `#/product/${encodeURIComponent(prodId)}`;
                     window.location.hash = hash;
                 }
             }
@@ -76,12 +122,23 @@ export const AppProvider = ({ children }) => {
         handleHashChange();
         window.addEventListener("hashchange", handleHashChange);
         
-        return () => window.removeEventListener("hashchange", handleHashChange);
+        return () => {
+            window.removeEventListener("hashchange", handleHashChange);
+            window.removeEventListener("accessify:catalog_updated", handleCatalogUpdated);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            window.removeEventListener("focus", handleWindowFocus);
+            clearInterval(syncInterval);
+        };
     }, []);
 
     // Sync state helpers
-    const refreshData = () => {
-        setProducts(db.getProducts());
+    const refreshData = async () => {
+        const synced = await db.syncWithCentralDb();
+        if (synced && Array.isArray(synced)) {
+            setProducts(synced);
+        } else {
+            setProducts(db.getProducts());
+        }
         setCoupons(db.getCoupons());
         setOrders(db.getOrders());
     };
