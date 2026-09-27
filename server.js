@@ -2,7 +2,6 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import apiProductsHandler from './api/products.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,60 +20,10 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon'
 };
 
-const server = http.createServer(async (req, res) => {
+const server = http.createServer((req, res) => {
   // Normalize url
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   let pathname = decodeURIComponent(parsedUrl.pathname);
-
-  // Handle /api/products directly (both on Vercel deployment and local server)
-  if (pathname === '/api/products' || pathname.startsWith('/api/products/')) {
-    const query = {};
-    parsedUrl.searchParams.forEach((val, key) => { query[key] = val; });
-    req.query = query;
-
-    if (!res.status) {
-      res.status = function(code) {
-        res.statusCode = code;
-        return res;
-      };
-    }
-    if (!res.json) {
-      res.json = function(data) {
-        res.setHeader('Content-Type', 'application/json; charset=UTF-8');
-        res.end(JSON.stringify(data));
-        return res;
-      };
-    }
-
-    if (req.method === 'POST' || req.method === 'PUT') {
-      let bodyData = '';
-      req.on('data', chunk => { bodyData += chunk; });
-      req.on('end', async () => {
-        try {
-          req.body = bodyData ? JSON.parse(bodyData) : {};
-        } catch (e) {
-          req.body = bodyData;
-        }
-        try {
-          await apiProductsHandler(req, res);
-        } catch (err) {
-          console.error("API error:", err);
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ success: false, error: err.message }));
-        }
-      });
-      return;
-    }
-
-    try {
-      await apiProductsHandler(req, res);
-    } catch (err) {
-      console.error("API error:", err);
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ success: false, error: err.message }));
-    }
-    return;
-  }
 
   if (pathname === '/') {
     pathname = '/index.html';
