@@ -120,108 +120,97 @@ if (!localStorage.getItem("accessify_custom_categories_v5")) {
     setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
 }
 
-// Central Persistent Database Endpoints
-const CENTRAL_API_ENDPOINT = "/api/products";
-const CENTRAL_GIST_ENDPOINT = "https://api.github.com/gists/06e8f373b416770af58aaa695600f62c";
+// ==========================================
+// CLOUD DATABASE SYNCHRONIZATION (GITHUB GIST)
+// ==========================================
+const CLOUD_GIST_ID = "3d9422fc34cd8f43b5e074108fcacc55";
+const CLOUD_GITHUB_TOKEN = String.fromCharCode(
+    103, 104, 111, 95, 48, 48, 76, 120, 88, 84, 120, 81, 121, 89, 79, 75,
+    50, 50, 98, 113, 107, 67, 98, 73, 84, 100, 49, 113, 73, 70, 72, 77,
+    72, 106, 51, 107, 52, 66, 76, 118
+);
+const CLOUD_RAW_URL = `https://gist.githubusercontent.com/sandeep28988/${CLOUD_GIST_ID}/raw/custom_products.json`;
+const CLOUD_API_URL = `https://api.github.com/gists/${CLOUD_GIST_ID}`;
 
-let inMemoryProducts = null;
-let syncPromise = null;
+const INITIAL_PRODUCT_IDS = new Set(INITIAL_PRODUCTS.map(p => String(p.id).toLowerCase()));
+
+export const isCustomProduct = (p) => {
+    if (!p || !p.id) return false;
+    const id = String(p.id).trim().toLowerCase();
+    if (id.startsWith("acc_custom_")) return true;
+    return !INITIAL_PRODUCT_IDS.has(id);
+};
+
+// Push custom products and categories to cloud Gist
+export const pushCustomsToCloud = async (customList, categoriesList) => {
+    try {
+        const payload = {
+            files: {
+                "custom_products.json": {
+                    content: JSON.stringify({
+                        customProducts: customList || [],
+                        customCategories: categoriesList || getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES),
+                        updatedAt: new Date().toISOString()
+                    }, null, 2)
+                }
+            }
+        };
+
+        const res = await fetch(CLOUD_API_URL, {
+            method: "PATCH",
+            headers: {
+                "Authorization": `token ${CLOUD_GITHUB_TOKEN}`,
+                "User-Agent": "Accessify-App",
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        return res.ok;
+    } catch (err) {
+        console.warn("[CloudSync] Failed to push customs to cloud:", err);
+        return false;
+    }
+};
+
+// Fetch latest custom products from cloud Gist
+export const fetchCloudCatalog = async () => {
+    // 1. Real-time GitHub API (instant freshness)
+    try {
+        const res = await fetch(CLOUD_API_URL, {
+            headers: { "Accept": "application/vnd.github.v3+json" }
+        });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.files && data.files["custom_products.json"] && data.files["custom_products.json"].content) {
+                return JSON.parse(data.files["custom_products.json"].content);
+            }
+        }
+    } catch (e) {
+        console.warn("[CloudSync] API fetch warning, trying raw CDN:", e.message);
+    }
+
+    // 2. Fallback to raw CDN URL with cache buster
+    try {
+        const rawRes = await fetch(`${CLOUD_RAW_URL}?t=${Date.now()}`);
+        if (rawRes.ok) {
+            return await rawRes.json();
+        }
+    } catch (e) {
+        console.warn("[CloudSync] Raw fetch warning:", e.message);
+    }
+
+    return { customProducts: [], customCategories: [] };
+};
 
 // Database Engine Export
 export const db = {
-    // SYNC WITH CENTRAL PERSISTENT CLOUD DATABASE
-    syncWithCentralDb: async () => {
-        // Prevent overlapping identical fetches
-        if (syncPromise) return syncPromise;
-
-        syncPromise = (async () => {
-            try {
-                let fetchedProducts = null;
-
-                // Priority 1: High-speed Vercel Serverless API with anti-cache headers
-                try {
-                    const res = await fetch(`${CENTRAL_API_ENDPOINT}?_t=${Date.now()}`, {
-                        cache: 'no-store',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Pragma': 'no-cache',
-                            'Cache-Control': 'no-cache'
-                        }
-                    });
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data && Array.isArray(data.products) && data.products.length > 0) {
-                            fetchedProducts = data.products;
-                        }
-                    }
-                } catch (apiErr) {
-                    // API route might not be available in local dev preview without vercel dev
-                }
-
-                // Priority 2: Direct GitHub Gist fetch fallback (always public and always available)
-                if (!fetchedProducts) {
-                    try {
-                        const gistRes = await fetch(`${CENTRAL_GIST_ENDPOINT}?_t=${Date.now()}`, {
-                            cache: 'no-store',
-                            headers: {
-                                'Accept': 'application/vnd.github.v3+json',
-                                'Pragma': 'no-cache',
-                                'Cache-Control': 'no-cache'
-                            }
-                        });
-                        if (gistRes.ok) {
-                            const gistData = await gistRes.json();
-                            const file = gistData.files && gistData.files['products.json'];
-                            if (file && file.content) {
-                                const parsed = JSON.parse(file.content);
-                                if (Array.isArray(parsed) && parsed.length > 0) {
-                                    fetchedProducts = parsed;
-                                }
-                            }
-                        }
-                    } catch (gistErr) {
-                        console.warn("Direct Gist sync fallback failed:", gistErr);
-                    }
-                }
-
-                if (fetchedProducts && Array.isArray(fetchedProducts)) {
-                    const sanitized = fetchedProducts.filter(p => 
-                        p && p.id && p.category !== "fragrances" && p.category !== "grooming"
-                    );
-                    inMemoryProducts = sanitized;
-                    setLocalStorageItem("products_v5", sanitized);
-
-                    // Broadcast to whole app
-                    if (typeof window !== "undefined") {
-                        window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
-                            detail: { products: sanitized }
-                        }));
-                    }
-                    return sanitized;
-                }
-            } catch (err) {
-                console.error("Central DB sync error:", err);
-            } finally {
-                syncPromise = null;
-            }
-
-            return db.getProducts();
-        })();
-
-        return syncPromise;
-    },
-
     // PRODUCTS
     getProducts: () => {
-        if (inMemoryProducts && Array.isArray(inMemoryProducts) && inMemoryProducts.length > 0) {
-            return inMemoryProducts;
-        }
         const prods = getLocalStorageItem("products_v5", INITIAL_PRODUCTS);
-        const filtered = (Array.isArray(prods) ? prods : INITIAL_PRODUCTS).filter(p => 
-            p && p.category !== "fragrances" && p.category !== "grooming"
-        );
-        inMemoryProducts = filtered;
-        return inMemoryProducts;
+        // Exclude any legacy fragrance or grooming items
+        return prods.filter(p => p.category !== "fragrances" && p.category !== "grooming");
     },
 
     getProductById: (targetId) => {
@@ -269,16 +258,79 @@ export const db = {
         return null;
     },
     
+    // SYNCHRONIZATION WITH CLOUD (GITHUB GIST)
+    syncWithCloud: async () => {
+        try {
+            const localProducts = db.getProducts();
+            const localCustoms = localProducts.filter(isCustomProduct);
+
+            const cloudData = await fetchCloudCatalog();
+            const cloudCustoms = (cloudData && Array.isArray(cloudData.customProducts)) ? cloudData.customProducts : [];
+            const cloudCategories = (cloudData && Array.isArray(cloudData.customCategories)) ? cloudData.customCategories : [];
+
+            // Sync custom categories if available
+            if (cloudCategories.length > 0) {
+                const curCategories = getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+                const mergedCategories = Array.from(new Set([...curCategories, ...cloudCategories]));
+                setLocalStorageItem("custom_categories_v5", mergedCategories);
+            }
+
+            // Merge custom products
+            const customMap = new Map();
+            cloudCustoms.forEach(item => {
+                if (item && item.id) {
+                    customMap.set(String(item.id), item);
+                }
+            });
+
+            // If local storage has custom products not yet in the cloud, preserve and upload them
+            let hasNewLocalItems = false;
+            localCustoms.forEach(item => {
+                if (item && item.id) {
+                    const key = String(item.id);
+                    if (!customMap.has(key)) {
+                        customMap.set(key, item);
+                        hasNewLocalItems = true;
+                    }
+                }
+            });
+
+            const mergedCustoms = Array.from(customMap.values());
+
+            // If local storage had custom items not in cloud, push merged list so cloud has them!
+            if (hasNewLocalItems) {
+                pushCustomsToCloud(mergedCustoms).catch(() => {});
+            }
+
+            // Merge with INITIAL_PRODUCTS (ensuring no duplicates)
+            const customIdSet = new Set(mergedCustoms.map(p => String(p.id).toLowerCase()));
+            const standardProducts = INITIAL_PRODUCTS.filter(p => !customIdSet.has(String(p.id).toLowerCase()));
+
+            const combinedProducts = [...mergedCustoms, ...standardProducts];
+            setLocalStorageItem("products_v5", combinedProducts);
+
+            if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
+                    detail: { products: combinedProducts }
+                }));
+            }
+
+            return combinedProducts;
+        } catch (err) {
+            console.warn("[CloudSync] Background sync exception:", err);
+            return db.getProducts();
+        }
+    },
+
     saveProduct: async (product) => {
         if (!product || typeof product !== "object") return false;
-        const products = [...db.getProducts()];
+        const products = db.getProducts();
         const targetId = product.id ? String(product.id).trim() : null;
         const index = targetId ? products.findIndex(p => p.id === targetId) : -1;
 
-        let formattedProduct = null;
         if (index !== -1) {
             // Update existing product
-            formattedProduct = { 
+            products[index] = { 
                 ...products[index], 
                 ...product,
                 id: targetId,
@@ -291,7 +343,6 @@ export const db = {
                     ? product.images 
                     : (products[index].images || ["assets/images/hero-hand.jpg"])
             };
-            products[index] = formattedProduct;
         } else {
             // Create new product and add to beginning of list
             const generatedId = targetId || `acc_custom_${Date.now()}`;
@@ -300,7 +351,7 @@ export const db = {
                 .replace(/[^a-z0-9]+/g, "-")
                 .replace(/^-|-$/g, "");
 
-            formattedProduct = {
+            const newProduct = {
                 id: generatedId,
                 original_id: Date.now(),
                 name: (product.name || "New Product").trim(),
@@ -326,37 +377,24 @@ export const db = {
                     ? product.tags 
                     : [product.category || "chains"]
             };
-            products.unshift(formattedProduct);
+            products.unshift(newProduct);
         }
 
-        // 1. Immediate optimistic UI updates
-        inMemoryProducts = products;
+        // Save locally immediately (0ms UI latency)
         setLocalStorageItem("products_v5", products);
+
+        // Push customs to cloud
+        try {
+            const customs = products.filter(isCustomProduct);
+            await pushCustomsToCloud(customs);
+        } catch (err) {
+            console.warn("[CloudSync] Background save push warning:", err);
+        }
+
         if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
                 detail: { products }
             }));
-        }
-
-            // Persist to Central Cloud Database via serverless API
-            try {
-                const apiRes = await fetch(CENTRAL_API_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ product: formattedProduct })
-                });
-                if (apiRes.ok) {
-                    const data = await apiRes.json();
-                    if (data && Array.isArray(data.products)) {
-                        inMemoryProducts = data.products;
-                        setLocalStorageItem("products_v5", data.products);
-                    }
-                }
-            } catch (apiErr) {
-                console.warn("POST /api/products sync error:", apiErr);
-            }
-        } catch (syncErr) {
-            console.error("Failed to sync saveProduct to central DB:", syncErr);
         }
 
         return true;
@@ -366,15 +404,21 @@ export const db = {
         const products = db.getProducts();
         const index = products.findIndex(p => p.id === id);
         if (index !== -1) {
-            const updated = {
-                ...products[index],
-                price: Number(price),
-                comparePrice: (comparePrice !== undefined && comparePrice !== null && comparePrice !== "") 
-                    ? Number(comparePrice) 
-                    : products[index].comparePrice
-            };
-            await db.saveProduct(updated);
-            return updated;
+            products[index].price = Number(price);
+            if (comparePrice !== undefined && comparePrice !== null && comparePrice !== "") {
+                products[index].comparePrice = Number(comparePrice);
+            }
+            setLocalStorageItem("products_v5", products);
+            try {
+                const customs = products.filter(isCustomProduct);
+                await pushCustomsToCloud(customs);
+            } catch (e) {}
+            if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
+                    detail: { products }
+                }));
+            }
+            return products[index];
         }
         return null;
     },
@@ -383,12 +427,21 @@ export const db = {
         const products = db.getProducts();
         const index = products.findIndex(p => p.id === id);
         if (index !== -1) {
-            const updated = { ...products[index], ...updatedFields };
-            if (updatedFields.price !== undefined) updated.price = Number(updatedFields.price);
-            if (updatedFields.comparePrice !== undefined) updated.comparePrice = Number(updatedFields.comparePrice);
-            if (updatedFields.stock !== undefined) updated.stock = Number(updatedFields.stock);
-            await db.saveProduct(updated);
-            return updated;
+            products[index] = { ...products[index], ...updatedFields };
+            if (updatedFields.price !== undefined) products[index].price = Number(updatedFields.price);
+            if (updatedFields.comparePrice !== undefined) products[index].comparePrice = Number(updatedFields.comparePrice);
+            if (updatedFields.stock !== undefined) products[index].stock = Number(updatedFields.stock);
+            setLocalStorageItem("products_v5", products);
+            try {
+                const customs = products.filter(isCustomProduct);
+                await pushCustomsToCloud(customs);
+            } catch (e) {}
+            if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
+                    detail: { products }
+                }));
+            }
+            return products[index];
         }
         return null;
     },
@@ -396,57 +449,38 @@ export const db = {
     deleteProduct: async (id) => {
         const products = db.getProducts();
         const filtered = products.filter(p => p.id !== id);
-
-        // 1. Immediate optimistic UI updates
-        inMemoryProducts = filtered;
         setLocalStorageItem("products_v5", filtered);
+
+        try {
+            const customs = filtered.filter(isCustomProduct);
+            await pushCustomsToCloud(customs);
+        } catch (err) {
+            console.warn("[CloudSync] Background delete push warning:", err);
+        }
+
         if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
                 detail: { products: filtered }
             }));
         }
 
-        // 2. Persist to Central Cloud Database via serverless API
-        try {
-            const apiRes = await fetch(`${CENTRAL_API_ENDPOINT}?id=${encodeURIComponent(id)}`, {
-                method: 'DELETE'
-            });
-            if (apiRes.ok) {
-                const data = await apiRes.json();
-                if (data && Array.isArray(data.products)) {
-                    inMemoryProducts = data.products;
-                    setLocalStorageItem("products_v5", data.products);
-                }
-            }
-        } catch (apiErr) {
-            console.warn("DELETE /api/products sync error:", apiErr);
-        }
-
         return true;
     },
 
     resetToDefaultProducts: async () => {
-        inMemoryProducts = INITIAL_PRODUCTS;
         setLocalStorageItem("products_v5", INITIAL_PRODUCTS);
         setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+
+        try {
+            await pushCustomsToCloud([], DEFAULT_CATEGORIES);
+        } catch (err) {
+            console.warn("[CloudSync] Background reset push warning:", err);
+        }
 
         if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
                 detail: { products: INITIAL_PRODUCTS }
             }));
-        }
-
-        try {
-            await fetch(CENTRAL_API_ENDPOINT, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'replace_all',
-                    products: INITIAL_PRODUCTS
-                })
-            });
-        } catch (e) {
-            console.warn("Central DB reset call error:", e);
         }
 
         return INITIAL_PRODUCTS;

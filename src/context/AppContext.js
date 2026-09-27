@@ -30,58 +30,12 @@ export const AppProvider = ({ children }) => {
     // Coupon Calculations
     const [activeCoupon, setActiveCoupon] = useState(null);
 
-    // Initial Load & Synchronisation with Central Persistent Cloud Database
+    // Initial Load & Synchronisation
     useEffect(() => {
-        // Load initial synchronous cache from DB service
+        // Load initial values from DB service
         setProducts(db.getProducts());
         setCoupons(db.getCoupons());
         setOrders(db.getOrders());
-
-        // Perform initial network sync with central persistent database immediately
-        db.syncWithCentralDb().then(synced => {
-            if (synced && Array.isArray(synced) && synced.length > 0) {
-                setProducts(synced);
-            }
-        });
-
-        // Listen for catalog update events
-        const handleCatalogUpdated = (e) => {
-            if (e.detail && Array.isArray(e.detail.products)) {
-                setProducts(e.detail.products);
-            }
-        };
-        window.addEventListener("accessify:catalog_updated", handleCatalogUpdated);
-
-        // When visitor switches tabs or returns from Instagram app / lock screen
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === "visible") {
-                db.syncWithCentralDb().then(synced => {
-                    if (synced && Array.isArray(synced)) {
-                        setProducts(synced);
-                    }
-                });
-            }
-        };
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-
-        // When window regains focus
-        const handleWindowFocus = () => {
-            db.syncWithCentralDb().then(synced => {
-                if (synced && Array.isArray(synced)) {
-                    setProducts(synced);
-                }
-            });
-        };
-        window.addEventListener("focus", handleWindowFocus);
-
-        // Periodic background revalidation (every 30 seconds)
-        const syncInterval = setInterval(() => {
-            db.syncWithCentralDb().then(synced => {
-                if (synced && Array.isArray(synced)) {
-                    setProducts(synced);
-                }
-            });
-        }, 30000);
         
         // Load initial local states
         const savedCart = localStorage.getItem("accessify_cart") || localStorage.getItem("valoir_cart");
@@ -105,14 +59,14 @@ export const AppProvider = ({ children }) => {
         const savedUser = localStorage.getItem("accessify_current_user") || localStorage.getItem("valoir_current_user");
         if (savedUser) setUser(JSON.parse(savedUser));
 
-        // Read initial URL Hash (supports direct hash, ?product=<id> from WhatsApp, and Instagram bio links)
+        // Read initial URL Hash (and support ?product=<id> query param from WhatsApp links)
         const handleHashChange = () => {
             let hash = window.location.hash || "";
             if ((!hash || hash === "#/") && window.location.search) {
                 const params = new URLSearchParams(window.location.search);
-                const prodId = params.get("product") || params.get("productId") || params.get("id") || params.get("p");
+                const prodId = params.get("product");
                 if (prodId) {
-                    hash = `#/product/${encodeURIComponent(prodId)}`;
+                    hash = `#/product/${prodId}`;
                     window.location.hash = hash;
                 }
             }
@@ -121,26 +75,60 @@ export const AppProvider = ({ children }) => {
         
         handleHashChange();
         window.addEventListener("hashchange", handleHashChange);
+
+        // Trigger background cloud sync for newly created/updated products
+        const runCloudSync = () => {
+            db.syncWithCloud()
+                .then(syncedProducts => {
+                    if (Array.isArray(syncedProducts) && syncedProducts.length > 0) {
+                        setProducts(syncedProducts);
+                    }
+                })
+                .catch(err => {
+                    console.warn("Background cloud sync warning:", err);
+                });
+        };
+
+        runCloudSync();
+
+        // Listen for catalog update events dispatched by db methods
+        const handleCatalogUpdated = (e) => {
+            if (e && e.detail && Array.isArray(e.detail.products)) {
+                setProducts(e.detail.products);
+            } else {
+                setProducts(db.getProducts());
+            }
+        };
+        window.addEventListener("accessify:catalog_updated", handleCatalogUpdated);
+
+        // Auto re-sync when tab becomes visible or receives focus
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "visible") {
+                runCloudSync();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        window.addEventListener("focus", runCloudSync);
         
         return () => {
             window.removeEventListener("hashchange", handleHashChange);
             window.removeEventListener("accessify:catalog_updated", handleCatalogUpdated);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
-            window.removeEventListener("focus", handleWindowFocus);
-            clearInterval(syncInterval);
+            window.removeEventListener("focus", runCloudSync);
         };
     }, []);
 
     // Sync state helpers
     const refreshData = async () => {
-        const synced = await db.syncWithCentralDb();
-        if (synced && Array.isArray(synced)) {
-            setProducts(synced);
-        } else {
-            setProducts(db.getProducts());
-        }
+        setProducts(db.getProducts());
         setCoupons(db.getCoupons());
         setOrders(db.getOrders());
+        try {
+            const synced = await db.syncWithCloud();
+            if (Array.isArray(synced) && synced.length > 0) {
+                setProducts(synced);
+            }
+        } catch (e) {}
     };
 
     // TOAST NOTIFICATIONS

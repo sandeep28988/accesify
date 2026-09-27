@@ -71,23 +71,26 @@ export const Home = () => {
         }
     ];
 
-    // Select 6 authentic banger products for the Best Sellers row
-    const bestSellers = products.length > 0
-        ? [
-            // Cross Pendant Chain
-            products.find(p => p.name.toLowerCase().includes("cross") && p.category === "chains") || products[0],
-            // Authentic Gothic Ring
-            products.find(p => p.category === "rings" && (p.name.toLowerCase().includes("star") || p.name.toLowerCase().includes("viking") || p.name.toLowerCase().includes("ch"))) || products[1],
-            // Gothic Earring
-            products.find(p => p.category === "earrings") || products[2],
-            // Streetwear Bracelet
-            products.find(p => p.category === "bracelets") || products[3],
-            // Y2K Gothic Necklace
-            products.find(p => p.tags && p.tags.includes("y2k-gothic-necklaces") && p.id !== products[0]?.id) || products[4],
-            // Iced Out Jewel
-            products.find(p => p.tags && p.tags.includes("iced-out-jewels")) || products[5]
-          ].filter(Boolean)
-        : [];
+    // Select products for Best Sellers & Featured showcase:
+    // Any newly uploaded custom products and featured items are shown first!
+    const customItems = products.filter(p => p && p.id && String(p.id).startsWith("acc_custom_") && p.status !== "inactive");
+    const featuredItems = products.filter(p => p && p.featured && !String(p.id).startsWith("acc_custom_") && p.status !== "inactive");
+    const defaultCurated = [
+        products.find(p => p.name.toLowerCase().includes("cross") && p.category === "chains") || products[0],
+        products.find(p => p.category === "rings" && (p.name.toLowerCase().includes("star") || p.name.toLowerCase().includes("viking") || p.name.toLowerCase().includes("ch"))) || products[1],
+        products.find(p => p.category === "earrings") || products[2],
+        products.find(p => p.category === "bracelets") || products[3],
+        products.find(p => p.tags && p.tags.includes("y2k-gothic-necklaces") && p.id !== products[0]?.id) || products[4],
+        products.find(p => p.tags && p.tags.includes("iced-out-jewels")) || products[5]
+    ].filter(Boolean);
+
+    const mergedShowcase = [...customItems, ...featuredItems, ...defaultCurated];
+    const seenShowcaseIds = new Set();
+    const bestSellers = mergedShowcase.filter(p => {
+        if (!p || !p.id || seenShowcaseIds.has(p.id)) return false;
+        seenShowcaseIds.add(p.id);
+        return true;
+    }).slice(0, 8);
 
     const faqQuestionsLeft = [
         {
