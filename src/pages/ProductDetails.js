@@ -126,9 +126,22 @@ export const ProductDetails = () => {
         `;
     }
 
-    // Related Items
+    // Related Items (strictly unique items, excluding current item)
+    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const currentName = norm(product.name);
+    const seenRelatedNames = new Set();
+    const seenRelatedIds = new Set();
     const relatedProducts = products
-        .filter(p => p.category === product.category && p.id !== product.id)
+        .filter(p => {
+            if (!p || !p.id || p.id === product.id) return false;
+            if (p.category !== product.category) return false;
+            const pName = norm(p.name);
+            if (pName && (pName === currentName || seenRelatedNames.has(pName))) return false;
+            if (seenRelatedIds.has(p.id)) return false;
+            seenRelatedIds.add(p.id);
+            if (pName) seenRelatedNames.add(pName);
+            return true;
+        })
         .slice(0, 4);
 
     // Zoom Effect Handlers

@@ -1530,33 +1530,6 @@ export const PRODUCTS_205 = [
     ]
   },
   {
-    "id": "acc_3600",
-    "original_id": 3600,
-    "name": "Alien Bracelet",
-    "slug": "alien-bracelet-jkiUB",
-    "category": "bracelets",
-    "price": 255,
-    "comparePrice": 825,
-    "description": "Signature gothic curb bracelet with detailed links. Comfortable ergonomic fit, high polished chrome finish, engineered for modern streetwear layering.",
-    "images": [
-      "https://cdn.zepio.io/blyo/product/d2ff1fe0-df95-4359-8279-43f4378bc544.webp"
-    ],
-    "variants": [
-      "Standard 19cm",
-      "Extended 21cm"
-    ],
-    "stock": 25,
-    "rating": 4.6,
-    "numReviews": 44,
-    "featured": false,
-    "newArrival": false,
-    "sku_code": "PTUZGWC3",
-    "branch_id": 2,
-    "tags": [
-      "bracelets"
-    ]
-  },
-  {
     "id": "acc_3599",
     "original_id": 3599,
     "name": "Chrome Heart Bracelet",

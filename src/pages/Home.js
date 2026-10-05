@@ -86,9 +86,15 @@ export const Home = () => {
 
     const mergedShowcase = [...customItems, ...featuredItems, ...defaultCurated];
     const seenShowcaseIds = new Set();
+    const seenShowcaseNames = new Set();
+    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
     const bestSellers = mergedShowcase.filter(p => {
-        if (!p || !p.id || seenShowcaseIds.has(p.id)) return false;
+        if (!p || !p.id) return false;
+        const nameKey = norm(p.name);
+        if (seenShowcaseIds.has(p.id) || (nameKey && seenShowcaseNames.has(nameKey))) return false;
         seenShowcaseIds.add(p.id);
+        if (nameKey) seenShowcaseNames.add(nameKey);
         return true;
     }).slice(0, 8);
 

@@ -60,18 +60,26 @@ const DEFAULT_CATEGORIES = [
     "wallets"
 ];
 
-// Helper to check localStorage and initialize
+// Helper to check localStorage and initialize safely
+const hasLocalStorage = () => typeof localStorage !== "undefined";
+
 const getLocalStorageItem = (key, initialValue) => {
+    if (!hasLocalStorage()) return initialValue;
     try {
         const item = localStorage.getItem(`accessify_${key}`);
-        return item ? JSON.parse(item) : initialValue;
+        if (item === null || item === undefined) return initialValue;
+        try {
+            return JSON.parse(item);
+        } catch {
+            return item;
+        }
     } catch (error) {
-        console.error("Error accessing localStorage", error);
         return initialValue;
     }
 };
 
 const setLocalStorageItem = (key, value) => {
+    if (!hasLocalStorage()) return;
     try {
         localStorage.setItem(`accessify_${key}`, JSON.stringify(value));
     } catch (error) {
@@ -79,49 +87,61 @@ const setLocalStorageItem = (key, value) => {
     }
 };
 
-// Seeding - ensure jewelry products are loaded without fragrances/grooming
-const existingProducts = getLocalStorageItem("products_v5", null);
-if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length === 0) {
-    setLocalStorageItem("products_v5", INITIAL_PRODUCTS);
-}
+// Seeding & Cache Invalidation - ensure clean version 7 without stale legacy caches
+if (hasLocalStorage()) {
+    try {
+        localStorage.removeItem("accessify_products_v5");
+        localStorage.removeItem("accessify_products_v4");
+        localStorage.removeItem("accessify_products_v3");
+        localStorage.removeItem("accessify_products_v2");
+        localStorage.removeItem("accessify_products_v1");
+        localStorage.removeItem("accessify_products");
+    } catch (e) {}
 
-if (!localStorage.getItem("accessify_coupons")) {
-    setLocalStorageItem("coupons", INITIAL_COUPONS);
-}
-if (!localStorage.getItem("accessify_reviews")) {
-    setLocalStorageItem("reviews", INITIAL_REVIEWS);
-}
-// Clean and migrate orders to v3 (purging all fake/dummy seed orders)
-const MOCK_ORDER_IDS = ["ACC-9124", "ACC-8975", "ACC-8610", "ACC-8402"];
-const cleanOrders = (rawOrders) => {
-    if (!Array.isArray(rawOrders)) return [];
-    return rawOrders.filter(o => o && o.id && !MOCK_ORDER_IDS.includes(o.id));
-};
-
-let existingOrders = getLocalStorageItem("orders_v3", null);
-if (existingOrders === null) {
-    const oldOrders = getLocalStorageItem("orders_v2", []);
-    const sanitized = cleanOrders(oldOrders);
-    setLocalStorageItem("orders_v3", sanitized);
-    try { localStorage.removeItem("accessify_orders_v2"); } catch (e) {}
-} else {
-    const sanitized = cleanOrders(existingOrders);
-    if (sanitized.length !== existingOrders.length) {
-        setLocalStorageItem("orders_v3", sanitized);
+    const existingProducts = getLocalStorageItem("products_v7", null);
+    if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length === 0) {
+        setLocalStorageItem("products_v7", INITIAL_PRODUCTS);
     }
-}
-if (!localStorage.getItem("accessify_settings_v1")) {
-    setLocalStorageItem("settings_v1", DEFAULT_SETTINGS);
-}
-if (!localStorage.getItem("accessify_banners")) {
-    setLocalStorageItem("banners", INITIAL_BANNERS);
-}
-if (!localStorage.getItem("accessify_custom_categories_v5")) {
-    setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+
+    if (!getLocalStorageItem("coupons", null)) {
+        setLocalStorageItem("coupons", INITIAL_COUPONS);
+    }
+    if (!getLocalStorageItem("reviews", null)) {
+        setLocalStorageItem("reviews", INITIAL_REVIEWS);
+    }
+    // Clean and migrate orders to v3 (purging all fake/dummy seed orders)
+    const MOCK_ORDER_IDS = ["ACC-9124", "ACC-8975", "ACC-8610", "ACC-8402"];
+    const cleanOrders = (rawOrders) => {
+        if (!Array.isArray(rawOrders)) return [];
+        return rawOrders.filter(o => o && o.id && !MOCK_ORDER_IDS.includes(o.id));
+    };
+
+    let existingOrders = getLocalStorageItem("orders_v3", null);
+    if (existingOrders === null) {
+        const oldOrders = getLocalStorageItem("orders_v2", []);
+        const sanitized = cleanOrders(oldOrders);
+        setLocalStorageItem("orders_v3", sanitized);
+        try { localStorage.removeItem("accessify_orders_v2"); } catch (e) {}
+    } else {
+        const sanitized = cleanOrders(existingOrders);
+        if (sanitized.length !== existingOrders.length) {
+            setLocalStorageItem("orders_v3", sanitized);
+        }
+    }
+    if (!getLocalStorageItem("settings_v1", null)) {
+        setLocalStorageItem("settings_v1", DEFAULT_SETTINGS);
+    }
+    if (!getLocalStorageItem("banners", null)) {
+        setLocalStorageItem("banners", INITIAL_BANNERS);
+    }
+    if (!getLocalStorageItem("custom_categories_v5", null)) {
+        setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+    }
 }
 
 // ==========================================
 // CLOUD DATABASE SYNCHRONIZATION (GITHUB GIST)
+// Single Source of Truth for Catalog Across All Devices & Browsers
 // ==========================================
 const CLOUD_GIST_ID = "3d9422fc34cd8f43b5e074108fcacc55";
 const CLOUD_GITHUB_TOKEN = String.fromCharCode(
@@ -141,16 +161,94 @@ export const isCustomProduct = (p) => {
     return !INITIAL_PRODUCT_IDS.has(id);
 };
 
-// Push custom products and categories to cloud Gist
-export const pushCustomsToCloud = async (customList, categoriesList) => {
+// Robust deduplication across IDs and normalized names (prevents repeating products completely)
+export const deduplicateProducts = (productsList) => {
+    if (!Array.isArray(productsList)) return [];
+    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const seenIds = new Set();
+    const seenNames = new Set();
+    const result = [];
+
+    for (const p of productsList) {
+        if (!p || !p.id) continue;
+        const idKey = String(p.id).trim().toLowerCase();
+        const nameKey = norm(p.name);
+
+        // Skip duplicate ID
+        if (seenIds.has(idKey)) continue;
+
+        // Skip duplicate normalized name
+        if (nameKey && seenNames.has(nameKey)) continue;
+
+        seenIds.add(idKey);
+        if (nameKey) seenNames.add(nameKey);
+        result.push(p);
+    }
+
+    return result;
+};
+
+// Compile full canonical catalog from custom products, overrides, and base products
+export const compileCentralCatalog = (customList, overridesMap, deletedIdsList) => {
+    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const cleanCustoms = deduplicateProducts(Array.isArray(customList) ? customList : []);
+    const overrides = (overridesMap && typeof overridesMap === 'object') ? overridesMap : {};
+    const deletedSet = new Set((Array.isArray(deletedIdsList) ? deletedIdsList : []).map(id => String(id).toLowerCase().trim()));
+
+    // Filter out deleted custom products (if any)
+    const activeCustoms = cleanCustoms.filter(p => !deletedSet.has(String(p.id).toLowerCase().trim()));
+
+    const customIdSet = new Set(activeCustoms.map(p => String(p.id).toLowerCase().trim()));
+    const customNameSet = new Set(activeCustoms.map(p => norm(p.name)).filter(Boolean));
+
+    // Base standard products (excluding fragrances/grooming, deleted products, and overridden duplicates)
+    const standardProducts = [];
+    for (const base of INITIAL_PRODUCTS) {
+        if (!base || !base.id) continue;
+        const baseId = String(base.id).toLowerCase().trim();
+        const baseName = norm(base.name);
+
+        // If deleted by Admin
+        if (deletedSet.has(baseId)) continue;
+
+        // If a custom item has the same ID or name
+        if (customIdSet.has(baseId)) continue;
+        if (baseName && customNameSet.has(baseName)) continue;
+
+        // Apply admin overrides if any (price, comparePrice, stock, status, featured, etc.)
+        const override = overrides[base.id] || overrides[baseId];
+        if (override) {
+            standardProducts.push({
+                ...base,
+                ...override,
+                price: override.price !== undefined ? Number(override.price) : base.price,
+                comparePrice: override.comparePrice !== undefined ? Number(override.comparePrice) : base.comparePrice,
+                stock: override.stock !== undefined ? Number(override.stock) : base.stock,
+                status: override.status !== undefined ? override.status : base.status
+            });
+        } else {
+            standardProducts.push({ ...base });
+        }
+    }
+
+    // Return deduplicated combined catalog
+    return deduplicateProducts([...activeCustoms, ...standardProducts]);
+};
+
+// Push central database state to cloud Gist (Admin only)
+export const pushCentralCatalogToCloud = async (customList, overridesMap, deletedIdsList, categoriesList) => {
     try {
+        const cleanList = deduplicateProducts(customList || []);
         const payload = {
             files: {
                 "custom_products.json": {
                     content: JSON.stringify({
-                        customProducts: customList || [],
-                        customCategories: categoriesList || getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES),
-                        updatedAt: new Date().toISOString()
+                        version: 7,
+                        updatedAt: new Date().toISOString(),
+                        customProducts: cleanList,
+                        productOverrides: overridesMap || getLocalStorageItem("product_overrides_v7", {}),
+                        deletedProductIds: deletedIdsList || getLocalStorageItem("deleted_product_ids_v7", []),
+                        customCategories: categoriesList || getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES)
                     }, null, 2)
                 }
             }
@@ -167,50 +265,102 @@ export const pushCustomsToCloud = async (customList, categoriesList) => {
             body: JSON.stringify(payload)
         });
 
+        if (res.ok) {
+            const data = await res.json();
+            if (data.files && data.files["custom_products.json"]) {
+                setLocalStorageItem("catalog_raw_url", data.files["custom_products.json"].raw_url);
+            }
+        }
+
         return res.ok;
     } catch (err) {
-        console.warn("[CloudSync] Failed to push customs to cloud:", err);
+        console.warn("[CloudSync] Failed to push central catalog to cloud:", err);
         return false;
     }
 };
 
-// Fetch latest custom products from cloud Gist
+// Fetch latest central catalog from cloud Gist (with authenticated token & commit SHA caching)
 export const fetchCloudCatalog = async () => {
-    // 1. Real-time GitHub API (instant freshness)
     try {
+        // 1. Authenticated GitHub API check (5,000 req/hr rate limit, never 403 on mobile/Instagram)
         const res = await fetch(CLOUD_API_URL, {
-            headers: { "Accept": "application/vnd.github.v3+json" }
+            headers: {
+                "Authorization": `token ${CLOUD_GITHUB_TOKEN}`,
+                "User-Agent": "Accessify-App",
+                "Accept": "application/vnd.github.v3+json"
+            }
         });
+
         if (res.ok) {
             const data = await res.json();
-            if (data.files && data.files["custom_products.json"] && data.files["custom_products.json"].content) {
-                return JSON.parse(data.files["custom_products.json"].content);
+            if (data.files && data.files["custom_products.json"]) {
+                const file = data.files["custom_products.json"];
+                const rawUrl = file.raw_url;
+                const cachedRawUrl = getLocalStorageItem("catalog_raw_url", "");
+
+                // If rawUrl is identical to our cached commit URL AND we have compiled products locally, cache is 100% valid!
+                if (rawUrl && cachedRawUrl === rawUrl && getLocalStorageItem("products_v7", null)) {
+                    return {
+                        cached: true,
+                        customProducts: getLocalStorageItem("custom_products_v7", []),
+                        productOverrides: getLocalStorageItem("product_overrides_v7", {}),
+                        deletedProductIds: getLocalStorageItem("deleted_product_ids_v7", []),
+                        customCategories: getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES),
+                        rawUrl
+                    };
+                }
+
+                // If content is embedded inline (small file)
+                if (!file.truncated && file.content) {
+                    const parsed = JSON.parse(file.content);
+                    if (rawUrl) setLocalStorageItem("catalog_raw_url", rawUrl);
+                    return { ...parsed, rawUrl, cached: false };
+                }
+
+                // If truncated (>1MB payload), fetch full file via commit-specific raw_url
+                if (rawUrl) {
+                    const rawRes = await fetch(`${rawUrl}?t=${Date.now()}`);
+                    if (rawRes.ok) {
+                        const parsed = await rawRes.json();
+                        setLocalStorageItem("catalog_raw_url", rawUrl);
+                        return { ...parsed, rawUrl, cached: false };
+                    }
+                }
             }
         }
     } catch (e) {
-        console.warn("[CloudSync] API fetch warning, trying raw CDN:", e.message);
+        console.warn("[CloudSync] API fetch warning, trying raw CDN fallback:", e.message);
     }
 
     // 2. Fallback to raw CDN URL with cache buster
     try {
         const rawRes = await fetch(`${CLOUD_RAW_URL}?t=${Date.now()}`);
         if (rawRes.ok) {
-            return await rawRes.json();
+            const parsed = await rawRes.json();
+            return { ...parsed, cached: false };
         }
     } catch (e) {
-        console.warn("[CloudSync] Raw fetch warning:", e.message);
+        console.warn("[CloudSync] Raw fetch fallback warning:", e.message);
     }
 
-    return { customProducts: [], customCategories: [] };
+    return null;
 };
 
 // Database Engine Export
 export const db = {
-    // PRODUCTS
+    // PRODUCTS - guaranteed deduplicated without duplicates or legacy categories
     getProducts: () => {
-        const prods = getLocalStorageItem("products_v5", INITIAL_PRODUCTS);
-        // Exclude any legacy fragrance or grooming items
-        return prods.filter(p => p.category !== "fragrances" && p.category !== "grooming");
+        const prods = getLocalStorageItem("products_v7", null);
+        if (Array.isArray(prods) && prods.length > 0) {
+            return deduplicateProducts(prods);
+        }
+        // Fallback: compile from baseline
+        const customs = getLocalStorageItem("custom_products_v7", []);
+        const overrides = getLocalStorageItem("product_overrides_v7", {});
+        const deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
+        const compiled = compileCentralCatalog(customs, overrides, deletedIds);
+        setLocalStorageItem("products_v7", compiled);
+        return compiled;
     },
 
     getProductById: (targetId) => {
@@ -220,11 +370,11 @@ export const db = {
         const prods = db.getProducts();
 
         // 1. Direct match on id (case-insensitive)
-        let found = prods.find(p => p.id && p.id.toLowerCase() === cleanId);
+        let found = prods.find(p => p.id && String(p.id).toLowerCase() === cleanId);
         if (found) return found;
 
         // 2. Match with/without acc_ prefix
-        found = prods.find(p => p.id && p.id.toLowerCase().replace(/^acc_/, "") === withoutAcc);
+        found = prods.find(p => p.id && String(p.id).toLowerCase().replace(/^acc_/, "") === withoutAcc);
         if (found) return found;
 
         // 3. Match on original_id
@@ -242,80 +392,49 @@ export const db = {
         });
         if (found) return found;
 
-        // Fallback to full PRODUCTS_205 catalog
-        found = PRODUCTS_205.find(p => p.id && p.id.toLowerCase() === cleanId);
-        if (found) return found;
-
-        found = PRODUCTS_205.find(p => p.id && p.id.toLowerCase().replace(/^acc_/, "") === withoutAcc);
-        if (found) return found;
-
-        found = PRODUCTS_205.find(p => p.original_id && String(p.original_id).trim() === withoutAcc);
-        if (found) return found;
-
-        found = PRODUCTS_205.find(p => p.slug && p.slug.toLowerCase() === cleanId);
-        if (found) return found;
-
         return null;
     },
     
     // SYNCHRONIZATION WITH CLOUD (GITHUB GIST)
     syncWithCloud: async () => {
         try {
-            const localProducts = db.getProducts();
-            const localCustoms = localProducts.filter(isCustomProduct);
-
             const cloudData = await fetchCloudCatalog();
-            const cloudCustoms = (cloudData && Array.isArray(cloudData.customProducts)) ? cloudData.customProducts : [];
-            const cloudCategories = (cloudData && Array.isArray(cloudData.customCategories)) ? cloudData.customCategories : [];
+            if (!cloudData) {
+                return db.getProducts();
+            }
 
-            // Sync custom categories if available
-            if (cloudCategories.length > 0) {
+            if (cloudData.cached) {
+                return db.getProducts();
+            }
+
+            const customProducts = deduplicateProducts(Array.isArray(cloudData.customProducts) ? cloudData.customProducts : []);
+            const productOverrides = (cloudData.productOverrides && typeof cloudData.productOverrides === 'object') ? cloudData.productOverrides : {};
+            const deletedProductIds = Array.isArray(cloudData.deletedProductIds) ? cloudData.deletedProductIds : [];
+            const customCategories = Array.isArray(cloudData.customCategories) ? cloudData.customCategories : DEFAULT_CATEGORIES;
+
+            // Sync categories
+            if (customCategories.length > 0) {
                 const curCategories = getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
-                const mergedCategories = Array.from(new Set([...curCategories, ...cloudCategories]));
+                const mergedCategories = Array.from(new Set([...curCategories, ...customCategories]));
                 setLocalStorageItem("custom_categories_v5", mergedCategories);
             }
 
-            // Merge custom products
-            const customMap = new Map();
-            cloudCustoms.forEach(item => {
-                if (item && item.id) {
-                    customMap.set(String(item.id), item);
-                }
-            });
+            // Save central cloud data locally
+            setLocalStorageItem("custom_products_v7", customProducts);
+            setLocalStorageItem("product_overrides_v7", productOverrides);
+            setLocalStorageItem("deleted_product_ids_v7", deletedProductIds);
 
-            // If local storage has custom products not yet in the cloud, preserve and upload them
-            let hasNewLocalItems = false;
-            localCustoms.forEach(item => {
-                if (item && item.id) {
-                    const key = String(item.id);
-                    if (!customMap.has(key)) {
-                        customMap.set(key, item);
-                        hasNewLocalItems = true;
-                    }
-                }
-            });
-
-            const mergedCustoms = Array.from(customMap.values());
-
-            // If local storage had custom items not in cloud, push merged list so cloud has them!
-            if (hasNewLocalItems) {
-                pushCustomsToCloud(mergedCustoms).catch(() => {});
-            }
-
-            // Merge with INITIAL_PRODUCTS (ensuring no duplicates)
-            const customIdSet = new Set(mergedCustoms.map(p => String(p.id).toLowerCase()));
-            const standardProducts = INITIAL_PRODUCTS.filter(p => !customIdSet.has(String(p.id).toLowerCase()));
-
-            const combinedProducts = [...mergedCustoms, ...standardProducts];
-            setLocalStorageItem("products_v5", combinedProducts);
+            // Compile the central catalog
+            const compiled = compileCentralCatalog(customProducts, productOverrides, deletedProductIds);
+            setLocalStorageItem("products_v7", compiled);
 
             if (typeof window !== "undefined") {
                 window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
-                    detail: { products: combinedProducts }
+                    detail: { products: compiled }
                 }));
             }
 
-            return combinedProducts;
+            return compiled;
         } catch (err) {
             console.warn("[CloudSync] Background sync exception:", err);
             return db.getProducts();
@@ -324,27 +443,49 @@ export const db = {
 
     saveProduct: async (product) => {
         if (!product || typeof product !== "object") return false;
-        const products = db.getProducts();
         const targetId = product.id ? String(product.id).trim() : null;
-        const index = targetId ? products.findIndex(p => p.id === targetId) : -1;
 
-        if (index !== -1) {
-            // Update existing product
-            products[index] = { 
-                ...products[index], 
+        let customs = getLocalStorageItem("custom_products_v7", []);
+        const overrides = getLocalStorageItem("product_overrides_v7", {});
+        let deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
+
+        // If target was previously in deletedIds, un-delete it
+        if (targetId && deletedIds.includes(targetId)) {
+            deletedIds = deletedIds.filter(id => id !== targetId);
+            setLocalStorageItem("deleted_product_ids_v7", deletedIds);
+        }
+
+        const customIndex = targetId ? customs.findIndex(p => p.id === targetId) : -1;
+        const isStandard = targetId && INITIAL_PRODUCT_IDS.has(targetId.toLowerCase());
+
+        if (customIndex !== -1) {
+            // Update existing custom product
+            customs[customIndex] = {
+                ...customs[customIndex],
                 ...product,
                 id: targetId,
-                name: (product.name || products[index].name || "Product").trim(),
+                name: (product.name || customs[customIndex].name || "Product").trim(),
                 price: Number(product.price) || 0,
                 comparePrice: Number(product.comparePrice) || Number(product.price) || 0,
-                stock: product.stock !== undefined ? Number(product.stock) : (products[index].stock || 20),
-                status: product.status || products[index].status || "active",
+                stock: product.stock !== undefined ? Number(product.stock) : (customs[customIndex].stock || 20),
+                status: product.status || customs[customIndex].status || "active",
                 images: Array.isArray(product.images) && product.images.length > 0 
                     ? product.images 
-                    : (products[index].images || ["assets/images/hero-hand.jpg"])
+                    : (customs[customIndex].images || ["assets/images/hero-hand.jpg"])
             };
+        } else if (isStandard) {
+            // Update existing standard product via overrides
+            overrides[targetId] = {
+                ...(overrides[targetId] || {}),
+                ...product,
+                price: Number(product.price) || 0,
+                comparePrice: Number(product.comparePrice) || Number(product.price) || 0,
+                stock: product.stock !== undefined ? Number(product.stock) : 20,
+                status: product.status || "active"
+            };
+            setLocalStorageItem("product_overrides_v7", overrides);
         } else {
-            // Create new product and add to beginning of list
+            // Create brand new custom product
             const generatedId = targetId || `acc_custom_${Date.now()}`;
             const slug = (product.name || "product")
                 .toLowerCase()
@@ -377,23 +518,25 @@ export const db = {
                     ? product.tags 
                     : [product.category || "chains"]
             };
-            products.unshift(newProduct);
+            customs.unshift(newProduct);
         }
 
-        // Save locally immediately (0ms UI latency)
-        setLocalStorageItem("products_v5", products);
+        const cleanCustoms = deduplicateProducts(customs);
+        setLocalStorageItem("custom_products_v7", cleanCustoms);
 
-        // Push customs to cloud
+        const cleanProducts = compileCentralCatalog(cleanCustoms, overrides, deletedIds);
+        setLocalStorageItem("products_v7", cleanProducts);
+
+        // Push central catalog to cloud immediately
         try {
-            const customs = products.filter(isCustomProduct);
-            await pushCustomsToCloud(customs);
+            await pushCentralCatalogToCloud(cleanCustoms, overrides, deletedIds);
         } catch (err) {
             console.warn("[CloudSync] Background save push warning:", err);
         }
 
         if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
-                detail: { products }
+                detail: { products: cleanProducts }
             }));
         }
 
@@ -401,66 +544,88 @@ export const db = {
     },
 
     updateProductPrice: async (id, price, comparePrice) => {
-        const products = db.getProducts();
-        const index = products.findIndex(p => p.id === id);
-        if (index !== -1) {
-            products[index].price = Number(price);
-            if (comparePrice !== undefined && comparePrice !== null && comparePrice !== "") {
-                products[index].comparePrice = Number(comparePrice);
-            }
-            setLocalStorageItem("products_v5", products);
-            try {
-                const customs = products.filter(isCustomProduct);
-                await pushCustomsToCloud(customs);
-            } catch (e) {}
-            if (typeof window !== "undefined") {
-                window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
-                    detail: { products }
-                }));
-            }
-            return products[index];
-        }
-        return null;
+        return await db.updateProduct(id, {
+            price: Number(price),
+            comparePrice: (comparePrice !== undefined && comparePrice !== null && comparePrice !== "") ? Number(comparePrice) : undefined
+        });
     },
 
     updateProduct: async (id, updatedFields) => {
-        const products = db.getProducts();
-        const index = products.findIndex(p => p.id === id);
-        if (index !== -1) {
-            products[index] = { ...products[index], ...updatedFields };
-            if (updatedFields.price !== undefined) products[index].price = Number(updatedFields.price);
-            if (updatedFields.comparePrice !== undefined) products[index].comparePrice = Number(updatedFields.comparePrice);
-            if (updatedFields.stock !== undefined) products[index].stock = Number(updatedFields.stock);
-            setLocalStorageItem("products_v5", products);
-            try {
-                const customs = products.filter(isCustomProduct);
-                await pushCustomsToCloud(customs);
-            } catch (e) {}
-            if (typeof window !== "undefined") {
-                window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
-                    detail: { products }
-                }));
-            }
-            return products[index];
+        let customs = getLocalStorageItem("custom_products_v7", []);
+        const overrides = getLocalStorageItem("product_overrides_v7", {});
+        const deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
+
+        const customIndex = customs.findIndex(p => p.id === id);
+        if (customIndex !== -1) {
+            // Update custom product
+            customs[customIndex] = { ...customs[customIndex], ...updatedFields };
+            if (updatedFields.price !== undefined) customs[customIndex].price = Number(updatedFields.price);
+            if (updatedFields.comparePrice !== undefined) customs[customIndex].comparePrice = Number(updatedFields.comparePrice);
+            if (updatedFields.stock !== undefined) customs[customIndex].stock = Number(updatedFields.stock);
+            customs = deduplicateProducts(customs);
+            setLocalStorageItem("custom_products_v7", customs);
+        } else {
+            // Update standard product override
+            overrides[id] = {
+                ...(overrides[id] || {}),
+                ...updatedFields
+            };
+            if (updatedFields.price !== undefined) overrides[id].price = Number(updatedFields.price);
+            if (updatedFields.comparePrice !== undefined) overrides[id].comparePrice = Number(updatedFields.comparePrice);
+            if (updatedFields.stock !== undefined) overrides[id].stock = Number(updatedFields.stock);
+            setLocalStorageItem("product_overrides_v7", overrides);
         }
-        return null;
+
+        const cleanProducts = compileCentralCatalog(customs, overrides, deletedIds);
+        setLocalStorageItem("products_v7", cleanProducts);
+
+        try {
+            await pushCentralCatalogToCloud(customs, overrides, deletedIds);
+        } catch (e) {
+            console.warn("[CloudSync] Background update push warning:", e);
+        }
+
+        if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
+                detail: { products: cleanProducts }
+            }));
+        }
+
+        return cleanProducts.find(p => p.id === id) || null;
     },
     
     deleteProduct: async (id) => {
-        const products = db.getProducts();
-        const filtered = products.filter(p => p.id !== id);
-        setLocalStorageItem("products_v5", filtered);
+        let customs = getLocalStorageItem("custom_products_v7", []);
+        const overrides = getLocalStorageItem("product_overrides_v7", {});
+        let deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
+
+        const isCustom = customs.some(p => p.id === id);
+        if (isCustom) {
+            customs = customs.filter(p => p.id !== id);
+            setLocalStorageItem("custom_products_v7", customs);
+        } else {
+            if (!deletedIds.includes(id)) {
+                deletedIds.push(id);
+                setLocalStorageItem("deleted_product_ids_v7", deletedIds);
+            }
+            if (overrides[id]) {
+                delete overrides[id];
+                setLocalStorageItem("product_overrides_v7", overrides);
+            }
+        }
+
+        const cleanProducts = compileCentralCatalog(customs, overrides, deletedIds);
+        setLocalStorageItem("products_v7", cleanProducts);
 
         try {
-            const customs = filtered.filter(isCustomProduct);
-            await pushCustomsToCloud(customs);
+            await pushCentralCatalogToCloud(customs, overrides, deletedIds);
         } catch (err) {
             console.warn("[CloudSync] Background delete push warning:", err);
         }
 
         if (typeof window !== "undefined") {
             window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
-                detail: { products: filtered }
+                detail: { products: cleanProducts }
             }));
         }
 
@@ -468,11 +633,14 @@ export const db = {
     },
 
     resetToDefaultProducts: async () => {
-        setLocalStorageItem("products_v5", INITIAL_PRODUCTS);
+        setLocalStorageItem("products_v7", INITIAL_PRODUCTS);
+        setLocalStorageItem("custom_products_v7", []);
+        setLocalStorageItem("product_overrides_v7", {});
+        setLocalStorageItem("deleted_product_ids_v7", []);
         setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
 
         try {
-            await pushCustomsToCloud([], DEFAULT_CATEGORIES);
+            await pushCentralCatalogToCloud([], {}, [], DEFAULT_CATEGORIES);
         } catch (err) {
             console.warn("[CloudSync] Background reset push warning:", err);
         }
@@ -559,7 +727,7 @@ export const db = {
             const totalRating = productReviews.reduce((sum, r) => sum + r.rating, 0);
             products[productIndex].rating = parseFloat((totalRating / productReviews.length).toFixed(1));
             products[productIndex].numReviews = productReviews.length;
-            setLocalStorageItem("products_v5", products);
+            setLocalStorageItem("products_v7", products);
         }
         return newReview;
     },
@@ -586,7 +754,7 @@ export const db = {
                     products[productIndex].stock = Math.max(0, (products[productIndex].stock || 20) - (item.quantity || 1));
                 }
             });
-            setLocalStorageItem("products_v5", products);
+            setLocalStorageItem("products_v7", products);
         }
 
         return newOrder;

@@ -1138,7 +1138,7 @@ export const AdminDashboard = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            ${filteredProducts.slice(0, 100).map(product => {
+                                            ${filteredProducts.map(product => {
                                                 const editedPrice = inlinePrices[product.id]?.price !== undefined 
                                                     ? inlinePrices[product.id].price 
                                                     : product.price;
@@ -1271,7 +1271,7 @@ export const AdminDashboard = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            ${products.slice(0, 100).map(product => {
+                                            ${products.map(product => {
                                                 const stock = product.stock !== undefined ? product.stock : 20;
                                                 return html`
                                                     <tr key=${product.id}>

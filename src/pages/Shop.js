@@ -77,8 +77,10 @@ export const Shop = () => {
         setVisibleCount(24);
     };
 
-    // Filter Logic
+    // Filter Logic - customer catalogue only displays active products
     let filteredProducts = products.filter(product => {
+        if (!product || product.status === "inactive") return false;
+
         // Category / Collection / Subcategory Filter
         if (selectedCategory !== "all") {
             const target = selectedCategory.toLowerCase().trim();
@@ -131,6 +133,19 @@ export const Shop = () => {
             return discB - discA;
         });
     }
+
+    // Ensure 100% unique products in shop catalog without duplicates
+    const seenShopIds = new Set();
+    const seenShopNames = new Set();
+    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    filteredProducts = filteredProducts.filter(p => {
+        if (!p || !p.id) return false;
+        const nameKey = norm(p.name);
+        if (seenShopIds.has(p.id) || (nameKey && seenShopNames.has(nameKey))) return false;
+        seenShopIds.add(p.id);
+        if (nameKey) seenShopNames.add(nameKey);
+        return true;
+    });
 
     const displayedProducts = filteredProducts.slice(0, visibleCount);
 
@@ -190,7 +205,7 @@ export const Shop = () => {
                             <i data-lucide="help-circle" style="width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 20px;"></i>
                             <h3 style="font-size: 1.2rem; margin-bottom: 12px;">NO ACCESSORIES MATCH</h3>
                             <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">Try resetting your filters or price range to explore all accessories.</p>
-                            <button class="btn btn-primary" onClick=${handleClearAll}>SHOW ALL ${products.length} PRODUCTS</button>
+                            <button class="btn btn-primary" onClick=${handleClearAll}>SHOW ALL ${products.filter(p => p && p.status !== "inactive").length} PRODUCTS</button>
                         </div>
                     ` : html`
                         <div>

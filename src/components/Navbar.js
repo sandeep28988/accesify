@@ -51,13 +51,23 @@ export const Navbar = () => {
         }
     }, [searchOpen]);
 
-    // Live search results
+    // Live search results (strictly unique)
+    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const seenSearchIds = new Set();
+    const seenSearchNames = new Set();
     const filteredSearchProducts = searchQuery.trim() === ""
         ? []
-        : products.filter(p => 
-            p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            p.category.toLowerCase().includes(searchQuery.toLowerCase())
-          ).slice(0, 8);
+        : products.filter(p => {
+            if (!p || !p.id) return false;
+            const matches = (p.name && p.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                            (p.category && p.category.toLowerCase().includes(searchQuery.toLowerCase()));
+            if (!matches) return false;
+            const nameKey = norm(p.name);
+            if (seenSearchIds.has(p.id) || (nameKey && seenSearchNames.has(nameKey))) return false;
+            seenSearchIds.add(p.id);
+            if (nameKey) seenSearchNames.add(nameKey);
+            return true;
+          }).slice(0, 8);
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();

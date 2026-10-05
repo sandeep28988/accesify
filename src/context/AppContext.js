@@ -37,13 +37,24 @@ export const AppProvider = ({ children }) => {
         setCoupons(db.getCoupons());
         setOrders(db.getOrders());
         
-        // Load initial local states
+        // Load initial local states with deduplication and legacy migration
         const savedCart = localStorage.getItem("accessify_cart") || localStorage.getItem("valoir_cart");
         if (savedCart) {
             try {
                 const parsed = JSON.parse(savedCart);
-                const valid = Array.isArray(parsed) ? parsed.filter(i => i.id && i.id.startsWith("acc_")) : [];
-                setCart(valid);
+                if (Array.isArray(parsed)) {
+                    const seenCart = new Set();
+                    const valid = parsed.filter(i => {
+                        if (!i || !i.id) return false;
+                        const key = `${i.id}-${i.variant || 'Standard'}`;
+                        if (seenCart.has(key)) return false;
+                        seenCart.add(key);
+                        return true;
+                    });
+                    setCart(valid);
+                    localStorage.setItem("accessify_cart", JSON.stringify(valid));
+                    localStorage.removeItem("valoir_cart");
+                }
             } catch (e) {}
         }
         
@@ -51,8 +62,18 @@ export const AppProvider = ({ children }) => {
         if (savedWishlist) {
             try {
                 const parsed = JSON.parse(savedWishlist);
-                const valid = Array.isArray(parsed) ? parsed.filter(i => i.id && i.id.startsWith("acc_")) : [];
-                setWishlist(valid);
+                if (Array.isArray(parsed)) {
+                    const seenWish = new Set();
+                    const valid = parsed.filter(i => {
+                        if (!i || !i.id) return false;
+                        if (seenWish.has(i.id)) return false;
+                        seenWish.add(i.id);
+                        return true;
+                    });
+                    setWishlist(valid);
+                    localStorage.setItem("accessify_wishlist", JSON.stringify(valid));
+                    localStorage.removeItem("valoir_wishlist");
+                }
             } catch (e) {}
         }
 
@@ -110,11 +131,19 @@ export const AppProvider = ({ children }) => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
         window.addEventListener("focus", runCloudSync);
         
+        // Auto re-sync periodically while user is on site
+        const heartbeatInterval = setInterval(() => {
+            if (typeof document !== "undefined" && document.visibilityState === "visible") {
+                runCloudSync();
+            }
+        }, 45000);
+        
         return () => {
             window.removeEventListener("hashchange", handleHashChange);
             window.removeEventListener("accessify:catalog_updated", handleCatalogUpdated);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
             window.removeEventListener("focus", runCloudSync);
+            clearInterval(heartbeatInterval);
         };
     }, []);
 
@@ -181,7 +210,7 @@ export const AppProvider = ({ children }) => {
                 ];
             }
             
-            localStorage.setItem("valoir_cart", JSON.stringify(newCart));
+            localStorage.setItem("accessify_cart", JSON.stringify(newCart));
             return newCart;
         });
         
@@ -191,7 +220,7 @@ export const AppProvider = ({ children }) => {
     const removeFromCart = (productId, variant) => {
         setCart(prevCart => {
             const newCart = prevCart.filter(item => !(item.id === productId && item.variant === variant));
-            localStorage.setItem("valoir_cart", JSON.stringify(newCart));
+            localStorage.setItem("accessify_cart", JSON.stringify(newCart));
             return newCart;
         });
         showToast("Removed item from cart.");
@@ -217,14 +246,14 @@ export const AppProvider = ({ children }) => {
                 }
                 return item;
             });
-            localStorage.setItem("valoir_cart", JSON.stringify(newCart));
+            localStorage.setItem("accessify_cart", JSON.stringify(newCart));
             return newCart;
         });
     };
 
     const clearCart = () => {
         setCart([]);
-        localStorage.removeItem("valoir_cart");
+        localStorage.removeItem("accessify_cart");
         setActiveCoupon(null);
     };
 
@@ -249,16 +278,18 @@ export const AppProvider = ({ children }) => {
     // WISHLIST OPERATIONS
     const toggleWishlist = (product) => {
         setWishlist(prev => {
-            const exists = prev.find(p => p.id === product.id);
+            const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            const pName = norm(product.name);
+            const exists = prev.some(p => p.id === product.id || (pName && norm(p.name) === pName));
             let newWishlist;
             if (exists) {
-                newWishlist = prev.filter(p => p.id !== product.id);
+                newWishlist = prev.filter(p => p.id !== product.id && (!pName || norm(p.name) !== pName));
                 showToast(`Removed ${product.name} from wishlist.`);
             } else {
                 newWishlist = [...prev, product];
                 showToast(`Added ${product.name} to wishlist.`);
             }
-            localStorage.setItem("valoir_wishlist", JSON.stringify(newWishlist));
+            try { localStorage.setItem("accessify_wishlist", JSON.stringify(newWishlist)); } catch (e) {}
             return newWishlist;
         });
     };
