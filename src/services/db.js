@@ -237,46 +237,52 @@ export const compileCentralCatalog = (customList, overridesMap, deletedIdsList) 
 
 // Push central database state to cloud Gist (Admin only)
 export const pushCentralCatalogToCloud = async (customList, overridesMap, deletedIdsList, categoriesList) => {
-    try {
-        const cleanList = deduplicateProducts(customList || []);
-        const payload = {
-            files: {
-                "custom_products.json": {
-                    content: JSON.stringify({
-                        version: 7,
-                        updatedAt: new Date().toISOString(),
-                        customProducts: cleanList,
-                        productOverrides: overridesMap || getLocalStorageItem("product_overrides_v7", {}),
-                        deletedProductIds: deletedIdsList || getLocalStorageItem("deleted_product_ids_v7", []),
-                        customCategories: categoriesList || getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES)
-                    }, null, 2)
-                }
-            }
-        };
-
-        const res = await fetch(CLOUD_API_URL, {
-            method: "PATCH",
-            headers: {
-                "Authorization": `token ${CLOUD_GITHUB_TOKEN}`,
-                "User-Agent": "Accessify-App",
-                "Content-Type": "application/json",
-                "Accept": "application/vnd.github.v3+json"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (res.ok) {
-            const data = await res.json();
-            if (data.files && data.files["custom_products.json"]) {
-                setLocalStorageItem("catalog_raw_url", data.files["custom_products.json"].raw_url);
+    const cleanList = deduplicateProducts(customList || []);
+    const payload = {
+        files: {
+            "custom_products.json": {
+                content: JSON.stringify({
+                    version: 7,
+                    updatedAt: new Date().toISOString(),
+                    customProducts: cleanList,
+                    productOverrides: overridesMap || getLocalStorageItem("product_overrides_v7", {}),
+                    deletedProductIds: deletedIdsList || getLocalStorageItem("deleted_product_ids_v7", []),
+                    customCategories: categoriesList || getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES)
+                }, null, 2)
             }
         }
+    };
 
-        return res.ok;
-    } catch (err) {
-        console.warn("[CloudSync] Failed to push central catalog to cloud:", err);
-        return false;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+            const res = await fetch(CLOUD_API_URL, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": `token ${CLOUD_GITHUB_TOKEN}`,
+                    "User-Agent": "Accessify-App",
+                    "Content-Type": "application/json",
+                    "Accept": "application/vnd.github.v3+json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                if (data.files && data.files["custom_products.json"]) {
+                    setLocalStorageItem("catalog_raw_url", data.files["custom_products.json"].raw_url);
+                }
+                return true;
+            } else {
+                console.warn(`[CloudSync] Push attempt ${attempt} returned status ${res.status}`);
+            }
+        } catch (err) {
+            console.warn(`[CloudSync] Push attempt ${attempt} network error:`, err);
+        }
+        if (attempt < 2) {
+            await new Promise(r => setTimeout(r, 1000));
+        }
     }
+    return false;
 };
 
 // Fetch latest central catalog from cloud Gist (with authenticated token & commit SHA caching)
@@ -667,7 +673,7 @@ export const db = {
         return combined.filter(c => c !== "all" && c !== "fragrances" && c !== "grooming");
     },
 
-    addCategory: (categoryName) => {
+    addCategory: async (categoryName) => {
         if (!categoryName) return false;
         const slug = categoryName.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
         if (slug === "fragrances" || slug === "grooming") return false;
@@ -675,6 +681,14 @@ export const db = {
         if (!current.includes(slug)) {
             current.push(slug);
             setLocalStorageItem("custom_categories_v5", current);
+            try {
+                const customs = getLocalStorageItem("custom_products_v7", []);
+                const overrides = getLocalStorageItem("product_overrides_v7", {});
+                const deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
+                await pushCentralCatalogToCloud(customs, overrides, deletedIds, current);
+            } catch (e) {
+                console.warn("[CloudSync] addCategory push warning:", e);
+            }
         }
         return slug;
     },

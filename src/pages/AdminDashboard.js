@@ -16,7 +16,7 @@ const compressImage = (file) => {
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
-                const maxDim = 900;
+                const maxDim = 800;
                 if (width > maxDim || height > maxDim) {
                     if (width > height) {
                         height = Math.round((height * maxDim) / width);
@@ -29,9 +29,14 @@ const compressImage = (file) => {
                 canvas.width = width;
                 canvas.height = height;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                // Clean compressed JPEG data URL (~50-80KB)
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                if (ctx) {
+                    // Fill neutral white background so transparent PNGs don't render black
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, width, height);
+                    ctx.drawImage(img, 0, 0, width, height);
+                }
+                // Clean compressed JPEG data URL (~40-60KB)
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
                 resolve(dataUrl);
             };
             img.onerror = () => reject(new Error("Failed to process image file"));
@@ -313,6 +318,7 @@ export const AdminDashboard = () => {
     // Save Product
     const handleSaveProduct = async (e) => {
         if (e && e.preventDefault) e.preventDefault();
+        if (isSavingProduct) return;
 
         if (!formName.trim()) {
             showToast("Product name is required.");
@@ -506,15 +512,15 @@ export const AdminDashboard = () => {
     };
 
     // Category Creation
-    const handleCreateCategory = (e) => {
+    const handleCreateCategory = async (e) => {
         e.preventDefault();
         if (!newCategoryInput.trim()) return;
-        const slug = db.addCategory(newCategoryInput);
+        const slug = await db.addCategory(newCategoryInput);
         if (slug) {
             showToast(`Category "${slug}" added.`);
             setNewCategoryInput("");
             setIsCategoryModalOpen(false);
-            refreshData();
+            if (refreshData) await refreshData();
         }
     };
 

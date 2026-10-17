@@ -148,9 +148,10 @@ export const Shop = () => {
     });
 
     const displayedProducts = filteredProducts.slice(0, visibleCount);
+    const activeProductsCount = products.filter(p => p && p.status !== "inactive").length;
 
     const categoryTitle = selectedCategory === "all"
-        ? `${products.length}+ STREETWEAR ACCESSORIES`
+        ? `${activeProductsCount} STREETWEAR ACCESSORIES`
         : selectedCategory === "combos"
             ? "LIMITED EDITION COMBOS"
             : `${selectedCategory.replace(/-/g, " ").toUpperCase()} COLLECTION`;

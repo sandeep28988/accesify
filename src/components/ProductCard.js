@@ -36,11 +36,13 @@ export const ProductCard = ({ product }) => {
         addToCart(product, 1);
     };
 
+    const primaryImage = (Array.isArray(product.images) && product.images[0]) || (typeof product.images === 'string' && product.images) || 'assets/images/hero-hand.jpg';
+
     return html`
         <div class="product-card">
             <div class="product-image-container">
                 <a href=${`#/product/${product.id}`} aria-label=${product.name} style="display: block; width: 100%; height: 100%;">
-                    <img class="product-card-img" src=${product.images[0]} alt=${product.name} loading="lazy" />
+                    <img class="product-card-img" src=${primaryImage} alt=${product.name} loading="lazy" />
                 </a>
                 
                 <!-- Badges -->

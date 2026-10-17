@@ -58,7 +58,7 @@ export const Navbar = () => {
     const filteredSearchProducts = searchQuery.trim() === ""
         ? []
         : products.filter(p => {
-            if (!p || !p.id) return false;
+            if (!p || !p.id || p.status === 'inactive') return false;
             const matches = (p.name && p.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
                             (p.category && p.category.toLowerCase().includes(searchQuery.toLowerCase()));
             if (!matches) return false;

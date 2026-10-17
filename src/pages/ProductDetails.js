@@ -135,6 +135,7 @@ export const ProductDetails = () => {
         .filter(p => {
             if (!p || !p.id || p.id === product.id) return false;
             if (p.category !== product.category) return false;
+            if (p.status === "inactive") return false;
             const pName = norm(p.name);
             if (pName && (pName === currentName || seenRelatedNames.has(pName))) return false;
             if (seenRelatedIds.has(p.id)) return false;
@@ -219,7 +220,7 @@ export const ProductDetails = () => {
                         <img 
                             ref=${mainImgRef}
                             class="product-main-img" 
-                            src=${product.images[activeImageIndex] || product.images[0]} 
+                            src=${(Array.isArray(product.images) && (product.images[activeImageIndex] || product.images[0])) || product.images || 'assets/images/hero-hand.jpg'} 
                             alt=${product.name} 
                         />
                         ${hasDiscount && html`
@@ -229,7 +230,7 @@ export const ProductDetails = () => {
                         `}
                     </div>
                     
-                    ${product.images.length > 1 && html`
+                    ${Array.isArray(product.images) && product.images.length > 1 && html`
                         <div class="product-thumbnails">
                             ${product.images.map((img, idx) => html`
                                 <div 
