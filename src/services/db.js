@@ -1,5 +1,6 @@
 // ACCESSIFY (https://blyo.in/) - Unified Database & LocalStorage Service
 import { PRODUCTS_205 } from '../data/products.js';
+import { INITIAL_CUSTOM_PRODUCTS } from '../data/customProducts.js';
 
 // Filter out fragrances and grooming as requested - focus 100% on jewelry & streetwear accessories
 const INITIAL_PRODUCTS = PRODUCTS_205.filter(p => 
@@ -83,8 +84,111 @@ const setLocalStorageItem = (key, value) => {
     try {
         localStorage.setItem(`accessify_${key}`, JSON.stringify(value));
     } catch (error) {
-        console.error("Error setting localStorage", error);
+        console.warn("Storage warning (quota or restricted):", error && error.message ? error.message : error);
     }
+};
+
+const INITIAL_PRODUCT_IDS = new Set(INITIAL_PRODUCTS.map(p => String(p.id).toLowerCase()));
+
+export const isCustomProduct = (p) => {
+    if (!p || !p.id) return false;
+    const id = String(p.id).trim().toLowerCase();
+    if (id.startsWith("acc_custom_")) return true;
+    return !INITIAL_PRODUCT_IDS.has(id);
+};
+
+// Robust deduplication across IDs and normalized names (prevents repeating products completely)
+export const deduplicateProducts = (productsList) => {
+    if (!Array.isArray(productsList)) return [];
+    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const seenIds = new Set();
+    const seenNames = new Set();
+    const result = [];
+
+    for (const p of productsList) {
+        if (!p || !p.id) continue;
+        const idKey = String(p.id).trim().toLowerCase();
+        const nameKey = norm(p.name);
+
+        // Skip duplicate ID
+        if (seenIds.has(idKey)) continue;
+
+        // Skip duplicate normalized name
+        if (nameKey && seenNames.has(nameKey)) continue;
+
+        seenIds.add(idKey);
+        if (nameKey) seenNames.add(nameKey);
+        result.push(p);
+    }
+
+    return result;
+};
+
+// In-memory catalog cache - ensures fast, synchronous access immune to localStorage quota limits (base64 images)
+let _memoryCatalog = null;
+let _memoryCustomProducts = null;
+
+export const getCanonicalCustomProducts = () => {
+    if (Array.isArray(_memoryCustomProducts) && _memoryCustomProducts.length > 0) {
+        return _memoryCustomProducts;
+    }
+    const localCustoms = getLocalStorageItem("custom_products_v7", null);
+    const baseCustoms = Array.isArray(localCustoms) && localCustoms.length > 0 ? localCustoms : [];
+    const merged = deduplicateProducts([...baseCustoms, ...INITIAL_CUSTOM_PRODUCTS]);
+    _memoryCustomProducts = merged;
+    return merged;
+};
+
+// Compile full canonical catalog from custom products, overrides, and base products
+export const compileCentralCatalog = (customList, overridesMap, deletedIdsList) => {
+    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const customsSource = (Array.isArray(customList) && customList.length > 0)
+        ? customList
+        : getCanonicalCustomProducts();
+    const cleanCustoms = deduplicateProducts([...customsSource, ...INITIAL_CUSTOM_PRODUCTS]);
+    const overrides = (overridesMap && typeof overridesMap === 'object') ? overridesMap : {};
+    const deletedSet = new Set((Array.isArray(deletedIdsList) ? deletedIdsList : []).map(id => String(id).toLowerCase().trim()));
+
+    // Filter out deleted custom products (if any)
+    const activeCustoms = cleanCustoms.filter(p => !deletedSet.has(String(p.id).toLowerCase().trim()));
+
+    const customIdSet = new Set(activeCustoms.map(p => String(p.id).toLowerCase().trim()));
+    const customNameSet = new Set(activeCustoms.map(p => norm(p.name)).filter(Boolean));
+
+    // Base standard products (excluding fragrances/grooming, deleted products, and overridden duplicates)
+    const standardProducts = [];
+    for (const base of INITIAL_PRODUCTS) {
+        if (!base || !base.id) continue;
+        const baseId = String(base.id).toLowerCase().trim();
+        const baseName = norm(base.name);
+
+        // If deleted by Admin
+        if (deletedSet.has(baseId)) continue;
+
+        // If a custom item has the same ID or name
+        if (customIdSet.has(baseId)) continue;
+        if (baseName && customNameSet.has(baseName)) continue;
+
+        // Apply admin overrides if any (price, comparePrice, stock, status, featured, etc.)
+        const override = overrides[base.id] || overrides[baseId];
+        if (override) {
+            standardProducts.push({
+                ...base,
+                ...override,
+                price: override.price !== undefined ? Number(override.price) : base.price,
+                comparePrice: override.comparePrice !== undefined ? Number(override.comparePrice) : base.comparePrice,
+                stock: override.stock !== undefined ? Number(override.stock) : base.stock,
+                status: override.status !== undefined ? override.status : base.status
+            });
+        } else {
+            standardProducts.push({ ...base });
+        }
+    }
+
+    // Return deduplicated combined catalog
+    const compiled = deduplicateProducts([...activeCustoms, ...standardProducts]);
+    _memoryCatalog = compiled;
+    return compiled;
 };
 
 // Seeding & Cache Invalidation - ensure clean version 7 without stale legacy caches
@@ -99,8 +203,16 @@ if (hasLocalStorage()) {
     } catch (e) {}
 
     const existingProducts = getLocalStorageItem("products_v7", null);
-    if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length === 0) {
-        setLocalStorageItem("products_v7", INITIAL_PRODUCTS);
+    const minExpected = INITIAL_PRODUCTS.length + INITIAL_CUSTOM_PRODUCTS.length - 10;
+    if (!existingProducts || !Array.isArray(existingProducts) || existingProducts.length < minExpected) {
+        const customs = getCanonicalCustomProducts();
+        const overrides = getLocalStorageItem("product_overrides_v7", {});
+        const deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
+        const compiled = compileCentralCatalog(customs, overrides, deletedIds);
+        _memoryCatalog = compiled;
+        try {
+            setLocalStorageItem("products_v7", compiled);
+        } catch (e) {}
     }
 
     if (!getLocalStorageItem("coupons", null)) {
@@ -156,89 +268,6 @@ const CLOUD_GITHUB_TOKEN = String.fromCharCode(
 );
 const CLOUD_RAW_URL = `https://gist.githubusercontent.com/sandeep28988/${CLOUD_GIST_ID}/raw/custom_products.json`;
 const CLOUD_API_URL = `https://api.github.com/gists/${CLOUD_GIST_ID}`;
-
-const INITIAL_PRODUCT_IDS = new Set(INITIAL_PRODUCTS.map(p => String(p.id).toLowerCase()));
-
-export const isCustomProduct = (p) => {
-    if (!p || !p.id) return false;
-    const id = String(p.id).trim().toLowerCase();
-    if (id.startsWith("acc_custom_")) return true;
-    return !INITIAL_PRODUCT_IDS.has(id);
-};
-
-// Robust deduplication across IDs and normalized names (prevents repeating products completely)
-export const deduplicateProducts = (productsList) => {
-    if (!Array.isArray(productsList)) return [];
-    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-    const seenIds = new Set();
-    const seenNames = new Set();
-    const result = [];
-
-    for (const p of productsList) {
-        if (!p || !p.id) continue;
-        const idKey = String(p.id).trim().toLowerCase();
-        const nameKey = norm(p.name);
-
-        // Skip duplicate ID
-        if (seenIds.has(idKey)) continue;
-
-        // Skip duplicate normalized name
-        if (nameKey && seenNames.has(nameKey)) continue;
-
-        seenIds.add(idKey);
-        if (nameKey) seenNames.add(nameKey);
-        result.push(p);
-    }
-
-    return result;
-};
-
-// Compile full canonical catalog from custom products, overrides, and base products
-export const compileCentralCatalog = (customList, overridesMap, deletedIdsList) => {
-    const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-    const cleanCustoms = deduplicateProducts(Array.isArray(customList) ? customList : []);
-    const overrides = (overridesMap && typeof overridesMap === 'object') ? overridesMap : {};
-    const deletedSet = new Set((Array.isArray(deletedIdsList) ? deletedIdsList : []).map(id => String(id).toLowerCase().trim()));
-
-    // Filter out deleted custom products (if any)
-    const activeCustoms = cleanCustoms.filter(p => !deletedSet.has(String(p.id).toLowerCase().trim()));
-
-    const customIdSet = new Set(activeCustoms.map(p => String(p.id).toLowerCase().trim()));
-    const customNameSet = new Set(activeCustoms.map(p => norm(p.name)).filter(Boolean));
-
-    // Base standard products (excluding fragrances/grooming, deleted products, and overridden duplicates)
-    const standardProducts = [];
-    for (const base of INITIAL_PRODUCTS) {
-        if (!base || !base.id) continue;
-        const baseId = String(base.id).toLowerCase().trim();
-        const baseName = norm(base.name);
-
-        // If deleted by Admin
-        if (deletedSet.has(baseId)) continue;
-
-        // If a custom item has the same ID or name
-        if (customIdSet.has(baseId)) continue;
-        if (baseName && customNameSet.has(baseName)) continue;
-
-        // Apply admin overrides if any (price, comparePrice, stock, status, featured, etc.)
-        const override = overrides[base.id] || overrides[baseId];
-        if (override) {
-            standardProducts.push({
-                ...base,
-                ...override,
-                price: override.price !== undefined ? Number(override.price) : base.price,
-                comparePrice: override.comparePrice !== undefined ? Number(override.comparePrice) : base.comparePrice,
-                stock: override.stock !== undefined ? Number(override.stock) : base.stock,
-                status: override.status !== undefined ? override.status : base.status
-            });
-        } else {
-            standardProducts.push({ ...base });
-        }
-    }
-
-    // Return deduplicated combined catalog
-    return deduplicateProducts([...activeCustoms, ...standardProducts]);
-};
 
 // Push central database state to cloud Gist (Admin only)
 export const pushCentralCatalogToCloud = async (customList, overridesMap, deletedIdsList, categoriesList) => {
@@ -310,10 +339,14 @@ export const fetchCloudCatalog = async () => {
                 const cachedRawUrl = getLocalStorageItem("catalog_raw_url", "");
 
                 // If rawUrl is identical to our cached commit URL AND we have compiled products locally, cache is 100% valid!
-                if (rawUrl && cachedRawUrl === rawUrl && getLocalStorageItem("products_v7", null)) {
+                const minExpected = INITIAL_PRODUCTS.length + INITIAL_CUSTOM_PRODUCTS.length - 10;
+                const cachedProds = getLocalStorageItem("products_v7", null);
+                const cachedCustoms = getLocalStorageItem("custom_products_v7", null);
+
+                if (rawUrl && cachedRawUrl === rawUrl && Array.isArray(cachedProds) && cachedProds.length >= minExpected && Array.isArray(cachedCustoms) && cachedCustoms.length >= INITIAL_CUSTOM_PRODUCTS.length) {
                     return {
                         cached: true,
-                        customProducts: getLocalStorageItem("custom_products_v7", []),
+                        customProducts: cachedCustoms,
                         productOverrides: getLocalStorageItem("product_overrides_v7", {}),
                         deletedProductIds: getLocalStorageItem("deleted_product_ids_v7", []),
                         customCategories: getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES),
@@ -361,16 +394,24 @@ export const fetchCloudCatalog = async () => {
 export const db = {
     // PRODUCTS - guaranteed deduplicated without duplicates or legacy categories
     getProducts: () => {
-        const prods = getLocalStorageItem("products_v7", null);
-        if (Array.isArray(prods) && prods.length > 0) {
-            return deduplicateProducts(prods);
+        if (Array.isArray(_memoryCatalog) && _memoryCatalog.length > 0) {
+            return _memoryCatalog;
         }
-        // Fallback: compile from baseline
-        const customs = getLocalStorageItem("custom_products_v7", []);
+        const prods = getLocalStorageItem("products_v7", null);
+        const minExpected = INITIAL_PRODUCTS.length + INITIAL_CUSTOM_PRODUCTS.length - 10;
+        if (Array.isArray(prods) && prods.length >= minExpected) {
+            _memoryCatalog = deduplicateProducts(prods);
+            return _memoryCatalog;
+        }
+        // Fallback: compile from baseline + canonical customs
+        const customs = getCanonicalCustomProducts();
         const overrides = getLocalStorageItem("product_overrides_v7", {});
         const deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
         const compiled = compileCentralCatalog(customs, overrides, deletedIds);
-        setLocalStorageItem("products_v7", compiled);
+        _memoryCatalog = compiled;
+        try {
+            setLocalStorageItem("products_v7", compiled);
+        } catch (e) {}
         return compiled;
     },
 
@@ -414,11 +455,14 @@ export const db = {
                 return db.getProducts();
             }
 
-            if (cloudData.cached) {
-                return db.getProducts();
+            if (cloudData.cached && Array.isArray(_memoryCatalog) && _memoryCatalog.length > 0) {
+                return _memoryCatalog;
             }
 
-            const customProducts = deduplicateProducts(Array.isArray(cloudData.customProducts) ? cloudData.customProducts : []);
+            const rawCustom = Array.isArray(cloudData.customProducts) ? cloudData.customProducts : [];
+            const customProducts = deduplicateProducts([...rawCustom, ...INITIAL_CUSTOM_PRODUCTS]);
+            _memoryCustomProducts = customProducts;
+
             const productOverrides = (cloudData.productOverrides && typeof cloudData.productOverrides === 'object') ? cloudData.productOverrides : {};
             const deletedProductIds = Array.isArray(cloudData.deletedProductIds) ? cloudData.deletedProductIds : [];
             const customCategories = Array.isArray(cloudData.customCategories) ? cloudData.customCategories : DEFAULT_CATEGORIES;
@@ -427,17 +471,24 @@ export const db = {
             if (customCategories.length > 0) {
                 const curCategories = getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
                 const mergedCategories = Array.from(new Set([...curCategories, ...customCategories]));
-                setLocalStorageItem("custom_categories_v5", mergedCategories);
+                try {
+                    setLocalStorageItem("custom_categories_v5", mergedCategories);
+                } catch (e) {}
             }
 
             // Save central cloud data locally
-            setLocalStorageItem("custom_products_v7", customProducts);
-            setLocalStorageItem("product_overrides_v7", productOverrides);
-            setLocalStorageItem("deleted_product_ids_v7", deletedProductIds);
+            try {
+                setLocalStorageItem("custom_products_v7", customProducts);
+                setLocalStorageItem("product_overrides_v7", productOverrides);
+                setLocalStorageItem("deleted_product_ids_v7", deletedProductIds);
+            } catch (e) {}
 
             // Compile the central catalog
             const compiled = compileCentralCatalog(customProducts, productOverrides, deletedProductIds);
-            setLocalStorageItem("products_v7", compiled);
+            _memoryCatalog = compiled;
+            try {
+                setLocalStorageItem("products_v7", compiled);
+            } catch (e) {}
 
             if (typeof window !== "undefined") {
                 window.dispatchEvent(new CustomEvent("accessify:catalog_updated", {
@@ -456,14 +507,14 @@ export const db = {
         if (!product || typeof product !== "object") return false;
         const targetId = product.id ? String(product.id).trim() : null;
 
-        let customs = getLocalStorageItem("custom_products_v7", []);
+        let customs = [...getCanonicalCustomProducts()];
         const overrides = getLocalStorageItem("product_overrides_v7", {});
         let deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
 
         // If target was previously in deletedIds, un-delete it
         if (targetId && deletedIds.includes(targetId)) {
             deletedIds = deletedIds.filter(id => id !== targetId);
-            setLocalStorageItem("deleted_product_ids_v7", deletedIds);
+            try { setLocalStorageItem("deleted_product_ids_v7", deletedIds); } catch (e) {}
         }
 
         const customIndex = targetId ? customs.findIndex(p => p.id === targetId) : -1;
@@ -494,7 +545,7 @@ export const db = {
                 stock: product.stock !== undefined ? Number(product.stock) : 20,
                 status: product.status || "active"
             };
-            setLocalStorageItem("product_overrides_v7", overrides);
+            try { setLocalStorageItem("product_overrides_v7", overrides); } catch (e) {}
         } else {
             // Create brand new custom product
             const generatedId = targetId || `acc_custom_${Date.now()}`;
@@ -533,10 +584,12 @@ export const db = {
         }
 
         const cleanCustoms = deduplicateProducts(customs);
-        setLocalStorageItem("custom_products_v7", cleanCustoms);
+        _memoryCustomProducts = cleanCustoms;
+        try { setLocalStorageItem("custom_products_v7", cleanCustoms); } catch (e) {}
 
         const cleanProducts = compileCentralCatalog(cleanCustoms, overrides, deletedIds);
-        setLocalStorageItem("products_v7", cleanProducts);
+        _memoryCatalog = cleanProducts;
+        try { setLocalStorageItem("products_v7", cleanProducts); } catch (e) {}
 
         // Push central catalog to cloud immediately
         try {
@@ -562,7 +615,7 @@ export const db = {
     },
 
     updateProduct: async (id, updatedFields) => {
-        let customs = getLocalStorageItem("custom_products_v7", []);
+        let customs = [...getCanonicalCustomProducts()];
         const overrides = getLocalStorageItem("product_overrides_v7", {});
         const deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
 
@@ -574,7 +627,8 @@ export const db = {
             if (updatedFields.comparePrice !== undefined) customs[customIndex].comparePrice = Number(updatedFields.comparePrice);
             if (updatedFields.stock !== undefined) customs[customIndex].stock = Number(updatedFields.stock);
             customs = deduplicateProducts(customs);
-            setLocalStorageItem("custom_products_v7", customs);
+            _memoryCustomProducts = customs;
+            try { setLocalStorageItem("custom_products_v7", customs); } catch (e) {}
         } else {
             // Update standard product override
             overrides[id] = {
@@ -584,11 +638,12 @@ export const db = {
             if (updatedFields.price !== undefined) overrides[id].price = Number(updatedFields.price);
             if (updatedFields.comparePrice !== undefined) overrides[id].comparePrice = Number(updatedFields.comparePrice);
             if (updatedFields.stock !== undefined) overrides[id].stock = Number(updatedFields.stock);
-            setLocalStorageItem("product_overrides_v7", overrides);
+            try { setLocalStorageItem("product_overrides_v7", overrides); } catch (e) {}
         }
 
         const cleanProducts = compileCentralCatalog(customs, overrides, deletedIds);
-        setLocalStorageItem("products_v7", cleanProducts);
+        _memoryCatalog = cleanProducts;
+        try { setLocalStorageItem("products_v7", cleanProducts); } catch (e) {}
 
         try {
             await pushCentralCatalogToCloud(customs, overrides, deletedIds);
@@ -606,27 +661,29 @@ export const db = {
     },
     
     deleteProduct: async (id) => {
-        let customs = getLocalStorageItem("custom_products_v7", []);
+        let customs = [...getCanonicalCustomProducts()];
         const overrides = getLocalStorageItem("product_overrides_v7", {});
         let deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
 
         const isCustom = customs.some(p => p.id === id);
         if (isCustom) {
             customs = customs.filter(p => p.id !== id);
-            setLocalStorageItem("custom_products_v7", customs);
+            _memoryCustomProducts = customs;
+            try { setLocalStorageItem("custom_products_v7", customs); } catch (e) {}
         } else {
             if (!deletedIds.includes(id)) {
                 deletedIds.push(id);
-                setLocalStorageItem("deleted_product_ids_v7", deletedIds);
+                try { setLocalStorageItem("deleted_product_ids_v7", deletedIds); } catch (e) {}
             }
             if (overrides[id]) {
                 delete overrides[id];
-                setLocalStorageItem("product_overrides_v7", overrides);
+                try { setLocalStorageItem("product_overrides_v7", overrides); } catch (e) {}
             }
         }
 
         const cleanProducts = compileCentralCatalog(customs, overrides, deletedIds);
-        setLocalStorageItem("products_v7", cleanProducts);
+        _memoryCatalog = cleanProducts;
+        try { setLocalStorageItem("products_v7", cleanProducts); } catch (e) {}
 
         try {
             await pushCentralCatalogToCloud(customs, overrides, deletedIds);
@@ -644,11 +701,15 @@ export const db = {
     },
 
     resetToDefaultProducts: async () => {
-        setLocalStorageItem("products_v7", INITIAL_PRODUCTS);
-        setLocalStorageItem("custom_products_v7", []);
-        setLocalStorageItem("product_overrides_v7", {});
-        setLocalStorageItem("deleted_product_ids_v7", []);
-        setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+        _memoryCatalog = INITIAL_PRODUCTS;
+        _memoryCustomProducts = [];
+        try {
+            setLocalStorageItem("products_v7", INITIAL_PRODUCTS);
+            setLocalStorageItem("custom_products_v7", []);
+            setLocalStorageItem("product_overrides_v7", {});
+            setLocalStorageItem("deleted_product_ids_v7", []);
+            setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+        } catch (e) {}
 
         try {
             await pushCentralCatalogToCloud([], {}, [], DEFAULT_CATEGORIES);
@@ -693,7 +754,7 @@ export const db = {
             current.push(slug);
             setLocalStorageItem("custom_categories_v5", current);
             try {
-                const customs = getLocalStorageItem("custom_products_v7", []);
+                const customs = getCanonicalCustomProducts();
                 const overrides = getLocalStorageItem("product_overrides_v7", {});
                 const deletedIds = getLocalStorageItem("deleted_product_ids_v7", []);
                 await pushCentralCatalogToCloud(customs, overrides, deletedIds, current);
