@@ -55,9 +55,9 @@ export const Home = () => {
             link: "#/shop?category=y2k-gothic-necklaces"
         },
         {
-            title: "ICED OUT JEWELS",
-            image: "assets/images/category-iced-out.jpg",
-            link: "#/shop?category=iced-out-jewels"
+            title: "CHROME HEARTS",
+            image: "assets/images/category-chrome-hearts.jpg?v=ch1",
+            link: "#/shop?category=chrome-hearts"
         },
         {
             title: "SLEEK CHAINS",
@@ -81,7 +81,7 @@ export const Home = () => {
         products.find(p => p.category === "earrings") || products[2],
         products.find(p => p.category === "bracelets") || products[3],
         products.find(p => p.tags && p.tags.includes("y2k-gothic-necklaces") && p.id !== products[0]?.id) || products[4],
-        products.find(p => p.tags && p.tags.includes("iced-out-jewels")) || products[5]
+        products.find(p => p.category === "chrome-hearts" || (p.tags && p.tags.includes("chrome-hearts"))) || products[5]
     ].filter(Boolean);
 
     const mergedShowcase = [...customItems, ...featuredItems, ...defaultCurated];

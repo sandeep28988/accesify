@@ -94,7 +94,7 @@ export const Navbar = () => {
         { label: "EARRINGS", href: "#/shop?category=earrings" },
         { label: "BRACELET", href: "#/shop?category=bracelets" },
         { label: "Y2K GOTHIC NECKLACES", href: "#/shop?category=y2k-gothic-necklaces" },
-        { label: "ICED OUT JEWELS", href: "#/shop?category=iced-out-jewels" },
+        { label: "CHROME HEARTS", href: "#/shop?category=chrome-hearts" },
         { label: "SLEEK CHAINS", href: "#/shop?category=sleek-chains" },
         { label: "LIMITED EDITION COMBOS", href: "#/shop?category=combos" }
     ];
@@ -240,7 +240,7 @@ export const Navbar = () => {
                                     TRENDING SEARCHES
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                                    ${["Cross", "Rings", "Chains", "Bracelets", "Gothic", "Iced Out", "Combos"].map(tag => html`
+                                    ${["Cross", "Rings", "Chains", "Bracelets", "Gothic", "Chrome Hearts", "Combos"].map(tag => html`
                                         <button 
                                             type="button" 
                                             class="search-tag-chip"

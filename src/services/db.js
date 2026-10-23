@@ -54,7 +54,7 @@ const DEFAULT_CATEGORIES = [
     "bracelets",
     "sleek-chains",
     "y2k-gothic-necklaces",
-    "iced-out-jewels",
+    "chrome-hearts",
     "combos",
     "belts",
     "wallets"
@@ -134,8 +134,13 @@ if (hasLocalStorage()) {
     if (!getLocalStorageItem("banners", null)) {
         setLocalStorageItem("banners", INITIAL_BANNERS);
     }
-    if (!getLocalStorageItem("custom_categories_v5", null)) {
+    let curCategories = getLocalStorageItem("custom_categories_v5", null);
+    if (!curCategories) {
         setLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+    } else if (Array.isArray(curCategories)) {
+        curCategories = curCategories.map(c => c === "iced-out-jewels" ? "chrome-hearts" : c);
+        if (!curCategories.includes("chrome-hearts")) curCategories.push("chrome-hearts");
+        setLocalStorageItem("custom_categories_v5", curCategories);
     }
 }
 
@@ -666,11 +671,17 @@ export const db = {
 
     // CATEGORIES
     getCategories: () => {
-        const custom = getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+        let custom = getLocalStorageItem("custom_categories_v5", DEFAULT_CATEGORIES);
+        if (Array.isArray(custom)) {
+            custom = custom.map(c => c === "iced-out-jewels" ? "chrome-hearts" : c);
+            if (!custom.includes("chrome-hearts")) custom.push("chrome-hearts");
+        } else {
+            custom = DEFAULT_CATEGORIES;
+        }
         const products = db.getProducts();
         const fromProds = products.map(p => (p.category || "").toLowerCase().trim()).filter(Boolean);
         const combined = Array.from(new Set([...custom, ...fromProds]));
-        return combined.filter(c => c !== "all" && c !== "fragrances" && c !== "grooming");
+        return combined.filter(c => c !== "all" && c !== "fragrances" && c !== "grooming" && c !== "iced-out-jewels");
     },
 
     addCategory: async (categoryName) => {

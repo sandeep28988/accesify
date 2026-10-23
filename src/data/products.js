@@ -7,7 +7,7 @@ export const PRODUCTS_205 = [
     "original_id": 3654,
     "name": "CH97 BELT",
     "slug": "ch97-belt",
-    "category": "belts",
+    "category": "chrome-hearts",
     "price": 1199,
     "comparePrice": 2099,
     "description": "Statement heavyweight belt featuring gothic hardware, chrome buckles, and premium PU leather construction. Adjustable sizing for versatile streetwear fits.",
@@ -29,7 +29,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "belts",
-      "streetwear"
+      "streetwear",
+      "chrome-hearts"
     ]
   },
   {
@@ -37,7 +38,7 @@ export const PRODUCTS_205 = [
     "original_id": 3653,
     "name": "CH WALLET(SILVER)",
     "slug": "ch-walletsilver",
-    "category": "wallets",
+    "category": "chrome-hearts",
     "price": 699,
     "comparePrice": 1299,
     "description": "Tactical streetwear wallet with heavy chrome chain attachment and multiple card slots. Compact and durable with industrial edge.",
@@ -58,7 +59,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "wallets",
-      "streetwear"
+      "streetwear",
+      "chrome-hearts"
     ]
   },
   {
@@ -651,7 +653,7 @@ export const PRODUCTS_205 = [
     "original_id": 3632,
     "name": "CH F97",
     "slug": "ch-f97",
-    "category": "rings",
+    "category": "chrome-hearts",
     "price": 349,
     "comparePrice": 899,
     "description": "Premium Gothic & Y2K inspired CH F97. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -673,7 +675,8 @@ export const PRODUCTS_205 = [
     "sku_code": "7RYXRLFB",
     "branch_id": 2,
     "tags": [
-      "rings"
+      "rings",
+      "chrome-hearts"
     ]
   },
   {
@@ -938,7 +941,7 @@ export const PRODUCTS_205 = [
     "original_id": 3622,
     "name": "Chrome Hearts Filigree Cross",
     "slug": "chrome-hearts-filigree-cross",
-    "category": "chains",
+    "category": "chrome-hearts",
     "price": 235,
     "comparePrice": 599,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -960,7 +963,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "y2k-gothic-necklaces"
+      "y2k-gothic-necklaces",
+      "chrome-hearts"
     ]
   },
   {
@@ -968,7 +972,7 @@ export const PRODUCTS_205 = [
     "original_id": 3621,
     "name": "CH Star",
     "slug": "ch-star",
-    "category": "rings",
+    "category": "chrome-hearts",
     "price": 349,
     "comparePrice": 999,
     "description": "Premium Gothic & Y2K inspired CH Star. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -991,7 +995,8 @@ export const PRODUCTS_205 = [
     "sku_code": "G5OOHFUJ",
     "branch_id": 2,
     "tags": [
-      "rings"
+      "rings",
+      "chrome-hearts"
     ]
   },
   {
@@ -999,7 +1004,7 @@ export const PRODUCTS_205 = [
     "original_id": 3620,
     "name": "CH-53",
     "slug": "ch-53",
-    "category": "rings",
+    "category": "chrome-hearts",
     "price": 349,
     "comparePrice": 899,
     "description": "Premium Gothic & Y2K inspired CH-53. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1021,7 +1026,8 @@ export const PRODUCTS_205 = [
     "sku_code": "A2DMNWXI",
     "branch_id": 2,
     "tags": [
-      "rings"
+      "rings",
+      "chrome-hearts"
     ]
   },
   {
@@ -1029,7 +1035,7 @@ export const PRODUCTS_205 = [
     "original_id": 3619,
     "name": "CH Jack & Rose",
     "slug": "ch-jack-rose",
-    "category": "rings",
+    "category": "chrome-hearts",
     "price": 349,
     "comparePrice": 899,
     "description": "Premium Gothic & Y2K inspired CH Jack & Rose. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1051,7 +1057,8 @@ export const PRODUCTS_205 = [
     "sku_code": "CPTKS06B",
     "branch_id": 2,
     "tags": [
-      "rings"
+      "rings",
+      "chrome-hearts"
     ]
   },
   {
@@ -1059,7 +1066,7 @@ export const PRODUCTS_205 = [
     "original_id": 3617,
     "name": "CH Ring (4 in 1)",
     "slug": "ch-ring-4-in-1",
-    "category": "rings",
+    "category": "chrome-hearts",
     "price": 699,
     "comparePrice": 1499,
     "description": "Premium Gothic & Y2K inspired CH Ring (4 in 1). Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1083,7 +1090,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "rings",
-      "combos"
+      "combos",
+      "chrome-hearts"
     ]
   },
   {
@@ -1181,7 +1189,7 @@ export const PRODUCTS_205 = [
     "original_id": 3613,
     "name": "CH Chained Ring",
     "slug": "ch-chained-ring-UoS0w",
-    "category": "chains",
+    "category": "chrome-hearts",
     "price": 359,
     "comparePrice": 999,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -1204,7 +1212,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "y2k-gothic-necklaces"
+      "y2k-gothic-necklaces",
+      "chrome-hearts"
     ]
   },
   {
@@ -1298,7 +1307,7 @@ export const PRODUCTS_205 = [
     "original_id": 3609,
     "name": "Chrome lucifer blood heart pendant with chain (Limited edition)",
     "slug": "chrome-lucifer-blood-heart-pendant-with-chain-limited-edition",
-    "category": "chains",
+    "category": "chrome-hearts",
     "price": 255,
     "comparePrice": 699,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -1320,7 +1329,8 @@ export const PRODUCTS_205 = [
     "tags": [
       "chains",
       "y2k-gothic-necklaces",
-      "limited-edition"
+      "limited-edition",
+      "chrome-hearts"
     ]
   },
   {
@@ -1534,7 +1544,7 @@ export const PRODUCTS_205 = [
     "original_id": 3599,
     "name": "Chrome Heart Bracelet",
     "slug": "chrome-heart-bracelet",
-    "category": "bracelets",
+    "category": "chrome-hearts",
     "price": 235,
     "comparePrice": 700,
     "description": "Signature gothic curb bracelet with detailed links. Comfortable ergonomic fit, high polished chrome finish, engineered for modern streetwear layering.",
@@ -1553,7 +1563,8 @@ export const PRODUCTS_205 = [
     "sku_code": "HBNIZ2LE",
     "branch_id": 2,
     "tags": [
-      "bracelets"
+      "bracelets",
+      "chrome-hearts"
     ]
   },
   {
@@ -1618,7 +1629,7 @@ export const PRODUCTS_205 = [
     "original_id": 3596,
     "name": "Chrome Heart Earring",
     "slug": "chrome-heart-earring",
-    "category": "earrings",
+    "category": "chrome-hearts",
     "price": 285,
     "comparePrice": 759,
     "description": "Premium Gothic & Y2K inspired Chrome Heart Earring. Crafted from high-grade stainless steel with scratch-resistant electroplating. Water-resistant, nickel-free and hypoallergenic for daily streetwear aesthetic.",
@@ -1639,7 +1650,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "earrings",
-      "y2k-gothic"
+      "y2k-gothic",
+      "chrome-hearts"
     ]
   },
   {
@@ -1727,7 +1739,7 @@ export const PRODUCTS_205 = [
     "tags": [
       "chains",
       "y2k-gothic-necklaces",
-      "iced-out-jewels"
+      "chrome-hearts"
     ]
   },
   {
@@ -1793,7 +1805,7 @@ export const PRODUCTS_205 = [
     "original_id": 2992,
     "name": "Chrome Heart Skull Pendant",
     "slug": "chrome-heart-skull-pendant",
-    "category": "chains",
+    "category": "chrome-hearts",
     "price": 249,
     "comparePrice": 789,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -1814,7 +1826,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "y2k-gothic-necklaces"
+      "y2k-gothic-necklaces",
+      "chrome-hearts"
     ]
   },
   {
@@ -1964,7 +1977,7 @@ export const PRODUCTS_205 = [
     "original_id": 2978,
     "name": "Chrome link bracelet (limited edition)",
     "slug": "chrome-link-bracelet-limited-edition",
-    "category": "bracelets",
+    "category": "chrome-hearts",
     "price": 229,
     "comparePrice": 699,
     "description": "Signature gothic curb bracelet with detailed links. Comfortable ergonomic fit, high polished chrome finish, engineered for modern streetwear layering.",
@@ -1984,7 +1997,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "bracelets",
-      "limited-edition"
+      "limited-edition",
+      "chrome-hearts"
     ]
   },
   {
@@ -2038,7 +2052,7 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "iced-out-jewels",
+      "chrome-hearts",
       "limited-edition"
     ]
   },
@@ -2066,7 +2080,7 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "iced-out-jewels",
+      "chrome-hearts",
       "limited-edition"
     ]
   },
@@ -2096,7 +2110,7 @@ export const PRODUCTS_205 = [
     "tags": [
       "combos",
       "limited-edition",
-      "iced-out-jewels"
+      "chrome-hearts"
     ]
   },
   {
@@ -2722,7 +2736,7 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "iced-out-jewels",
+      "chrome-hearts",
       "limited-edition"
     ]
   },
@@ -2823,7 +2837,7 @@ export const PRODUCTS_205 = [
     "original_id": 2943,
     "name": "Chrome cross pendant with chain (Limited edition)",
     "slug": "chrome-cross-pendant-with-chain-limited-edition",
-    "category": "chains",
+    "category": "chrome-hearts",
     "price": 299,
     "comparePrice": 899,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -2844,7 +2858,8 @@ export const PRODUCTS_205 = [
     "tags": [
       "chains",
       "y2k-gothic-necklaces",
-      "limited-edition"
+      "limited-edition",
+      "chrome-hearts"
     ]
   },
   {
@@ -3463,7 +3478,7 @@ export const PRODUCTS_205 = [
     "original_id": 2920,
     "name": "Chrome Heart Pendant",
     "slug": "chrome-heart-pendant",
-    "category": "chains",
+    "category": "chrome-hearts",
     "price": 249,
     "comparePrice": 899,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -3483,7 +3498,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "y2k-gothic-necklaces"
+      "y2k-gothic-necklaces",
+      "chrome-hearts"
     ]
   },
   {
@@ -3551,7 +3567,7 @@ export const PRODUCTS_205 = [
     "original_id": 2917,
     "name": "Chrome watcher pendant with chain (Limited edition)",
     "slug": "chrome-watcher-pendant-with-chain-limited-edition",
-    "category": "chains",
+    "category": "chrome-hearts",
     "price": 249,
     "comparePrice": 749,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -3573,7 +3589,8 @@ export const PRODUCTS_205 = [
     "tags": [
       "chains",
       "y2k-gothic-necklaces",
-      "limited-edition"
+      "limited-edition",
+      "chrome-hearts"
     ]
   },
   {
@@ -3775,7 +3792,7 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "bracelets",
-      "iced-out-jewels",
+      "chrome-hearts",
       "limited-edition"
     ]
   },
@@ -4325,7 +4342,7 @@ export const PRODUCTS_205 = [
     "original_id": 2889,
     "name": "Chrome Heart(Small)",
     "slug": "chrome-heartsmall",
-    "category": "chains",
+    "category": "chrome-hearts",
     "price": 239,
     "comparePrice": 349,
     "description": "Heavyweight curb chain and streetwear accessory. Built from premium 316L surgical-grade stainless steel with reinforced lobster clasp. Rust-resistant and tarnish-free.",
@@ -4345,7 +4362,8 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "y2k-gothic-necklaces"
+      "y2k-gothic-necklaces",
+      "chrome-hearts"
     ]
   },
   {
@@ -5092,7 +5110,7 @@ export const PRODUCTS_205 = [
     "branch_id": 2,
     "tags": [
       "chains",
-      "iced-out-jewels"
+      "chrome-hearts"
     ]
   },
   {

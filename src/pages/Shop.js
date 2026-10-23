@@ -86,7 +86,23 @@ export const Shop = () => {
             const target = selectedCategory.toLowerCase().trim();
             const prodCat = (product.category || "").toLowerCase().trim();
             const prodTags = Array.isArray(product.tags) ? product.tags.map(t => String(t).toLowerCase().trim()) : [];
+            const prodName = (product.name || "").trim().toLowerCase();
             
+            const isChromeHeartsQuery = target === "chrome-hearts" || target === "iced-out-jewels";
+            const isCHProduct = isChromeHeartsQuery && (
+                prodCat === "chrome-hearts" ||
+                prodCat === "iced-out-jewels" ||
+                prodTags.includes("chrome-hearts") ||
+                prodTags.includes("iced-out-jewels") ||
+                prodTags.includes("chrome hearts") ||
+                /^ch[\s\-_0-9]/i.test(prodName) ||
+                /^\(?ch[\s\-_0-9]/i.test(prodName) ||
+                /^ch\s/i.test(prodName) ||
+                prodName.includes("chrome heart") ||
+                prodName.includes("chrome hearts") ||
+                /^chrome\s+(link|cross|watcher|lucifer|reaper|sight|star|magsafe|leather)/i.test(prodName)
+            );
+
             const matchPrimary = prodCat === target ||
                 (target === "bracelet" && prodCat === "bracelets") ||
                 (target === "earring" && prodCat === "earrings");
@@ -94,7 +110,7 @@ export const Shop = () => {
                 (target === "bracelet" && prodTags.includes("bracelets")) ||
                 (target === "earring" && prodTags.includes("earrings"));
             
-            if (!matchPrimary && !matchTag) {
+            if (!matchPrimary && !matchTag && !isCHProduct) {
                 return false;
             }
         }
@@ -154,7 +170,9 @@ export const Shop = () => {
         ? `${activeProductsCount} STREETWEAR ACCESSORIES`
         : selectedCategory === "combos"
             ? "LIMITED EDITION COMBOS"
-            : `${selectedCategory.replace(/-/g, " ").toUpperCase()} COLLECTION`;
+            : (selectedCategory === "chrome-hearts" || selectedCategory === "iced-out-jewels")
+                ? "CHROME HEARTS COLLECTION"
+                : `${selectedCategory.replace(/-/g, " ").toUpperCase()} COLLECTION`;
 
     return html`
         <div class="container anim-fade-in" style="padding-top: 36px; padding-bottom: 80px;">

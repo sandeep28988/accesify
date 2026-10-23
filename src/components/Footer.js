@@ -53,7 +53,7 @@ export const Footer = () => {
                             </ul>
                             <ul class="footer-link-list">
                                 <li><a href="#/shop?category=y2k-gothic-necklaces">Y2K Gothic Necklaces</a></li>
-                                <li><a href="#/shop?category=iced-out-jewels">Iced Out Jewels</a></li>
+                                <li><a href="#/shop?category=chrome-hearts">Chrome Hearts</a></li>
                                 <li><a href="#/shop?category=sleek-chains">Sleek Chains</a></li>
                                 <li><a href="#/shop?category=combos">Limited Edition Combos</a></li>
                             </ul>
