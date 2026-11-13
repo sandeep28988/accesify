@@ -153,7 +153,7 @@ export const AdminDashboard = () => {
                     </div>
 
                     <h2 style="font-size: 1.35rem; font-weight: 800; color: #111827; margin-bottom: 4px; letter-spacing: -0.02em;">
-                        ACCESSIFY ADMIN
+                        SAINT CULT ADMIN
                     </h2>
                     <p style="font-size: 0.82rem; color: #6b7280; margin-bottom: 24px;">
                         Sign in to access staff dashboard, catalog & orders.
@@ -538,7 +538,7 @@ export const AdminDashboard = () => {
             showToast("Customer phone number not available.");
             return;
         }
-        const message = `Hello ${order.customer.name}! This is ACCESSIFY regarding your order #${order.id}. Current status: ${order.status.toUpperCase()}. Total: ₹${order.total}. Thank you for shopping with us!`;
+        const message = `Hello ${order.customer.name}! This is SAINT CULT regarding your order #${order.id}. Current status: ${order.status.toUpperCase()}. Total: ₹${order.total}. Thank you for shopping with us!`;
         window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
     };
 
@@ -626,9 +626,9 @@ export const AdminDashboard = () => {
             <aside class="zepio-sidebar ${mobileMenuOpen ? 'open' : ''}">
                 <div class="zepio-sidebar-header">
                     <div class="zepio-brand-info">
-                        <div class="zepio-brand-icon">A</div>
+                        <div class="zepio-brand-icon">S</div>
                         <div>
-                            <h3 class="zepio-brand-title">ACCESSIFY</h3>
+                            <h3 class="zepio-brand-title">SAINT CULT</h3>
                             <div class="zepio-brand-sub">
                                 <span class="zepio-status-dot"></span>
                                 Staff Panel
@@ -828,7 +828,7 @@ export const AdminDashboard = () => {
                             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
                                 <div>
                                     <h1 class="zepio-page-title">Staff Dashboard</h1>
-                                    <p class="zepio-page-subtitle">Operations overview for ACCESSIFY streetwear store.</p>
+                                    <p class="zepio-page-subtitle">Operations overview for SAINT CULT streetwear store.</p>
                                 </div>
                                 <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                                     <button 
@@ -1485,7 +1485,7 @@ export const AdminDashboard = () => {
                                                     <td style="font-weight: 700;">₹${c.totalSpent.toLocaleString()}</td>
                                                     <td>
                                                         <a 
-                                                            href="https://wa.me/${c.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(c.name)}!%20Greetings%20from%20ACCESSIFY." 
+                                                            href="https://wa.me/${c.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(c.name)}!%20Greetings%20from%20SAINT%20CULT." 
                                                             target="_blank" 
                                                             class="zepio-btn zepio-btn-success zepio-btn-sm"
                                                         >

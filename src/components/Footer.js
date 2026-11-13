@@ -21,13 +21,12 @@ export const Footer = () => {
                     
                     <!-- Column 1: Brand & Logo -->
                     <div class="footer-brand-col">
-                        <a href="#/" style="text-decoration: none; margin-bottom: 8px; display: inline-block;">
-                            <img 
-                                src="assets/images/accessify-logo.png" 
-                                alt="Accessify" 
-                                style="height: 42px; width: auto; max-width: 170px; display: block; margin-bottom: 8px;" 
-                            />
+                        <a href="#/" style="text-decoration: none; margin-bottom: 8px; display: inline-block;" aria-label="SAINT CULT Home">
+                            <span class="saint-cult-brand-header" style="font-size: 1.45rem;">SAINT CULT</span>
                         </a>
+                        <p style="color: var(--text-secondary); font-size: 0.8rem; line-height: 1.6; margin-top: 6px;">
+                            Premium streetwear & gothic jewelry. 316L stainless steel chains, rings, bracelets, and alternative accessories.
+                        </p>
                     </div>
 
                     <!-- Column 2: SHOP -->
@@ -113,7 +112,7 @@ export const Footer = () => {
                 <!-- Bottom Copyright & Policies Bar -->
                 <div class="footer-bottom-bar">
                     <div>
-                        © 2025 ACCESSIFY. All rights reserved.
+                        © 2026 SAINT CULT. All rights reserved.
                     </div>
                     <div class="footer-bottom-links">
                         <a href="#/privacy">Privacy Policy</a>

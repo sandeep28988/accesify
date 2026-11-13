@@ -18,17 +18,17 @@ export const About = () => {
         <div class="container anim-fade-in" style="padding-top: 130px; padding-bottom: 80px;">
             <div class="section-header" style="text-align: left; margin-bottom: 60px;">
                 <span class="section-subtitle">THE IDENTITY</span>
-                <h1 class="section-title">ABOUT ACCESSIFY</h1>
+                <h1 class="section-title">ABOUT SAINT CULT</h1>
             </div>
 
             <!-- Content Row -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-bottom: 80px; align-items: center;">
                 <div>
                     <h2 style="font-size: 1.8rem; text-transform: uppercase; margin-bottom: 24px; line-height: 1.2;">
-                        GET ACCESSIFIED. STREETWEAR & GOTHIC JEWELRY.
+                        SAINT CULT. STREETWEAR & GOTHIC JEWELRY.
                     </h2>
                     <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
-                        Accessify.eco is an online streetwear and fashion accessories brand selling budget-friendly, Gothic- and Y2K-inspired jewelry: stainless steel rings, chains, necklaces, and alternative lifestyle items.
+                        Saint Cult is an online streetwear and fashion accessories brand selling budget-friendly, Gothic- and Y2K-inspired jewelry: stainless steel rings, chains, necklaces, and alternative lifestyle items.
                     </p>
                     <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 30px;">
                         With over 210 curated products available in stock, we offer instant personal ordering via WhatsApp, express courier dispatch across India, and free delivery on orders over ₹1,000.
@@ -47,7 +47,7 @@ export const About = () => {
                 <div>
                     <img 
                         src="assets/images/hero-hand.jpg" 
-                        alt="ACCESSIFY Brand" 
+                        alt="SAINT CULT Brand" 
                         style="width: 100%; height: 400px; object-fit: cover; border: 1px solid var(--border-color); border-radius: 6px;"
                     />
                 </div>

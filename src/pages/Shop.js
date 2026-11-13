@@ -178,7 +178,7 @@ export const Shop = () => {
         <div class="container anim-fade-in" style="padding-top: 36px; padding-bottom: 80px;">
             <div class="section-header" style="margin-bottom: 30px; text-align: left;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                    <span class="section-subtitle" style="margin-bottom: 0;">ACCESSIFY OFFICIAL CATALOGUE</span>
+                    <span class="section-subtitle" style="margin-bottom: 0;">SAINT CULT OFFICIAL CATALOGUE</span>
                     <span class="whatsapp-badge" style="font-size: 0.7rem; padding: 2px 8px;">
                         <${WhatsAppIcon} size=${12} color="#25D366" />
                         <span>Instant WhatsApp Orders</span>

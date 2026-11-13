@@ -319,7 +319,7 @@ export const AppProvider = ({ children }) => {
             };
             setUser(adminUser);
             localStorage.setItem("accessify_current_user", JSON.stringify(adminUser));
-            showToast("Welcome to ACCESSIFY Admin Dashboard!");
+            showToast("Welcome to SAINT CULT Admin Dashboard!");
             window.location.hash = "#/admin";
             return true;
         }

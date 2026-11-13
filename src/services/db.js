@@ -9,6 +9,7 @@ const INITIAL_PRODUCTS = PRODUCTS_205.filter(p =>
 );
 
 const INITIAL_COUPONS = [
+    { code: "SAINTCULT10", type: "percentage", value: 10, active: true },
     { code: "ACCESSIFY10", type: "percentage", value: 10, active: true },
     { code: "FIRST50", type: "flat", value: 50, active: true },
     { code: "FREESHIP", type: "flat", value: 30, active: true },
@@ -24,16 +25,16 @@ const INITIAL_REVIEWS = [
 const INITIAL_ORDERS = [];
 
 const DEFAULT_SETTINGS = {
-    storeName: "ACCESSIFY",
+    storeName: "SAINT CULT",
     storeTagline: "PREMIUM STREETWEAR & GOTHIC JEWELRY",
     whatsappPhone: "917012400815",
-    supportEmail: "orders@accessify.store",
+    supportEmail: "orders@saintcult.store",
     currency: "₹",
     deliveryFee: 50,
     freeDeliveryThreshold: 999,
     codEnabled: true,
     whatsappCheckoutEnabled: true,
-    upiId: "accessify@upi"
+    upiId: "saintcult@upi"
 };
 
 const INITIAL_BANNERS = [

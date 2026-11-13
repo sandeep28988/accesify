@@ -1,4 +1,4 @@
-// WhatsApp Order Helpers for ACCESSIFY (https://accessify-store.vercel.app/)
+// WhatsApp Order Helpers for SAINT CULT (https://accessify-store.vercel.app/)
 // Official Order WhatsApp Number: +91 7012400815
 
 export const WHATSAPP_PHONE = "917012400815";
@@ -80,6 +80,6 @@ export const getCartWhatsAppUrl = (cartItems, totalAmount) => {
  * General support chat URL
  */
 export const getSupportWhatsAppUrl = () => {
-    const message = `Hi ACCESSIFY! I would like to inquire about your streetwear accessories collection.`;
+    const message = `Hi SAINT CULT! I would like to inquire about your streetwear accessories collection.`;
     return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 };

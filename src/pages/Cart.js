@@ -150,7 +150,7 @@ export const Cart = () => {
                                 />
                                 <button type="submit" class="btn btn-secondary" style="padding: 10px 16px;">APPLY</button>
                             </form>
-                            <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px;">Try: ACCESSIFY10 (10% Off) or FIRST50 (₹50 Off)</p>
+                            <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px;">Try: SAINTCULT10 (10% Off) or FIRST50 (₹50 Off)</p>
                         `}
                     </div>
 

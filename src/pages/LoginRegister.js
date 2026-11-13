@@ -47,7 +47,7 @@ export const LoginRegister = () => {
             const standardUser = { username: regUsername, email: regEmail, role: "user" };
             localStorage.setItem("valoir_current_user", JSON.stringify(standardUser));
             login(regEmail, regPassword); // log them in automatically
-            showToast(`Welcome to ACCESSIFY, ${regUsername}!`);
+            showToast(`Welcome to SAINT CULT, ${regUsername}!`);
         }
     };
 
@@ -76,7 +76,7 @@ export const LoginRegister = () => {
                             <h3>${user.username}</h3>
                             <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px;">${user.email}</p>
                             <span class="status-badge delivered" style="margin-top: 10px; font-size: 0.65rem;">
-                                ACCESSIFY VIP MEMBER
+                                SAINT CULT VIP MEMBER
                             </span>
                         </div>
 
@@ -177,7 +177,7 @@ export const LoginRegister = () => {
                                 id="login-email"
                                 type="email" 
                                 class="form-control" 
-                                placeholder="customer@accessify.store"
+                                placeholder="customer@saintcult.store"
                                 value=${email} 
                                 onInput=${(e) => setEmail(e.target.value)} 
                                 required 

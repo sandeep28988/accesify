@@ -12,7 +12,7 @@ export const PrivacyPolicy = () => {
             <h1 class="section-title" style="margin-bottom: 30px; text-align: left;">PRIVACY POLICY</h1>
             <div style="color: var(--text-secondary); line-height: 1.8; display: flex; flex-direction: column; gap: 20px;">
                 <p>Last updated: June 08, 2026</p>
-                <p>Welcome to ACCESSIFY. We respect your privacy and are committed to protecting your personal data. This privacy policy describes how we collect, use, and process your information when you visit or make a purchase from our website.</p>
+                <p>Welcome to SAINT CULT. We respect your privacy and are committed to protecting your personal data. This privacy policy describes how we collect, use, and process your information when you visit or make a purchase from our website.</p>
                 
                 <h3 style="color: var(--text-primary); margin-top: 10px; text-transform: uppercase;">1. INFORMATION WE COLLECT</h3>
                 <p>When you place an order, sign up for an account, or contact us, we collect details such as your name, delivery address, phone number, email address, and payment preferences. We also capture device information (IP address, browser type) to optimize our catalog loading times.</p>

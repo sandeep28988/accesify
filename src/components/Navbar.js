@@ -123,6 +123,11 @@ export const Navbar = () => {
                         <span class="header-search-text">Search for products...</span>
                     </button>
 
+                    <!-- Center: SAINT CULT Brand Wordmark -->
+                    <a href="#/" class="header-brand-center" aria-label="SAINT CULT Home">
+                        <span class="saint-cult-brand-header">SAINT CULT</span>
+                    </a>
+
                     <!-- Right Actions: Account + Cart Bag -->
                     <div class="header-actions-right">
                         <!-- Mobile Menu Toggle Button (Visible on Small Screens) -->
@@ -177,7 +182,7 @@ export const Navbar = () => {
                 <!-- Mobile Navigation Drawer -->
                 <div class="mobile-menu ${mobileMenuOpen ? 'open' : ''}">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                        <span class="brand-subtext" style="font-size: 0.7rem;">✦ ACCESSIFY MENU</span>
+                        <span class="brand-subtext" style="font-size: 0.7rem;">✦ SAINT CULT MENU</span>
                         <button 
                             style="background: transparent; border: none; font-size: 1.2rem; cursor: pointer;" 
                             onClick=${() => setMobileMenuOpen(false)}

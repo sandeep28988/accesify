@@ -36,7 +36,7 @@ export const Contact = () => {
         <div class="container anim-fade-in" style="padding-top: 130px; padding-bottom: 80px;">
             <div class="section-header" style="text-align: left; margin-bottom: 40px;">
                 <span class="section-subtitle">GET IN TOUCH</span>
-                <h1 class="section-title">CONTACT ACCESSIFY</h1>
+                <h1 class="section-title">CONTACT SAINT CULT</h1>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px;">

@@ -1,4 +1,4 @@
-// ACCESSIFY (https://blyo.in/) - 205 Products Catalogue Dataset
+// SAINT CULT - 205 Products Catalogue Dataset
 // All authentic images from cdn.zepio.io, prices in INR (₹), categories and specifications
 
 export const PRODUCTS_205 = [
@@ -5415,7 +5415,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 230,
     "comparePrice": 345,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/0ab335dd-30f3-4af8-8d23-69cbdbb47430.webp"
     ],
@@ -5441,7 +5441,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 230,
     "comparePrice": 345,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/33d11fda-11d8-4352-8ee9-9bace81b0afe.webp"
     ],
@@ -5467,7 +5467,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 299,
     "comparePrice": 449,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/24d37ae0-d6fb-4b1f-b3d7-d6eef64fc81d.webp"
     ],
@@ -5493,7 +5493,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 230,
     "comparePrice": 345,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/dc51c4b0-ee7f-4fca-af37-6203da0f8338.webp"
     ],
@@ -5519,7 +5519,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 220,
     "comparePrice": 330,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/9f69c46a-172a-4e17-8c00-ecc32e7fd1ce.webp"
     ],
@@ -5545,7 +5545,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 220,
     "comparePrice": 330,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/476157e6-ff7e-4a18-9191-89287e2de5f8.webp"
     ],
@@ -5571,7 +5571,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 275,
     "comparePrice": 413,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/1e4ed5ee-beb2-4bd8-9e34-52b142aac2d7.webp"
     ],
@@ -5597,7 +5597,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 275,
     "comparePrice": 413,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/cd149e2e-33e3-449f-b64c-b8e6efccb2a8.webp"
     ],
@@ -5623,7 +5623,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 275,
     "comparePrice": 413,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/b5bfb409-25b5-4dea-8238-38842a776ada.webp"
     ],
@@ -5649,7 +5649,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 275,
     "comparePrice": 413,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/52ec13bb-2d45-4aef-a3c6-4b4da4f55534.webp"
     ],
@@ -5675,7 +5675,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 275,
     "comparePrice": 413,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/3dbc16df-7dd4-49ad-8632-f7b4a96f57bb.webp"
     ],
@@ -5701,7 +5701,7 @@ export const PRODUCTS_205 = [
     "category": "fragrances",
     "price": 159,
     "comparePrice": 239,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/12728831-0c86-413d-bf03-ad7e8aa17697.webp"
     ],
@@ -5753,7 +5753,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 40,
     "comparePrice": 60,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/86a18e9b-129c-4ab4-b4ab-e022124eb240.webp"
     ],
@@ -5779,7 +5779,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 37,
     "comparePrice": 56,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/6e034459-4846-4dd2-9550-f14ca9af1f8e.webp"
     ],
@@ -5805,7 +5805,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 65,
     "comparePrice": 98,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/416c8e57-0dce-400a-8528-b3512a03db25.webp"
     ],
@@ -5831,7 +5831,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 75,
     "comparePrice": 113,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/6f1722f6-23e8-4a82-80eb-9b13628c8921.webp"
     ],
@@ -5857,7 +5857,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 75,
     "comparePrice": 113,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/d73aba18-4339-4ddc-8c31-4c478ccb29b4.webp"
     ],
@@ -5883,7 +5883,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 75,
     "comparePrice": 113,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/e166e9fc-0e2c-42de-9517-6024b377eca7.webp"
     ],
@@ -5909,7 +5909,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 65,
     "comparePrice": 98,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/22232371-7fdc-41c7-a0ea-babb5a346b24.webp"
     ],
@@ -5935,7 +5935,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 82,
     "comparePrice": 123,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/e929d496-a45f-43b2-8e3d-2bbf46b82285.webp"
     ],
@@ -5961,7 +5961,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 95,
     "comparePrice": 100,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/77055509-fa58-477b-bfef-3374ac2bbeed.webp"
     ],
@@ -5987,7 +5987,7 @@ export const PRODUCTS_205 = [
     "category": "grooming",
     "price": 50,
     "comparePrice": 58,
-    "description": "Signature lifestyle accessory from ACCESSIFY. Curated for long-lasting freshness and modern urban lifestyle.",
+    "description": "Signature lifestyle accessory from SAINT CULT. Curated for long-lasting freshness and modern urban lifestyle.",
     "images": [
       "https://cdn.zepio.io/blyo/product/cdae845c-036f-4fbd-ba00-ac8260aa2c77.webp"
     ],

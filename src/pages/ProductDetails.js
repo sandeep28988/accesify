@@ -329,7 +329,7 @@ export const ProductDetails = () => {
                         `}
                         
                         <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 4px;">
-                            🔒 Direct order processing with ACCESSIFY Team on WhatsApp (${WHATSAPP_DISPLAY})
+                            🔒 Direct order processing with SAINT CULT Team on WhatsApp (${WHATSAPP_DISPLAY})
                         </p>
                     </div>
 

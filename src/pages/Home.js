@@ -124,7 +124,7 @@ export const Home = () => {
         },
         {
             q: "Do you ship internationally?",
-            a: "Currently, Accessify ships across every state and union territory in India with express delivery. Worldwide international shipping is coming soon!"
+            a: "Currently, Saint Cult ships across every state and union territory in India with express delivery. Worldwide international shipping is coming soon!"
         }
     ];
 
@@ -134,11 +134,11 @@ export const Home = () => {
             <!-- 1. HERO BANNER SECTION MATCHING USER BRAND GRAPHIC -->
             <section class="cosmora-hero">
                 <div class="container" style="position: relative;">
-                    <a href="#/shop" class="cosmora-hero-banner" aria-label="Shop Accessify Collection">
+                    <a href="#/shop" class="cosmora-hero-banner" aria-label="Shop Saint Cult Collection">
                         <img 
                             class="cosmora-hero-banner-img" 
-                            src="assets/images/hero-banner.png?v=4" 
-                            alt="Accessify | Premium Streetwear & Gothic Jewelry" 
+                            src="assets/images/saint-cult-header.jpg?v=saint_cult_1" 
+                            alt="SAINT CULT | Premium Streetwear & Gothic Jewelry" 
                         />
                     </a>
                 </div>
