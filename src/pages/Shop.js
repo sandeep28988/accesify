@@ -197,17 +197,17 @@ export const Shop = () => {
 
             <!-- Sorting & Result Counters Header -->
             <div class="shop-main-controls" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                <div class="shop-results-count" style="font-weight: 600; font-size: 0.85rem; color: #4B5563;">
+                <div class="shop-results-count" style="font-weight: 600; font-size: 0.85rem; color: #C0C0C0;">
                     SHOWING ${Math.min(visibleCount, filteredProducts.length)} OF ${filteredProducts.length} ACCESSORIES
                     ${selectedCategory !== 'all' && html`
-                        <span style="margin-left: 10px; cursor: pointer; color: #111827; text-decoration: underline; font-size: 0.8rem;" onClick=${() => { setSelectedCategory('all'); window.location.hash = '#/shop'; }}>
+                        <span style="margin-left: 10px; cursor: pointer; color: #FFFFFF; text-decoration: underline; font-size: 0.8rem;" onClick=${() => { setSelectedCategory('all'); window.location.hash = '#/shop'; }}>
                             (View All)
                         </span>
                     `}
                 </div>
                 
                 <div class="shop-sorting">
-                    <select value=${sortBy} onChange=${(e) => setSortBy(e.target.value)} aria-label="Sort products" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px 14px; font-size: 0.82rem; font-weight: 600; color: #111827;">
+                    <select value=${sortBy} onChange=${(e) => setSortBy(e.target.value)} aria-label="Sort products" style="background: #080808; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 8px 14px; font-size: 0.82rem; font-weight: 600; color: #FFFFFF;">
                         <option value="default">RECOMMENDED DROPS</option>
                         <option value="price-low">PRICE: LOW TO HIGH</option>
                         <option value="price-high">PRICE: HIGH TO LOW</option>

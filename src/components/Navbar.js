@@ -119,7 +119,7 @@ export const Navbar = () => {
                         onClick=${() => setSearchOpen(true)}
                         aria-label="Search accessories"
                     >
-                        <i data-lucide="search" style="width: 15px; height: 15px; color: #6B7280; flex-shrink: 0;"></i>
+                        <i data-lucide="search" style="width: 15px; height: 15px; color: #A3A3A3; flex-shrink: 0;"></i>
                         <span class="header-search-text">Search for products...</span>
                     </button>
 
@@ -190,7 +190,7 @@ export const Navbar = () => {
                         <a 
                             href=${cat.href} 
                             class="nav-link" 
-                            style="font-size: 0.95rem; font-weight: 600; padding: 10px 0; border-bottom: 1px solid #F3F4F6;"
+                            style="font-size: 0.95rem; font-weight: 600; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08);"
                             onClick=${() => setMobileMenuOpen(false)}
                             key=${cat.label}
                         >
@@ -199,7 +199,7 @@ export const Navbar = () => {
                     `)}
 
                     <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 14px;">
-                        <a href="#/admin" class="nav-link" style="color: #6B7280; font-size: 0.85rem;" onClick=${() => setMobileMenuOpen(false)}>
+                        <a href="#/admin" class="nav-link" style="color: #A3A3A3; font-size: 0.85rem;" onClick=${() => setMobileMenuOpen(false)}>
                             ⚙️ Admin Dashboard
                         </a>
                         <a 
@@ -236,7 +236,7 @@ export const Navbar = () => {
                         <!-- Trending / Popular Quick Searches -->
                         ${searchQuery.trim() === "" && html`
                             <div class="search-quick-tags" style="margin-top: 24px;">
-                                <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; color: #9CA3AF; text-transform: uppercase; margin-bottom: 12px;">
+                                <div style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; color: #A3A3A3; text-transform: uppercase; margin-bottom: 12px;">
                                     TRENDING SEARCHES
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 8px;">
@@ -246,7 +246,7 @@ export const Navbar = () => {
                                             class="search-tag-chip"
                                             onClick=${() => setSearchQuery(tag)}
                                             key=${tag}
-                                            style="background: #F3F4F6; border: 1px solid #E5E7EB; border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 600; color: #374151; cursor: pointer; transition: all 0.15s ease;"
+                                            style="background: #0A0A0A; border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 20px; padding: 6px 14px; font-size: 0.8rem; font-weight: 600; color: #D1D5DB; cursor: pointer; transition: all 0.15s ease;"
                                         >
                                             ${tag}
                                         </button>
@@ -271,7 +271,7 @@ export const Navbar = () => {
                         `}
                         
                         ${searchQuery.trim() !== "" && filteredSearchProducts.length === 0 && html`
-                            <p style="margin-top: 40px; text-align: center; color: #6B7280; font-size: 0.95rem;">
+                            <p style="margin-top: 40px; text-align: center; color: #A3A3A3; font-size: 0.95rem;">
                                 No products found matching "${searchQuery}". Try searching for "cross", "ring", "chain", or "bracelet".
                             </p>
                         `}

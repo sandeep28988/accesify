@@ -129,7 +129,7 @@ export const Home = () => {
     ];
 
     return html`
-        <div class="home-page anim-fade-in" style="background: #FFFFFF; min-height: 100vh;">
+        <div class="home-page anim-fade-in" style="background: #000000; min-height: 100vh;">
             
             <!-- 1. HERO BANNER SECTION MATCHING USER BRAND GRAPHIC -->
             <section class="cosmora-hero">

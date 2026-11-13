@@ -31,7 +31,7 @@ export const About = () => {
                         Accessify.eco is an online streetwear and fashion accessories brand selling budget-friendly, Gothic- and Y2K-inspired jewelry: stainless steel rings, chains, necklaces, and alternative lifestyle items.
                     </p>
                     <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 30px;">
-                        With over 205 curated products available in stock, we offer instant personal ordering via WhatsApp, express courier dispatch across India, and free delivery on orders over ₹1,000.
+                        With over 210 curated products available in stock, we offer instant personal ordering via WhatsApp, express courier dispatch across India, and free delivery on orders over ₹1,000.
                     </p>
                     <a 
                         href=${getSupportWhatsAppUrl()} 

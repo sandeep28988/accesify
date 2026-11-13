@@ -1,38 +1,69 @@
-/* ACCESSIFY DESIGN SYSTEM - PURE WHITE LUXURY & STREETWEAR AESTHETIC */
+/* ============================================================
+   ACCESSIFY LUXURY Y2K & DARK CHROME DESIGN SYSTEM
+   PURE BLACK (#000000) • METALLIC CHROME • SILVER ACCENTS
+   ============================================================ */
+
 :root {
-    --bg-primary: #FFFFFF;
-    --bg-secondary: #F8F9FA;
-    --bg-tertiary: #F1F3F5;
-    --border-color: #E5E7EB;
-    --border-light: #F3F4F6;
-    --border-focus: #111827;
-    --text-primary: #111827;
-    --text-secondary: #4B5563;
-    --text-muted: #9CA3AF;
-    --accent-chrome-solid: #111827;
-    --accent-chrome-gradient: linear-gradient(135deg, #111827 0%, #4B5563 100%);
-    --accent-silver: #6B7280;
-    --accent-glow: rgba(0, 0, 0, 0.06);
+    /* 1. Core Backgrounds - Absolute Pure Black */
+    --bg-primary: #000000;
+    --bg-secondary: #050505;
+    --bg-tertiary: #0A0A0A;
+    --bg-card: #040404;
+    --bg-elevated: #0E0E0E;
+    --bg-surface: #080808;
+    --bg-glass: rgba(0, 0, 0, 0.92);
+    --bg-glass-card: rgba(8, 8, 8, 0.85);
+
+    /* 2. Metallic Borders & Dividers */
+    --border-color: rgba(255, 255, 255, 0.12);
+    --border-light: rgba(255, 255, 255, 0.06);
+    --border-chrome: rgba(192, 192, 192, 0.28);
+    --border-chrome-bright: rgba(255, 255, 255, 0.45);
+    --border-focus: #FFFFFF;
+
+    /* 3. Typography & Text Palette */
+    --text-primary: #FFFFFF;
+    --text-secondary: #C0C0C0;
+    --text-muted: #8E9297;
+    --text-silver-bright: #E5E7EB;
+    --text-silver-dark: #6B7280;
+
+    /* 4. Chrome & Metallic Accents */
+    --accent-chrome-solid: #E0E0E0;
+    --accent-chrome-gradient: linear-gradient(135deg, #FFFFFF 0%, #D1D5DB 35%, #9CA3AF 65%, #E5E7EB 100%);
+    --accent-chrome-vertical: linear-gradient(180deg, #FFFFFF 0%, #D4D4D8 35%, #9CA3AF 65%, #FFFFFF 100%);
+    --accent-silver: #C0C0C0;
+    --accent-silver-glow: 0 0 20px rgba(192, 192, 192, 0.25);
+    --accent-white-glow: 0 0 25px rgba(255, 255, 255, 0.2);
+    --chrome-sheen: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.12) 50%, transparent 100%);
+
+    /* 5. WhatsApp Brand Colors */
     --whatsapp-green: #25D366;
-    --whatsapp-green-dark: #20ba59;
-    
+    --whatsapp-green-dark: #20BA59;
+    --whatsapp-glow: 0 0 25px rgba(37, 211, 102, 0.35);
+
+    /* 6. Typography Scale & Fonts */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    --font-display: 'Cinzel', 'Plus Jakarta Sans', 'Inter', sans-serif;
     --font-gothic: 'UnifrakturMaguntia', 'Pirata One', 'Cinzel', serif;
-    --font-mono: 'Montserrat', sans-serif;
-    
+    --font-mono: 'Montserrat', monospace, sans-serif;
+
+    /* 7. Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-fast: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
     --transition-slow: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.07);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.09);
-    --shadow-glass: inset 0 1px 0 0 rgba(255, 255, 255, 0.9), 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+    --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* 8. Shadows & Dark Reflections */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.8);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.9), 0 0 1px rgba(255, 255, 255, 0.1);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 1px rgba(255, 255, 255, 0.15);
+    --shadow-chrome: 0 0 25px rgba(192, 192, 192, 0.15);
+    --shadow-card-hover: 0 12px 35px rgba(0, 0, 0, 0.98), 0 0 20px rgba(255, 255, 255, 0.12);
 }
 
-/* Reset */
-* {
+/* Base Reset */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -45,42 +76,60 @@ html {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: var(--font-sans);
+    color-scheme: dark;
 }
 
 body {
     overflow-x: hidden;
     min-height: 100vh;
+    background-color: #000000;
+    color: var(--text-primary);
+    background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
 }
 
-/* Scrollbar */
+/* Text Selection */
+::selection {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+::-moz-selection {
+    background: #FFFFFF;
+    color: #000000;
+}
+
+/* High-End Dark Chrome Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-primary);
+    background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--border-color);
+    background: rgba(255, 255, 255, 0.18);
     border-radius: 3px;
+    border: 1px solid #000000;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
+    background: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
-/* Typography */
+/* Typography Defaults */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
 }
 
 p, span, li, a, button, input, textarea, select {
     font-family: var(--font-sans);
+    color: inherit;
 }
 
 a {
@@ -89,19 +138,44 @@ a {
     transition: var(--transition-fast);
 }
 
-/* Utility Classes */
+/* Chrome & Luxury Text Utilities */
 .chrome-text {
     background: var(--accent-chrome-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+    display: inline-block;
+}
+
+.chrome-text-vertical {
+    background: var(--accent-chrome-vertical);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+}
+
+.silver-text {
+    color: var(--text-secondary);
+}
+
+.white-text {
+    color: #FFFFFF;
 }
 
 .glassmorphism {
-    background: rgba(18, 18, 18, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(5, 5, 5, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-color);
+}
+
+.dark-chrome-panel {
+    background: #050505;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    border-radius: 4px;
 }
 
 .container {
@@ -111,113 +185,141 @@ a {
     width: 100%;
 }
 
-/* Buttons */
+/* Buttons - Gothic & Dark Chrome Luxury */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 12px 28px;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     border: 1px solid transparent;
     cursor: pointer;
     transition: var(--transition-smooth);
     position: relative;
     overflow: hidden;
+    user-select: none;
+    background: transparent;
 }
 
+/* Primary Button: Pure Black with Crisp White Border, Inverts to Pure White on Hover */
 .btn-primary {
-    background-color: var(--text-primary);
-    color: var(--bg-primary);
+    background-color: #000000;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
 .btn-primary:hover {
-    background-color: transparent;
-    color: var(--text-primary);
-    border-color: var(--text-primary);
+    background-color: #FFFFFF;
+    color: #000000;
+    border-color: #FFFFFF;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
 }
 
+/* Secondary Button: Pure Black with Metallic Silver Border, Glows on Hover */
 .btn-secondary {
     background-color: transparent;
-    color: var(--text-primary);
-    border-color: var(--border-color);
+    color: #E0E0E0;
+    border: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .btn-secondary:hover {
-    border-color: var(--text-primary);
-    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
 }
 
+/* Chrome Gradient Button */
 .btn-chrome {
-    background: var(--accent-chrome-gradient);
-    color: var(--bg-primary);
-    border: none;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, #FFFFFF 0%, #D1D5DB 40%, #9CA3AF 70%, #E5E7EB 100%);
+    color: #000000;
+    font-weight: 700;
+    border: 1px solid #FFFFFF;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
 }
 
 .btn-chrome:hover {
+    background: linear-gradient(135deg, #FFFFFF 0%, #E5E7EB 50%, #CBD5E1 100%);
+    box-shadow: 0 0 28px rgba(255, 255, 255, 0.45);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
 }
 
-/* WhatsApp Order Button - Official Green with High Visibility */
+/* WhatsApp Order Button - Official Green with High Visibility on Black */
 .btn-whatsapp {
     background-color: #25D366;
-    color: #ffffff !important;
-    border: 1px solid #20ba59;
+    color: #000000 !important;
+    border: 1px solid #20BA59;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
     transition: all 0.25s ease;
-    border-radius: 6px;
+    border-radius: 4px;
     cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .btn-whatsapp:hover {
-    background-color: #20ba59;
-    color: #ffffff !important;
-    border-color: #1da851;
+    background-color: #20BA59;
+    color: #000000 !important;
+    border-color: #1DA851;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    box-shadow: 0 0 25px rgba(37, 211, 102, 0.55);
 }
 
-/* WhatsApp Outline Button - Matches Cosmora Reference Mockup */
+.btn-whatsapp svg,
+.btn-whatsapp path {
+    fill: #000000 !important;
+}
+
+/* WhatsApp Outline Button - Dark Chrome Aesthetic */
 .btn-whatsapp-outline {
-    background-color: #ffffff;
+    background-color: #000000;
     color: #25D366 !important;
     border: 1.5px solid #25D366;
     font-weight: 700;
     font-size: 0.72rem;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 7px;
-    padding: 9px 12px;
-    border-radius: 6px;
+    padding: 10px 14px;
+    border-radius: 4px;
     transition: all 0.2s ease;
     cursor: pointer;
     text-decoration: none;
     width: 100%;
     box-sizing: border-box;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
 .btn-whatsapp-outline:hover {
     background-color: #25D366;
-    color: #ffffff !important;
+    color: #000000 !important;
     border-color: #25D366;
-    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+    box-shadow: 0 0 22px rgba(37, 211, 102, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-whatsapp-outline svg,
+.btn-whatsapp-outline path {
+    fill: #25D366 !important;
+    transition: fill 0.2s ease;
 }
 
 .btn-whatsapp-outline:hover svg,
 .btn-whatsapp-outline:hover path {
-    fill: #ffffff !important;
+    fill: #000000 !important;
 }
 
 .btn-pill {
@@ -225,7 +327,7 @@ a {
     padding: 12px 26px;
     font-size: 0.82rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
 }
 
 .btn-whatsapp-sm {
@@ -237,7 +339,7 @@ a {
 .btn-whatsapp-lg {
     padding: 16px 28px;
     font-size: 0.95rem;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     width: 100%;
 }
 
@@ -245,13 +347,15 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(37, 211, 102, 0.15);
+    background: rgba(37, 211, 102, 0.12);
     color: #25D366;
-    border: 1px solid rgba(37, 211, 102, 0.3);
+    border: 1px solid rgba(37, 211, 102, 0.35);
     padding: 4px 10px;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .btn-icon {
@@ -262,15 +366,16 @@ a {
     height: 40px;
     border-radius: 50%;
     border: 1px solid var(--border-color);
-    background: transparent;
+    background: #000000;
     color: var(--text-primary);
     cursor: pointer;
     transition: var(--transition-fast);
 }
 
 .btn-icon:hover {
-    border-color: var(--text-primary);
-    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 }
 
 /* Animations */
@@ -304,6 +409,11 @@ a {
     50% { opacity: 0.5; }
 }
 
+@keyframes chromeShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
 .anim-fade-in {
     animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -317,8 +427,10 @@ a {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: #000000;
 }
 
 main {
     flex: 1 0 auto;
+    background-color: #000000;
 }

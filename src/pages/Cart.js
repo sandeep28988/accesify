@@ -55,7 +55,7 @@ export const Cart = () => {
                 <p style="color: var(--text-secondary); margin-top: 12px; margin-bottom: 30px;">
                     Looks like you haven't added any accessories to your bag yet.
                 </p>
-                <a href="#/shop" class="btn btn-primary">EXPLORE 205 PRODUCTS</a>
+                <a href="#/shop" class="btn btn-primary">EXPLORE ALL PRODUCTS</a>
             </div>
         `;
     }
