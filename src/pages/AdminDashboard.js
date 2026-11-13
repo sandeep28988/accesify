@@ -1326,10 +1326,10 @@ export const AdminDashboard = () => {
                             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
                                 ${allCategories.map(cat => {
                                     const count = products.filter(p => (p.category || "").toLowerCase() === cat.toLowerCase()).length;
-                                    let img = `assets/images/category-${cat}.jpg`;
-                                    if (cat === "sleek-chains") img = "assets/images/sleek-chains.jpg";
-                                    if (cat === "y2k-gothic-necklaces") img = "assets/images/category-gothic.jpg?v=2";
-                                    if (cat === "chrome-hearts" || cat === "iced-out-jewels") img = "assets/images/category-chrome-hearts.jpg?v=ch1";
+                                    let img = `assets/images/category-${cat}.jpg?v=black_bg`;
+                                    if (cat === "sleek-chains") img = "assets/images/sleek-chains.jpg?v=black_bg";
+                                    if (cat === "y2k-gothic-necklaces") img = "assets/images/category-gothic.jpg?v=black_bg";
+                                    if (cat === "chrome-hearts" || cat === "iced-out-jewels") img = "assets/images/category-chrome-hearts.jpg?v=black_bg";
 
                                     return html`
                                         <div class="zepio-card" key=${cat} style="margin-bottom: 0;">

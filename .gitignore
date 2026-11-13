@@ -4,3 +4,5 @@ node_modules/
 
 .vercel
 .env*
+assets/images/backup_originals/
+process_categories.py

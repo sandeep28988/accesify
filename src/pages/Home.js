@@ -31,42 +31,42 @@ export const Home = () => {
     const categoryCards = [
         {
             title: "CHAINS",
-            image: "assets/images/category-chains.jpg",
+            image: "assets/images/category-chains.jpg?v=black_bg",
             link: "#/shop?category=chains"
         },
         {
             title: "RINGS",
-            image: "assets/images/category-rings.jpg",
+            image: "assets/images/category-rings.jpg?v=black_bg",
             link: "#/shop?category=rings"
         },
         {
             title: "EARRINGS",
-            image: "assets/images/category-earrings.jpg",
+            image: "assets/images/category-earrings.jpg?v=black_bg",
             link: "#/shop?category=earrings"
         },
         {
             title: "BRACELET",
-            image: "assets/images/category-bracelets.jpg",
+            image: "assets/images/category-bracelets.jpg?v=black_bg",
             link: "#/shop?category=bracelets"
         },
         {
             title: "Y2K GOTHIC NECKLACES",
-            image: "assets/images/category-gothic.jpg?v=2",
+            image: "assets/images/category-gothic.jpg?v=black_bg",
             link: "#/shop?category=y2k-gothic-necklaces"
         },
         {
             title: "CHROME HEARTS",
-            image: "assets/images/category-chrome-hearts.jpg?v=ch1",
+            image: "assets/images/category-chrome-hearts.jpg?v=black_bg",
             link: "#/shop?category=chrome-hearts"
         },
         {
             title: "SLEEK CHAINS",
-            image: "assets/images/sleek-chains.jpg",
+            image: "assets/images/sleek-chains.jpg?v=black_bg",
             link: "#/shop?category=sleek-chains"
         },
         {
             title: "LIMITED EDITION COMBOS",
-            image: "assets/images/category-combos.jpg",
+            image: "assets/images/category-combos.jpg?v=black_bg",
             link: "#/shop?category=combos"
         }
     ];
